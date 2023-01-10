@@ -1,3 +1,4 @@
+#include "input.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,81 +49,30 @@ typedef struct client {
 
 char category[][10] = {"capucine", "integral", "perfilada", "furgao", "citadina", "utilitaria", "familiar"};
 
-int countNumberOfDigits(int number) {
-    int count = 0;
-    while (number != 0) {
-        number = number / 10;
-        count++;
-    }
-    return count;
-}
 
-short int readInteger(int li, int ls, int startLength, int endLength) {
-    int value;
-    int check;
-    do {
-        printf("\nInsert a number between %d and %d: ", li, ls);
-        check = scanf("%d", &value);
-        if (check != 1) {
-            while ((check = fgetc(stdin)) != '\n' && check != EOF)
-                ;// flush stdin
-        }
-        if (countNumberOfDigits(value) == 4) {
-            if (value >= li && value <= ls)
-                break;
-            else
-                printf("\nOnly values between %d and %d are accepted", li, ls);
-        } else
-            printf("\nInvalid length");
-    } while (1);
-    return value;
-}
-
-// Esta fun��o l� floats num determinado intervalo
-float lerFloat(float li, float ls) {
-    float num = -10;
-    do {
-        printf("\nInsira um valor entre %.2f e %.2f: ", li, ls);
-        scanf("%f", &num);
-    } while (num < li || num > ls);
-    return num;
-}
-
-void lerChars(char *s, short int tam, char *info) {
-    short int i = 0;
-    char ch;
-    puts(info);
-    ch = getchar();
-    while (ch != '\n' && i < tam) {
-        s[i] = ch;
-        i++;
-        ch = getchar();
-    }
-    s[i] = '\0';
-}
 // Esta fun��o valida as datas. Quando o utilizador insere o year e o m�s o programa verifica quantos dias ter� para cada situa��o
 void validarData(date data[]) {
     short int i, mes, ano, dia;
     char valor[MAX_TXT];
     printf("Indique o year");
-    ano = readInteger(1950, 2050, 4, 4);
+    ano = readInt(1950, 2050);
     printf("Indique o m�s");
-    mes = readInteger(1, 12, 1, 2);
+    mes = readInt(1, 12);
     if ((mes == 1) || (mes == 3) || (mes == 5) || (mes == 5) || (mes == 7) || (mes == 8) || (mes == 10) || (mes == 12)) {
         printf("month de 31 dias");
-        dia = readInteger(1, 31, 1, 2);
+        dia = readInt(1, 31);
     } else {
         if (mes == 2) {
             if (((ano % 4) == 0) && ((ano % 100) != 0) || ((ano % 400) == 0)) {
                 printf("month de 29 dias");
-                dia = readInteger(1, 29, 1, 2);
+                dia = readInt(1, 29);
             } else {
                 printf("month de 28 dias");
-                dia = readInteger(1, 28, 1, 2);
+                dia = readInt(1, 28);
             }
         } else {
             printf("month de 30 dias");
-            dia = readInteger(1, 30, 1, 2);
+            dia = readInt(1, 30);
         }
     }
     data[0].day = dia;
@@ -170,23 +120,23 @@ void inserirCli(client cli[], short int *qtd) {
         printf("\nDe momento nao admitimos mais clientes!!\n");
     else {
         printf("\n--- Dados do client ---");
-        n = readInteger(1000, 9999, 4, 4);
+        n = readInt(1000, 9999);
         encontrou = procurarCodigo(cli, *qtd, n);
         printf("\n\t\t encontrou %hd e *qtd %hd ", encontrou, *qtd);
         while (encontrou >= 0)// Significa que � repetido e n�o pode acontecer!!!
         {
-            n = readInteger(1000, 9999, 4, 4);
+            n = readInt(1000, 9999);
             encontrou = procurarCodigo(cli, *qtd, n);
         }
         printf("\n\t\t Fora: ");
         cli[*qtd].code = n;
-        lerChars(valor, 30, "\nNome (max 30 caracteres):");
+        readChars(valor, 30, "\nNome (max 30 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(cli[*qtd].name, valor);
-        lerChars(valor, 40, "\nMorada (max 40 caracteres):");
+        readChars(valor, 40, "\nMorada (max 40 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(cli[*qtd].address, valor);
-        lerChars(valor, 5, "\nCarta de conducao (max 5 caracteres):");
+        readChars(valor, 5, "\nCarta de conducao (max 5 caracteres):");
         printf("\n\t %s \n", valor);
         strcpy(cli[*qtd].driverLicense, valor);
         cli[*qtd].type = 0;
@@ -203,38 +153,38 @@ void inserirVec(vehicle vec[], short int *qtd, short int local[][MAX_ESC]) {
         printf("\nDe momento nao admitimos mais carros!!\n");
     else {
         printf("\n--- Dados do carro ---");
-        n = readInteger(10, 99, 1, 2);
+        n = readInt(10, 99);
         encontrou = procurarCodigoVec(vec, *qtd, n);
         printf("\n\t\t encontrou %hd e *qtd %hd ", encontrou, *qtd);
         while (encontrou >= 0)// Significa que � repetido e n�o pode acontecer!!!
         {
-            n = readInteger(10, 99, 2, 2);
+            n = readInt(10, 99);
             encontrou = procurarCodigoVec(vec, *qtd, n);
         }
         printf("\n\t\t Fora: ");
         vec[*qtd].code = n;
-        lerChars(valor, 10, "\nMarca (max 10 caracteres):");
+        readChars(valor, 10, "\nMarca (max 10 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(vec[*qtd].brand, valor);
-        lerChars(valor, 10, "\nModelo (max 10 caracteres):");
+        readChars(valor, 10, "\nModelo (max 10 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(vec[*qtd].model, valor);
-        lerChars(valor, 8, "\nMatricula (max 8 caracteres):");
+        readChars(valor, 8, "\nMatricula (max 8 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(vec[*qtd].registrationPlate, valor);
         printf("\nC�digo Categoria:\n");
-        vec[*qtd].codeCategory = readInteger(0, 6, 1, 1);
+        vec[*qtd].codeCategory = readInt(0, 6);
         vec[*qtd].state = 'd';
         //Atrav�s da category � definido se se trata de uma caravana ou autocaravana, o que ir� ditar diferen�as em todas as fun��es do contract.
         if (vec[*qtd].codeCategory < 4) {
             printf("\nKms:\n");
-            vec[*qtd].km = lerFloat(0, 9999);
+            vec[*qtd].km = readFloat(0, 9999);
             printf("\nQuantidade de Combust�vel\n");
-            vec[*qtd].quantityFuel = lerFloat(0, 9999);
+            vec[*qtd].quantityFuel = readFloat(0, 9999);
         }
         printf("\nEscritorio onde se encontra o vehicle");
         printf("\n0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
-        n = readInteger(0, 5, 1, 1);
+        n = readInt(0, 5);
         (local[*qtd][n])++;
         vec[*qtd].startPlace = n;
         (*qtd)++;// Incrementa a quantidade de ve�culos existentes no vector
@@ -251,11 +201,11 @@ void inserirContrato(contract cont[], client cli[], vehicle vec[], short int loc
             printf("N�o existem clientes/veiculos para efectuar o contract\n");
         else {
             printf("\nInsira o n�mero de client\n");
-            n = readInteger(1000, 9999, 4, 4);
+            n = readInt(1000, 9999);
             encontrou = procurarCodigo(cli, qtdcli, n);
             printf("\n\t\t encontrou %hd e *qtd %hd ", encontrou, *qtd);
             while (encontrou < 0) {
-                n = readInteger(1000, 9999, 4, 4);
+                n = readInt(1000, 9999);
                 encontrou = procurarCodigo(cli, qtdcli, n);
                 printf("\n\t\t encontrou %hd e *qtd %hd ", encontrou, *qtd);
             }
@@ -265,11 +215,11 @@ void inserirContrato(contract cont[], client cli[], vehicle vec[], short int loc
                 printf("\n\t\t Fora: ");
                 cont[*qtd].codeClient = n;
                 printf("\nInsira o n�mero do ve�culo\n");
-                n = readInteger(10, 99, 2, 2);
+                n = readInt(10, 99);
                 encontrou = procurarCodigoVec(vec, qtdvec, n);
                 printf("\n\t\t encontrou %hd e *qtd %hd ", encontrou, *qtd);
                 while (encontrou < 0) {
-                    n = readInteger(10, 99, 2, 2);
+                    n = readInt(10, 99);
                     encontrou = procurarCodigoVec(vec, qtdvec, n);
                     printf("\n\t\t encontrou %hd e *qtd %hd ", encontrou, *qtd);
                 }
@@ -282,10 +232,10 @@ void inserirContrato(contract cont[], client cli[], vehicle vec[], short int loc
                     valor2 = '?';
                     if (vec[encontrou].codeCategory > 3) {
                         printf("\nIndique o pre�o por day\n");
-                        cont[*qtd].priceDay = lerFloat(0.01, 9999);
+                        cont[*qtd].priceDay = readFloat(0.01, 9999);
                     } else {
                         printf("\nIndique o pre�o por km\n");
-                        cont[*qtd].priceKm = lerFloat(0.01, 9999);
+                        cont[*qtd].priceKm = readFloat(0.01, 9999);
                     }
                     validarData(data);
                     cont[*qtd].startDate = data[0];
@@ -341,7 +291,7 @@ void acabarContrato(contract cont[], short int pos, date data[], vehicle vec[], 
         vec[encontrou].state = 'd';
         if (vec[encontrou].codeCategory < 4) {
             printf("\n Indique a quantidade de kms\n");
-            cont[pos].quantityKm = lerFloat(0.01, 5000);
+            cont[pos].quantityKm = readFloat(0.01, 5000);
             vec[encontrou].km = cont[pos].quantityKm + vec[encontrou].km;
             custo = cont[pos].quantityKm * cont[pos].priceKm;
             printf("\nO custo � %.2f\n", custo);
@@ -364,7 +314,7 @@ void acabarContrato(contract cont[], short int pos, date data[], vehicle vec[], 
         // Volta a escrever a nova posi��o da caravana na matriz, que ao ter sido alugada passou a estar num local desconhecido
         printf("\nEscritorio onde se encontra o vehicle:");
         printf("\n0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
-        aux = readInteger(0, 5, 1, 1);
+        aux = readInt(0, 5);
         //O escritorio final ser� igual a localiza��o depois deste contract
         cont[pos].endOffice = aux;
         (local[encontrou][aux])++;
@@ -380,10 +330,10 @@ void editarContrato(contract cont[], vehicle vec[], short int pos, date data[], 
         encontrou = procurarCodigoVec(vec, qtdvec, cont[pos].codeVehicle);
         if (vec[encontrou].codeCategory > 3) {
             printf("\nIndique o pre�o por day\n");
-            cont[pos].priceDay = lerFloat(0.01, 9999);
+            cont[pos].priceDay = readFloat(0.01, 9999);
         } else {
             printf("\nIndique o pre�o por km\n");
-            cont[pos].priceKm = lerFloat(0.01, 9999);
+            cont[pos].priceKm = readFloat(0.01, 9999);
         }
         validarData(data);
         cont[pos].startDate = data[0];
@@ -409,13 +359,13 @@ void editarCli(client cli[], contract cont[], short int pos) {
         short int n;
         printf("\n--- Dados do client ---");
         char valor[MAX_TXT];
-        lerChars(valor, 30, "\nNome (max 30 caracteres):");
+        readChars(valor, 30, "\nNome (max 30 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(cli[pos].name, valor);
-        lerChars(valor, 40, "\nMorada (max 40 caracteres):");
+        readChars(valor, 40, "\nMorada (max 40 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(cli[pos].address, valor);
-        lerChars(valor, 5, "\nCarta de conducao (max 5 caracteres):");
+        readChars(valor, 5, "\nCarta de conducao (max 5 caracteres):");
         printf("\n\t %s \n", valor);
         strcpy(cli[pos].driverLicense, valor);
     }
@@ -434,23 +384,23 @@ void editarVec(vehicle vec[], contract cont[], short int pos, short int local[][
         short int n, encontrou = -1, i;
         char valor[MAX_TXT], valor2 = 'f';
         printf("\n--- Dados do carro ---");
-        lerChars(valor, 10, "\nMarca (max 10 caracteres):");
+        readChars(valor, 10, "\nMarca (max 10 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(vec[pos].brand, valor);
-        lerChars(valor, 10, "\nModelo (max 10 caracteres):");
+        readChars(valor, 10, "\nModelo (max 10 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(vec[pos].model, valor);
-        lerChars(valor, 8, "\nMatricula (max 8 caracteres):");
+        readChars(valor, 8, "\nMatricula (max 8 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(vec[pos].registrationPlate, valor);
         printf("\nC�digo Categoria:\n");
-        vec[pos].codeCategory = readInteger(0, 6, 1, 1);
+        vec[pos].codeCategory = readInt(0, 6);
         //Atrav�s da category � definido se se trata de uma caravana ou autocaravana, o que ir� ditar diferen�as em todas as fun��es do contract.
         if (vec[pos].codeCategory < 4) {
             printf("\nKms:\n");
-            vec[pos].km = lerFloat(0, 9999);
+            vec[pos].km = readFloat(0, 9999);
             printf("\nQuantidade de Combust�vel\n");
-            vec[pos].quantityFuel = lerFloat(0, 9999);
+            vec[pos].quantityFuel = readFloat(0, 9999);
         } else if (vec[pos].codeCategory >= 4) {
             vec[pos].km = 0;
             vec[pos].quantityFuel = 0;
@@ -461,7 +411,7 @@ void editarVec(vehicle vec[], contract cont[], short int pos, short int local[][
         }
         printf("\nEscritorio onde se encontra o vehicle");
         printf("\n0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
-        n = readInteger(0, 5, 1, 1);
+        n = readInt(0, 5);
         (local[pos][n])++;
         vec[pos].startPlace = n;
     }
@@ -569,7 +519,7 @@ short int mostrarDadosCli(client cli[], short int qtd) {
     if (qtd == 0)
         printf("\nNao existem clientes registados!!\n");
     else {
-        n = readInteger(1000, 9999, 4, 4);
+        n = readInt(1000, 9999);
         encontrou = procurarCodigo(cli, qtd, n);
         if (encontrou >= 0)
             mostrarCli(cli[encontrou]);
@@ -586,7 +536,7 @@ short int mostrarDadosVec(vehicle vec[], short int qtd) {
     if (qtd == 0)
         printf("\nNao existem ve�culos registados!!\n");
     else {
-        n = readInteger(10, 99, 2, 2);
+        n = readInt(10, 99);
         encontrou = procurarCodigoVec(vec, qtd, n);
         if (encontrou >= 0)
             mostrarVec(vec[encontrou]);
