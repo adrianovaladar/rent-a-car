@@ -9,7 +9,7 @@ int readInt(int lowerLimit, int upperLimit) {
         check = scanf("%d", &value);
         if (check != 1) {
             while ((check = fgetc(stdin)) != '\n' && check != EOF) {
-                ;// flush stdin
+                // flush stdin
             }
             continue;
         }
@@ -29,7 +29,7 @@ float readFloat(float lowerLimit, float upperLimit) {
         check = scanf("%f", &value);
         if (check != 1) {
             while ((check = fgetc(stdin)) != '\n' && check != EOF) {
-                ;// flush stdin
+                // flush stdin
             }
             continue;
         }
