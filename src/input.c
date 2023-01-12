@@ -42,6 +42,9 @@ float readFloat(float lowerLimit, float upperLimit) {
 }
 
 void readChars(char *s, int tam, char *info) {
+    if (tam <= 0)
+        return;
+    while ((getchar()) != '\n') {}
     int i = 0;
     char ch;
     puts(info);
@@ -51,5 +54,6 @@ void readChars(char *s, int tam, char *info) {
         i++;
         ch = getchar();
     }
+    //fgets(s, sizeof s, stdin);
     s[i] = '\0';
 }
