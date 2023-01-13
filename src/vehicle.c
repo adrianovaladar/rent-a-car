@@ -8,7 +8,6 @@
 void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_ESC]) {
     int n, found;
     char value[MAX_TXT];
-
     if (*qtd == MAX_VC) {
         printf("\nThe stand is full, please como back later\n");
         return;
@@ -22,13 +21,13 @@ void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_ESC]) {
         found = searchCodeVehicle(vec, *qtd, n);
     }
     vec[*qtd].code = n;
-    readChars(value, 10, "\nBrand (maximum 10 characters:");
+    readString(value, 10, "\nBrand (maximum 10 characters):");
     printf("\n\t %s ", value);
     strcpy(vec[*qtd].brand, value);
-    readChars(value, 10, "\nModel (maximum 10 characters):");
+    readString(value, 10, "\nModel (maximum 10 characters):");
     printf("\n\t %s ", value);
     strcpy(vec[*qtd].model, value);
-    readChars(value, 8, "\nRegistration plate (maximum 8 characters):");
+    readString(value, 8, "\nRegistration plate (maximum 8 characters):");
     printf("\n\t %s ", value);
     strcpy(vec[*qtd].registrationPlate, value);
     printf("\nCategory code:\n");
@@ -75,13 +74,13 @@ void editVehicle(vehicle vec[], contract cont[], int pos, int local[][MAX_ESC]) 
     int n, i;
     char value[MAX_TXT];
     printf("\n--- Car data ---");
-    readChars(value, 10, "\nBrand (maximum 10 characters:");
-    printf("\n\t %s ", value);
+    readString(value, 10, "\nBrand (maximum 10 characters:");
+    //  printf("\n\t %s ", value);
     strcpy(vec[pos].brand, value);
-    readChars(value, 10, "\nModel (maximum 10 characters):");
+    readString(value, 10, "\nModel (maximum 10 characters):");
     printf("\n\t %s ", value);
     strcpy(vec[pos].model, value);
-    readChars(value, 8, "\nRegistration plate (maximum 8 characters):");
+    readString(value, 8, "\nRegistration plate (maximum 8 characters):");
     printf("\n\t %s ", value);
     strcpy(vec[pos].registrationPlate, value);
     printf("\nCategory code:\n");
@@ -120,4 +119,45 @@ void deleteVehicle(vehicle vec[], contract cont[], int pos, int *qtd, int local[
         if (local[pos][i] == 1)
             (local[pos][i])--;
     }
+}
+
+void showVehicle(vehicle vec) {
+    printf("\n--- Dados do ve�culo ---\n");
+    printf("\n Code: %d", vec.code);
+    printf("\n Brand: %s", vec.brand);
+    printf("\n Model: %s", vec.model);
+    printf("\n Registration plate: %s", vec.registrationPlate);
+    printf("\n Category code: %d", vec.codeCategory);
+    printf("\n Kms: %.2f", vec.km);
+    printf("\n Amount of fuel: %.2f", vec.quantityFuel);
+    printf("\n Status: %c\n", vec.state);
+}
+
+void showAllVehicles(vehicle vec[], int qtd) {
+    int i;
+    if (qtd == 0) {
+        printf("\nThere are no registered vehicles\n");
+        getchar();
+    } else
+        for (i = 0; i < qtd; i++) {
+            showVehicle(vec[i]);
+            getchar();
+        }
+}
+
+int showVehicleByCode(vehicle vec[], int qtd) {
+    int n, found = -1;
+
+    if (qtd == 0)
+        printf("\nThere are no registered vehicles\n");
+    else {
+        n = readInt(10, 99);
+        found = searchCodeVehicle(vec, qtd, n);
+        if (found >= 0)
+            showVehicle(vec[found]);
+        else
+            printf("\nNo vehicle found with code %d\n", n);
+    }
+    getchar();
+    return found;
 }

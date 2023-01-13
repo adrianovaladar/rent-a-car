@@ -1,5 +1,6 @@
 #include "input.h"
 #include <stdio.h>
+#include <string.h>
 
 int readInt(int lowerLimit, int upperLimit) {
     int value;
@@ -41,19 +42,11 @@ float readFloat(float lowerLimit, float upperLimit) {
     return value;
 }
 
-void readChars(char *s, int tam, char *info) {
+void readString(char *s, int tam, char *info) {
     if (tam <= 0)
         return;
-    while ((getchar()) != '\n') {}
-    int i = 0;
-    char ch;
     puts(info);
-    ch = getchar();
-    while (ch != '\n' && i < tam) {
-        s[i] = ch;
-        i++;
-        ch = getchar();
-    }
-    //fgets(s, sizeof s, stdin);
-    s[i] = '\0';
+    do {
+        fgets(s, sizeof s, stdin);
+    } while (strlen(s) == 1);
 }

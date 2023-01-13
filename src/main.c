@@ -58,13 +58,13 @@ void inserirCli(client cli[], int *qtd) {
         }
         printf("\n\t\t Fora: ");
         cli[*qtd].code = n;
-        readChars(valor, 30, "\nNome (max 30 caracteres):");
+        readString(valor, 30, "\nNome (max 30 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(cli[*qtd].name, valor);
-        readChars(valor, 40, "\nMorada (max 40 caracteres):");
+        readString(valor, 40, "\nMorada (max 40 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(cli[*qtd].address, valor);
-        readChars(valor, 5, "\nCarta de conducao (max 5 caracteres):");
+        readString(valor, 5, "\nCarta de conducao (max 5 caracteres):");
         printf("\n\t %s \n", valor);
         strcpy(cli[*qtd].driverLicense, valor);
         cli[*qtd].type = 0;
@@ -242,13 +242,13 @@ void editarCli(client cli[], contract cont[], int pos) {
         int n;
         printf("\n--- Dados do client ---");
         char valor[MAX_TXT];
-        readChars(valor, 30, "\nNome (max 30 caracteres):");
+        readString(valor, 30, "\nNome (max 30 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(cli[pos].name, valor);
-        readChars(valor, 40, "\nMorada (max 40 caracteres):");
+        readString(valor, 40, "\nMorada (max 40 caracteres):");
         printf("\n\t %s ", valor);
         strcpy(cli[pos].address, valor);
-        readChars(valor, 5, "\nCarta de conducao (max 5 caracteres):");
+        readString(valor, 5, "\nCarta de conducao (max 5 caracteres):");
         printf("\n\t %s \n", valor);
         strcpy(cli[pos].driverLicense, valor);
     }
@@ -298,20 +298,6 @@ void mostrarCli(client cli) {
     printf("\n Carta de condu��o: %s\n", cli.driverLicense);
 }
 
-// Recebe um ve�culo por par�metro e mostra os seus dados
-void mostrarVec(vehicle vec) {
-    int i, cat;
-    printf("\n--- Dados do ve�culo ---\n");
-    printf("\n C�digo: %hd", vec.code);
-    printf("\n Marca: %s", vec.brand);
-    printf("\n Modelo: %s", vec.model);
-    printf("\n Matricula: %s", vec.registrationPlate);
-    printf("\n C�digo Categoria: %hd", vec.codeCategory);
-    printf("\n Kms: %.2f", vec.km);
-    printf("\n Quantidade Combustivel: %.2f", vec.quantityFuel);
-    printf("\n Estado: %c\n", vec.state);
-}
-
 // Recebe um contract por par�metro e mostra os seus dados
 void mostrarContrato(contract contrato) {
     int i, cat;
@@ -347,23 +333,7 @@ int mostrarDadosCli(client cli[], int qtd) {
     getchar();
     return encontrou;
 }
-// Procura um ve�culo e mostra todos os seus dados
-int mostrarDadosVec(vehicle vec[], int qtd) {
-    int i, n, encontrou = -1;
 
-    if (qtd == 0)
-        printf("\nNao existem ve�culos registados!!\n");
-    else {
-        n = readInt(10, 99);
-        encontrou = searchCodeVehicle(vec, qtd, n);
-        if (encontrou >= 0)
-            mostrarVec(vec[encontrou]);
-        else
-            printf("\nNao existe nenhum ve�culo com codigo = %hd\n", n);
-    }
-    getchar();
-    return encontrou;
-}
 // Procura um contract e mostra todos os seus dados
 int mostrarDadosContrato(contract contrato[], date data[], int qtd) {
     int i, n, encontrou = -1, aux = -1, codvec = -1;
@@ -394,18 +364,6 @@ void mostrarDadosClis(client cli[], int qtd) {
     } else
         for (i = 0; i < qtd; i++) {
             mostrarCli(cli[i]);
-            getchar();
-        }
-}
-// Mostrar todos os dados de todos os ve�culos
-void mostrarDadosVecs(vehicle vec[], int qtd) {
-    int n, i;
-    if (qtd == 0) {
-        printf("\nNao existem ve�culos registados!!\n");
-        getchar();
-    } else
-        for (i = 0; i < qtd; i++) {
-            mostrarVec(vec[i]);
             getchar();
         }
 }
@@ -610,7 +568,7 @@ int main() {
 #else
                 system("clear");
 #endif// seguindo o sugerido na op��o 2
-                pos_vc = mostrarDadosVec(veiculos_vec, qtd_vc);
+                pos_vc = showVehicleByCode(veiculos_vec, qtd_vc);
                 if (pos_vc >= 0) {
                     printf("\n'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
@@ -632,7 +590,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                mostrarDadosVecs(veiculos_vec, qtd_vc);
+                showAllVehicles(veiculos_vec, qtd_vc);
                 // Colocar aqui c�digo para chamar m�dulo mostrar veiculos
                 system("pause");
                 break;
