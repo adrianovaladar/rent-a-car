@@ -36,3 +36,7 @@ bool isLeapYear(int year) {
     bool b = (year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0) ? true : false;
     return b;
 }
+
+bool isEmptyDate(date d) {
+    return d.day == 0 && d.month == 0 && d.year == 0;
+}

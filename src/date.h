@@ -11,5 +11,6 @@ typedef struct date {
 
 void validateDate(date date[]);
 bool isLeapYear(int year);
+bool isEmptyDate(date d);
 
 #endif//RENT_A_CAR_DATE_H

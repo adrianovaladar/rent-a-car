@@ -1,6 +1,5 @@
 #include "vehicle.h"
 #include "constants.h"
-#include "contract.h"
 #include "input.h"
 #include <stdio.h>
 #include <string.h>
@@ -32,7 +31,7 @@ void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_ESC]) {
     strcpy(vec[*qtd].registrationPlate, value);
     printf("\nCategory code:\n");
     vec[*qtd].codeCategory = readInt(0, 6);
-    vec[*qtd].state = 'd';
+    vec[*qtd].status = 'd';
     if (vec[*qtd].codeCategory < 4) {
         printf("\nKms:\n");
         vec[*qtd].km = readFloat(0, 9999);
@@ -57,17 +56,8 @@ int searchCodeVehicle(vehicle vec[], int qtd, int cod) {
     return enc;
 }
 
-bool isUnderContract(vehicle vec[], contract cont[], int pos) {
-    for (int i = 0; i < MAX_CONT; i++) {
-        if (cont[i].codeVehicle == vec[pos].code && cont[i].endDate.day == 0) {
-            return true;
-        }
-    }
-    return false;
-}
-
-void editVehicle(vehicle vec[], contract cont[], int pos, int local[][MAX_ESC]) {
-    if (isUnderContract(vec, cont, pos)) {
+void editVehicle(vehicle vec[], int pos, int local[][MAX_ESC]) {
+    if (vec[pos].isUnderContract) {
         printf("\nThe vehicle is under a contract at the moment, please come back later\n");
         return;
     }
@@ -105,8 +95,8 @@ void editVehicle(vehicle vec[], contract cont[], int pos, int local[][MAX_ESC]) 
     vec[pos].startPlace = n;
 }
 
-void deleteVehicle(vehicle vec[], contract cont[], int pos, int *qtd, int local[][MAX_ESC]) {
-    if (isUnderContract(vec, cont, pos)) {
+void deleteVehicle(vehicle vec[], int pos, int *qtd, int local[][6]) {
+    if (vec[pos].isUnderContract) {
         printf("\nThe vehicle is under a contract at the moment, please come back later\n");
         return;
     }
@@ -122,7 +112,7 @@ void deleteVehicle(vehicle vec[], contract cont[], int pos, int *qtd, int local[
 }
 
 void showVehicle(vehicle vec) {
-    printf("\n--- Dados do ve�culo ---\n");
+    printf("\n--- Car data ---\n");
     printf("\n Code: %d", vec.code);
     printf("\n Brand: %s", vec.brand);
     printf("\n Model: %s", vec.model);
@@ -130,7 +120,7 @@ void showVehicle(vehicle vec) {
     printf("\n Category code: %d", vec.codeCategory);
     printf("\n Kms: %.2f", vec.km);
     printf("\n Amount of fuel: %.2f", vec.quantityFuel);
-    printf("\n Status: %c\n", vec.state);
+    printf("\n Status: %c\n", vec.status);
 }
 
 void showAllVehicles(vehicle vec[], int qtd) {
@@ -147,7 +137,6 @@ void showAllVehicles(vehicle vec[], int qtd) {
 
 int showVehicleByCode(vehicle vec[], int qtd) {
     int n, found = -1;
-
     if (qtd == 0)
         printf("\nThere are no registered vehicles\n");
     else {
