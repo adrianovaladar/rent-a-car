@@ -31,7 +31,7 @@ void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_ESC]) {
     strcpy(vec[*qtd].registrationPlate, value);
     printf("\nCategory code:\n");
     vec[*qtd].codeCategory = readInt(0, 6);
-    vec[*qtd].status = 'd';
+    vec[*qtd].isUnderContract = false;
     if (vec[*qtd].codeCategory < 4) {
         printf("\nKms:\n");
         vec[*qtd].km = readFloat(0, 9999);
@@ -120,7 +120,7 @@ void showVehicle(vehicle vec) {
     printf("\n Category code: %d", vec.codeCategory);
     printf("\n Kms: %.2f", vec.km);
     printf("\n Amount of fuel: %.2f", vec.quantityFuel);
-    printf("\n Status: %c\n", vec.status);
+    printf("\n Status: %s\n", vec.isUnderContract ? "Unavailable" : "Available");
 }
 
 void showAllVehicles(vehicle vec[], int qtd) {

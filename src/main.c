@@ -1,5 +1,6 @@
 #include "constants.h"
 #include "contract.h"
+#include "customer.h"
 #include "date.h"
 #include "input.h"
 #include "vehicle.h"
@@ -7,25 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct customer {
-    int code;
-    char name[30];
-    char address[40];
-    int type;
-    char driverLicense[11];
-} customer;
-
 char category[][10] = {"capucine", "integral", "perfilada", "furgao", "citadina", "utilitaria", "familiar"};
-
-int searchCodeClient(customer cli[], int qtd, int cod) {
-    int i, enc = -1;
-
-    for (i = 0; i <= qtd && enc == -1; i++)
-        if (cli[i].code == cod)
-            enc = i;
-
-    return enc;
-}
 
 // L� dados de um customer e guarda no vetor
 void inserirCli(customer cli[], int *qtd) {
@@ -59,140 +42,6 @@ void inserirCli(customer cli[], int *qtd) {
         getchar();
     }
     (*qtd)++;// Incrementa a quantidade de clientes existentes no vector
-}
-
-// Esta fun��o serve para alugar um ve�culo. Serve-se das fun��es searchCodeClient e searchCodeVehicle, por�m, neste caso, o que interessa � que ele exista, logo faz-se while(encontrou<0)
-void inserirContrato(contract cont[], customer cli[], vehicle vec[], int local[][MAX_ESC], date data[], int qtdcli, int qtdvec, int *qtd) {
-    if (*qtd == MAX_CONT)
-        printf("De momento n�o aceitamos mais contratos...");
-    else {
-        int n, found = -1, aux = 0, i;
-        char valor[MAX_TXT], valor2;
-        if (qtdvec == 0 || qtdcli == 0)
-            printf("N�o existem clientes/veiculos para efectuar o contract\n");
-        else {
-            printf("\nInsira o n�mero de customer\n");
-            n = readInt(1000, 9999);
-            found = searchCodeClient(cli, qtdcli, n);
-            printf("\n\t\t found %hd e *qtd %hd ", found, *qtd);
-            while (found < 0) {
-                n = readInt(1000, 9999);
-                found = searchCodeClient(cli, qtdcli, n);
-                printf("\n\t\t found %hd e *qtd %hd ", found, *qtd);
-            }
-            if (cli[found].type == 1)
-                printf("\nO customer � de risco pelo que n�o lhe � poss�vel efectuar contratos\n");
-            else {
-                printf("\n\t\t Fora: ");
-                cont[*qtd].codeCustomer = n;
-                printf("\nInsira o n�mero do ve�culo\n");
-                n = readInt(10, 99);
-                found = searchCodeVehicle(vec, qtdvec, n);
-                printf("\n\t\t found %hd e *qtd %hd ", found, *qtd);
-                while (found < 0) {
-                    n = readInt(10, 99);
-                    found = searchCodeVehicle(vec, qtdvec, n);
-                    printf("\n\t\t found %hd e *qtd %hd ", found, *qtd);
-                }
-                if (vec[found].status == 'a')
-                    printf("\nN�o � poss�vel alugar este ve�culo pois o mesmo n�o se encontra dispon�vel\n");
-                else {
-                    vec[found].isUnderContract = true;
-                    vec[found].status = 'a';
-                    printf("\n\t\t Fora: ");
-                    cont[*qtd].codeVehicle = n;
-                    valor2 = '?';
-                    if (vec[found].codeCategory > 3) {
-                        printf("\nIndique o pre�o por day\n");
-                        cont[*qtd].priceDay = readFloat(0.01, 9999);
-                    } else {
-                        printf("\nIndique o pre�o por km\n");
-                        cont[*qtd].priceKm = readFloat(0.01, 9999);
-                    }
-                    validateDate(data);
-                    cont[*qtd].startDate = data[0];
-                    for (i = 0; i < *qtd; i++)
-                        while ((cont[*qtd].codeVehicle == cont[i].codeVehicle && cont[*qtd].startDate.day >= cont[i].startDate.day && cont[*qtd].startDate.day < cont[*qtd].endDate.day && cont[*qtd].startDate.month == cont[i].startDate.month && cont[*qtd].startDate.month == cont[i].endDate.month && cont[*qtd].startDate.year == cont[i].startDate.year && cont[*qtd].startDate.year == cont[i].endDate.year) || (cont[*qtd].codeVehicle == cont[i].codeVehicle && cont[*qtd].startDate.month >= cont[i].startDate.month && cont[*qtd].startDate.month < cont[i].endDate.month && cont[*qtd].startDate.year == cont[i].startDate.year && cont[*qtd].startDate.year == cont[i].endDate.year) || (cont[*qtd].codeVehicle == cont[i].codeVehicle && cont[*qtd].startDate.year >= cont[i].startDate.year && cont[*qtd].startDate.year < cont[i].endDate.year)) {
-                            //Nota: Este while faz o seguinte: No caso de existir um contract de 1/1/2000 a 1/1/2001, como este ja foi finalizado, o vehicle passaria a 'd' e seria possivel outra vez alug�-lo. Por�m, este while n�o permite que hajam alugueres entre as datas de outro aluguer do mesmo vehicle, logo, por exemplo, a date 22/2/2000 ser� impossivel para o mesmo vec.
-                            printf("\nO ve�culo em quest�o esteve alugado na date em que inseriu, pelo que seria imposs�vel alug�-lo pois este estava indispon�vel\n");
-                            validateDate(data);
-                            cont[*qtd].startDate = data[0];
-                        }
-                    //A partir desta linha, � verificado o numero de vezes que o contract existe para validar o escritorio inicial e final, e tamb�m para alterar a matriz(ultimo ciclo for)
-                    for (i = 0; i < *qtd; i++)
-                        if (cont[*qtd].codeVehicle == cont[i].codeVehicle)
-                            aux++;
-
-                    if (aux == 0)
-                        cont[*qtd].startOffice = vec[found].startPlace;
-                    else if (aux > 0) {
-                        for (i = 0; i < *qtd; i++)
-                            if (cont[*qtd].codeVehicle == cont[i].codeVehicle)
-                                aux = i;
-                        cont[*qtd].startOffice = cont[aux].endOffice;
-                    }
-                    (*qtd)++;
-                    for (i = 0; i <= MAX_ESC; i++) {
-                        if (local[found][i] == 1)
-                            (local[found][i])--;
-                    }
-                }
-            }
-        }
-    }
-}
-
-//Esta fun��o devolve o ve�culo. � verificado se este j� foi terminado para nao haver altera��o de valores.
-void acabarContrato(contract cont[], int pos, date data[], vehicle vec[], customer cli[], int qtdcli, int qtdvec, int qtdcont, int local[][MAX_ESC]) {
-    if (cont[pos].endDate.day != 0)
-        printf("\n O contract j� foi finalizado!!!\n");
-    else {
-        char valor2 = '?';
-        int i, aux, found;
-        float custo;
-        printf("\nO ve�culo foi devolvido em bom status? Sim(s) N�o(n)\n");
-        valor2 = '?';
-        while (valor2 != 's' && valor2 != 'S' && valor2 != 'n' && valor2 != 'N') {
-            scanf("%c", &valor2);
-        }
-        if (valor2 == 'n' || valor2 == 'N') {
-            aux = searchCodeClient(cli, qtdcli, cont[pos].codeCustomer);
-            cli[aux].type = 1;
-        }
-        found = searchCodeVehicle(vec, qtdvec, cont[pos].codeVehicle);
-        vec[found].isUnderContract = false;
-        vec[found].status = 'd';
-
-        if (vec[found].codeCategory < 4) {
-            printf("\n Indique a quantidade de kms\n");
-            cont[pos].quantityKm = readFloat(0.01, 5000);
-            vec[found].km = cont[pos].quantityKm + vec[found].km;
-            custo = cont[pos].quantityKm * cont[pos].priceKm;
-            printf("\nO custo � %.2f\n", custo);
-        }
-        validateDate(data);
-        cont[pos].endDate = data[0];
-        for (i = 0; i < qtdcont; i++)
-            //Nota: Este while faz o seguinte: No caso de existir um contract de 1/1/2000 a 1/1/2001, como este ja foi finalizado, o vehicle passaria a 'd' e seria possivel outra vez alug�-lo. Por�m, este while n�o permite que hajam alugueres entre as datas de outro aluguer do mesmo vehicle, logo, por exemplo, a date 22/2/2000 ser� impossivel para o mesmo vec.
-            while ((cont[pos].codeVehicle == cont[i].codeVehicle && cont[pos].endDate.day > cont[i].startDate.day && cont[pos].endDate.day < cont[pos].endDate.day && cont[pos].endDate.month == cont[i].startDate.month && cont[pos].startDate.month == cont[i].endDate.month && cont[pos].endDate.year == cont[i].startDate.year && cont[pos].endDate.year == cont[i].endDate.year) || (cont[pos].codeVehicle == cont[i].codeVehicle && cont[pos].endDate.month >= cont[i].startDate.month && cont[pos].endDate.month < cont[i].endDate.month && cont[pos].endDate.year == cont[i].startDate.year && cont[pos].endDate.year == cont[i].endDate.year) || (cont[pos].codeVehicle == cont[i].codeVehicle && cont[pos].endDate.year >= cont[i].startDate.year && cont[pos].endDate.year < cont[i].endDate.year)) {
-                printf("\nO ve�culo em quest�o esteve alugado na date em que inseriu, pelo que seria imposs�vel alug�-lo pois este estava indispon�vel\n");
-                validateDate(data);
-                cont[pos].startDate = data[0];
-            }
-        //Este while verifica se a date final � menor que a inicial. Enquanto for, ir� sempre pedir datas novas, estando a date final e a inicial validadas consoante o month e o year.
-        while ((cont[pos].startDate.day > cont[pos].endDate.day && cont[pos].startDate.month == cont[pos].endDate.month && cont[pos].startDate.year == cont[pos].endDate.year) || (cont[pos].startDate.month > cont[pos].endDate.month && cont[pos].startDate.year == cont[pos].endDate.year) || cont[pos].startDate.year > cont[pos].endDate.year) {
-            printf("\n A date � inv�lida! Insira outra vez...\n");
-            validateDate(data);
-            cont[pos].endDate = data[0];
-        }
-        // Volta a escrever a nova posi��o da caravana na matriz, que ao ter sido alugada passou a estar num local desconhecido
-        printf("\nEscritorio onde se encontra o vehicle:");
-        printf("\n0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
-        aux = readInt(0, 5);
-        //O escritorio final ser� igual a localiza��o depois deste contract
-        cont[pos].endOffice = aux;
-        (local[found][aux])++;
-    }
 }
 
 // Esta fun��o difere da fun��o inserirCli pois esta baseia-se em qualquer posi��o da fun��o, modificando-a, logo nao altera o valor da quantidade.
@@ -327,7 +176,7 @@ void insertData(customer cli[], vehicle vec[], int *qtdcli, int *qtdvec, int loc
     strcpy(vec[0].brand, "Fiat");
     strcpy(vec[0].model, "Ducato");
     strcpy(vec[0].registrationPlate, "LA-35-61");
-    vec[0].status = 'd';
+    vec[0].isUnderContract = false;
     vec[0].km = 12.000;
     vec[0].quantityFuel = 1000.00;
     vec[0].codeCategory = 0;
@@ -352,7 +201,7 @@ int showMenu() {
         printf("----------------- Customer Area -----------------\n");
         printf("1 - Add customer\n");
         printf("2 - Show/Modify/Delete a customer\n");
-        printf("3 - Show data pf all customers\n\n");
+        printf("3 - Show data of all customers\n\n");
         printf("----------------- Vehicle Area ------------------\n");
         printf("11- Add vehicle\n");
         printf("12- Show/Modify/Delete um vehicle\n");
@@ -496,7 +345,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                inserirContrato(contracts, clients, vehicles, local, dates, quantityClients, quantityVehicles, &quantityContract);
+                startContract(contracts, clients, vehicles, local, dates, quantityClients, quantityVehicles, &quantityContract);
                 // Colocar aqui o c�digo para chamar o m�dulo alugar vehicle
                 system("pause");
                 break;
@@ -513,7 +362,7 @@ int main() {
                     printf("\n 'T'=Terminar contract 'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
                     if (op == 'T' || op == 't') {
-                        acabarContrato(contracts, contractPosition, dates, vehicles, clients, quantityClients, quantityVehicles, quantityContract, local);
+                        endContract(contracts, contractPosition, dates, vehicles, clients, quantityClients, quantityVehicles, quantityContract, local);
                         //Colocar aqui o c�digo para devolver ve�culo
                     }
                     if (op == 'M' || op == 'm') {

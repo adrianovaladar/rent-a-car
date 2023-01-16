@@ -12,7 +12,6 @@ typedef struct vehicle {
     int codeCategory;
     float km;
     float quantityFuel;
-    char status;
     int startPlace;
     bool isUnderContract;
 } vehicle;
