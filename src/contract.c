@@ -82,7 +82,7 @@ void editContract(contract cont[], vehicle vec[], int pos, date d[], int qtdvec,
 
 void deleteContract(contract c[], int pos, int *qtd) {
     if (c[pos].endDate.day == 0)
-        printf("\nO contract n�o pode ser eliminado pois ainda n�o foi finalizado\n");
+        printf("\nThe contract cannot be deleted because it was not closed yet\n");
     else {
         int i;
         for (i = pos; i <= *qtd; i++) {
@@ -98,18 +98,17 @@ int ShowContract(contract c[], date data[], int qtd) {
         printf("\nThere are no registered contracts\n");
         return aux;
     }
-    int i, found, codvec = -1;
+    int i, found, insertedCodeValue;
     printf("Insert the start date of the contract\n");
     found = searchDate(c, data, qtd);
     printf("Insert the code of the vehicle\n");
-    readInt(10, 99);
+    insertedCodeValue = readInt(10, 99);
     for (i = 0; i <= qtd; i++) {
-        if (c[i].startDate.day == data[0].day && c[i].startDate.month == data[0].month && c[i].startDate.year == data[0].year && c[i].codeVehicle == codvec) {
+        if (c[i].startDate.day == data[0].day && c[i].startDate.month == data[0].month && c[i].startDate.year == data[0].year && c[i].codeVehicle == insertedCodeValue) {
             showContract(c[found]);
             aux = i;
         }
     }
-
     getchar();
     return aux;
 }

@@ -307,8 +307,7 @@ void mostrar_matriz(vehicle vec[], int local[][MAX_ESC], int qtd) {
     getchar();
 }
 
-// Esta fun��o carrega dados para existirem clientes e ve�culos no instante em que se abre o programa
-void criarDados(customer cli[], vehicle vec[], int *qtdcli, int *qtdvec, int local[][MAX_ESC]) {
+void insertData(customer cli[], vehicle vec[], int *qtdcli, int *qtdvec, int local[][MAX_ESC]) {
     int n;
     cli[0].code = 1000;
     strcpy(cli[0].name, "customer 1");
@@ -372,18 +371,23 @@ int showMenu() {
              op != 21 && op != 22 && op != 23);
     return op;
 }
-// Fun��o principal
+
 int main() {
-    int qtd_cli = 0, qtd_vc = 0, qtd_cont = 0, qtd_data, pos_cli = -1, pos_vc = -1, pos_cont = -1;
-    customer vec_cli[MAX_CLI];
+    int quantityClients = 0, quantityVehicles = 0, quantityContract = 0, quantityDate, clientPosition = -1, vehiclePosition = -1, contractPosition = -1;
+    customer clients[MAX_CLI];
     int ch, local[MAX_VC][MAX_ESC];
-    vehicle veiculos_vec[MAX_VC];
-    contract contrato_vec[MAX_CONT];
-    date data_vec[MAX_CLI];
+    vehicle vehicles[MAX_VC];
+    contract contracts[MAX_CONT];
+    date dates[MAX_CLI];
     char op;
-    limpar_matriz(veiculos_vec, local);
-    criarDados(vec_cli, veiculos_vec, &qtd_cli, &qtd_vc, local);
+    limpar_matriz(vehicles, local);
+    insertData(clients, vehicles, &quantityClients, &quantityVehicles, local);
     do {
+#ifdef WINDOWS
+        system("cls");
+#else
+        system("clear");
+#endif
         ch = showMenu();
         switch (ch) {
             case 1: {
@@ -392,7 +396,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                inserirCli(vec_cli, &qtd_cli);
+                inserirCli(clients, &quantityClients);
                 system("pause");
                 break;
             }
@@ -402,17 +406,17 @@ int main() {
 #else
                 system("clear");
 #endif
-                pos_cli = mostrarDadosCli(vec_cli, qtd_cli);
-                if (pos_cli >= 0) {
+                clientPosition = mostrarDadosCli(clients, quantityClients);
+                if (clientPosition >= 0) {
                     printf("\n'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
                     if (op == 'M' || op == 'm') {
-                        editarCli(vec_cli, contrato_vec, pos_cli);
+                        editarCli(clients, contracts, clientPosition);
 
 
                         // colocar aqui o c�digo para chamar o m�dulo modificar customer
                     } else if (op == 'A' || op == 'a') {
-                        apagarCli(vec_cli, contrato_vec, pos_cli, &qtd_cli);
+                        apagarCli(clients, contracts, clientPosition, &quantityClients);
                         // colocar aqui o c�digo para chamar o m�dulo apagar customer
                     }
                 }
@@ -425,7 +429,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                mostrarDadosClis(vec_cli, qtd_cli);
+                mostrarDadosClis(clients, quantityClients);
                 system("pause");
                 break;
             }
@@ -436,7 +440,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                insertVehicle(veiculos_vec, &qtd_vc, local);
+                insertVehicle(vehicles, &quantityVehicles, local);
                 // colocar aqui o c�digo para chamar o m�dulo inserir vehicle
                 system("pause");
                 break;
@@ -447,17 +451,17 @@ int main() {
 #else
                 system("clear");
 #endif// seguindo o sugerido na op��o 2
-                pos_vc = showVehicleByCode(veiculos_vec, qtd_vc);
-                if (pos_vc >= 0) {
+                vehiclePosition = showVehicleByCode(vehicles, quantityVehicles);
+                if (vehiclePosition >= 0) {
                     printf("\n'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
                     if (op == 'M' || op == 'm') {
-                        editVehicle(veiculos_vec, pos_vc, local);
+                        editVehicle(vehicles, vehiclePosition, local);
 
                     }
                     // colocar aqui o c�digo para chamar o m�dulo modificar vehicle
                     else if (op == 'A' || op == 'a') {
-                        deleteVehicle(veiculos_vec, pos_vc, &qtd_vc, local);
+                        deleteVehicle(vehicles, vehiclePosition, &quantityVehicles, local);
                     }
                 }// colocar aqui o c�digo para chamar o m�dulo apagar vehicle
                 system("pause");
@@ -469,9 +473,10 @@ int main() {
 #else
                 system("clear");
 #endif
-                showAllVehicles(veiculos_vec, qtd_vc);
+                showAllVehicles(vehicles, quantityVehicles);
                 // Colocar aqui c�digo para chamar m�dulo mostrar veiculos
-                system("pause");
+                printf("Press any key to continue\n");
+                getchar();
                 break;
             }
 
@@ -481,7 +486,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                mostrar_matriz(veiculos_vec, local, qtd_vc);
+                mostrar_matriz(vehicles, local, quantityVehicles);
                 system("pause");
                 break;
             }
@@ -491,7 +496,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                inserirContrato(contrato_vec, vec_cli, veiculos_vec, local, data_vec, qtd_cli, qtd_vc, &qtd_cont);
+                inserirContrato(contracts, clients, vehicles, local, dates, quantityClients, quantityVehicles, &quantityContract);
                 // Colocar aqui o c�digo para chamar o m�dulo alugar vehicle
                 system("pause");
                 break;
@@ -503,20 +508,20 @@ int main() {
                 system("clear");
 #endif
                 // Colocar aqui o c�digo para chamar o m�dulo modificar contract e/ou apagar contract
-                pos_cont = ShowContract(contrato_vec, data_vec, qtd_cont);
-                if (pos_cont >= 0) {
+                contractPosition = ShowContract(contracts, dates, quantityContract);
+                if (contractPosition >= 0) {
                     printf("\n 'T'=Terminar contract 'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
                     if (op == 'T' || op == 't') {
-                        acabarContrato(contrato_vec, pos_cont, data_vec, veiculos_vec, vec_cli, qtd_cli, qtd_vc, qtd_cont, local);
+                        acabarContrato(contracts, contractPosition, dates, vehicles, clients, quantityClients, quantityVehicles, quantityContract, local);
                         //Colocar aqui o c�digo para devolver ve�culo
                     }
                     if (op == 'M' || op == 'm') {
-                        editContract(contrato_vec, veiculos_vec, pos_cont, data_vec, qtd_cont, qtd_cont);
+                        editContract(contracts, vehicles, contractPosition, dates, quantityContract, quantityContract);
 
                         // colocar aqui o c�digo para chamar o m�dulo modificar contract
                     } else if (op == 'A' || op == 'a') {
-                        deleteContract(contrato_vec, pos_cont, &qtd_cont);
+                        deleteContract(contracts, contractPosition, &quantityContract);
                     }
                 }
                 system("pause");
@@ -528,7 +533,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showContractData(contrato_vec, qtd_cont);
+                showContractData(contracts, quantityContract);
                 // Colocar aqui o c�digo para chamar o m�dulo mostrar contratos
                 system("pause");
                 break;
