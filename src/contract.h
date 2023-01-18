@@ -23,7 +23,7 @@ void editContract(contract cont[], vehicle vec[], int pos, date d[], int qtdvec,
 void deleteContract(contract c[], int pos, int *qtd);
 int ShowContract(contract c[], date data[], int qtd);
 int searchDate(contract cont[], date data[], int qtd);
-void startContract(contract cont[], customer cli[], vehicle vec[], int local[][MAX_ESC], date data[], int qtdcli, int qtdvec, int *qtd);
-void endContract(contract cont[], int pos, date data[], vehicle vec[], customer cli[], int qtdcli, int qtdvec, int qtdcont, int local[][MAX_ESC]);
+void startContract(contract contracts[], customer customers[], vehicle vehicles[], int local[][MAX_ESC], date data[], int qtdcli, int qtdvec, int *qtd);
+void endContract(contract contracts[], int pos, date data[], vehicle vehicles[], customer customers[], int quantityCustomers, int quantityVehicles, int quantityContracts, int local[][MAX_ESC]);
 
 #endif//RENT_A_CAR_CONTRACT_H

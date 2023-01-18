@@ -46,11 +46,11 @@ void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_ESC]) {
     (*qtd)++;
 }
 
-int searchCodeVehicle(vehicle vec[], int qtd, int cod) {
+int searchCodeVehicle(vehicle vec[], int qtd, int code) {
     int i, enc = -1;
 
     for (i = 0; i <= qtd && enc == -1; i++)
-        if (vec[i].code == cod)
+        if (vec[i].code == code)
             enc = i;
 
     return enc;

@@ -2,7 +2,6 @@
 #include "contract.h"
 #include "customer.h"
 #include "date.h"
-#include "input.h"
 #include "vehicle.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,129 +9,7 @@
 
 char category[][10] = {"capucine", "integral", "perfilada", "furgao", "citadina", "utilitaria", "familiar"};
 
-// L� dados de um customer e guarda no vetor
-void inserirCli(customer cli[], int *qtd) {
-    int n, i, encontrou = -1;
-    char valor[MAX_TXT];
-
-    if (*qtd == MAX_CLI)
-        printf("\nDe momento nao admitimos mais clientes!!\n");
-    else {
-        printf("\n--- Dados do customer ---");
-        n = readInt(1000, 9999);
-        encontrou = searchCodeClient(cli, *qtd, n);
-        printf("\n\t\t encontrou %hd e *qtd %hd ", encontrou, *qtd);
-        while (encontrou >= 0)// Significa que � repetido e n�o pode acontecer!!!
-        {
-            n = readInt(1000, 9999);
-            encontrou = searchCodeClient(cli, *qtd, n);
-        }
-        printf("\n\t\t Fora: ");
-        cli[*qtd].code = n;
-        readString(valor, 30, "\nNome (max 30 caracteres):");
-        printf("\n\t %s ", valor);
-        strcpy(cli[*qtd].name, valor);
-        readString(valor, 40, "\nMorada (max 40 caracteres):");
-        printf("\n\t %s ", valor);
-        strcpy(cli[*qtd].address, valor);
-        readString(valor, 5, "\nCarta de conducao (max 5 caracteres):");
-        printf("\n\t %s \n", valor);
-        strcpy(cli[*qtd].driverLicense, valor);
-        cli[*qtd].type = 0;
-        getchar();
-    }
-    (*qtd)++;// Incrementa a quantidade de clientes existentes no vector
-}
-
-// Esta fun��o difere da fun��o inserirCli pois esta baseia-se em qualquer posi��o da fun��o, modificando-a, logo nao altera o valor da quantidade.
-void editarCli(customer cli[], contract cont[], int pos) {
-    int i, aux = 0;
-    for (i = 0; i < MAX_CONT; i++) {
-        if (cont[i].codeCustomer == cli[pos].code && cont[i].endDate.day == 0) {
-            printf("\n O customer encontra-se em contract pelo que n�o � poss�vel modific�-lo\n");
-            aux++;
-        }
-    }
-    if (aux == 0) {
-        int n;
-        printf("\n--- Dados do customer ---");
-        char valor[MAX_TXT];
-        readString(valor, 30, "\nNome (max 30 caracteres):");
-        printf("\n\t %s ", valor);
-        strcpy(cli[pos].name, valor);
-        readString(valor, 40, "\nMorada (max 40 caracteres):");
-        printf("\n\t %s ", valor);
-        strcpy(cli[pos].address, valor);
-        readString(valor, 5, "\nCarta de conducao (max 5 caracteres):");
-        printf("\n\t %s \n", valor);
-        strcpy(cli[pos].driverLicense, valor);
-    }
-}
-
-// Esta fun��o difere da fun��o insertVehicle pois esta baseia-se em qualquer posi��o da fun��o, modificando-a, logo nao altera o valor da quantidade.
-
-
-// Apaga a posi��o desejada pelo utilizador, decrementando a quantidade 1 vez
-void apagarCli(customer cli[], contract cont[], int pos, int *qtd) {
-    int i, aux = 0;
-    for (i = 0; i < MAX_CONT; i++) {
-        if (cont[i].codeCustomer == cli[pos].code && cont[i].endDate.day == 0) {
-            printf("\n O customer encontra-se em contract pelo que n�o � poss�vel elimin�-lo\n");
-            aux++;
-        }
-    }
-    if (aux == 0) {
-        int i;
-        for (i = pos; i <= *qtd; i++) {
-            cli[i] = cli[i + 1];
-        }
-        (*qtd)--;// como retiramos um elemento do vetor o seu tamanho diminui
-    }
-}
-
-// Recebe um customer por par�metro e mostra os seus dados
-void mostrarCli(customer cli) {
-    int i, cat;
-    printf("\n--- Dados do customer ---\n");
-    printf("\n Codigo: %hd", cli.code);
-    printf("\n Nome: %s", cli.name);
-    printf("\n Morada: %s", cli.address);
-    printf("\n Tipo: %d", cli.type);
-    printf("\n Carta de condu��o: %s\n", cli.driverLicense);
-}
-
-// Procura um customer e mostra todos os seus dados
-int mostrarDadosCli(customer cli[], int qtd) {
-    int i, n, encontrou = -1;
-
-    if (qtd == 0)
-        printf("\nNao existem clientes registados!!\n");
-    else {
-        n = readInt(1000, 9999);
-        encontrou = searchCodeClient(cli, qtd, n);
-        if (encontrou >= 0)
-            mostrarCli(cli[encontrou]);
-        else
-            printf("\nNao existe nenhum customer com codigo = %hd\n", n);
-    }
-    getchar();
-    return encontrou;
-}
-
-// Mostrar todos os dados de todos os clientes
-void mostrarDadosClis(customer cli[], int qtd) {
-    int n, i;
-    if (qtd == 0) {
-        printf("\nNao existem clientes registados!!\n");
-        getchar();
-    } else
-        for (i = 0; i < qtd; i++) {
-            mostrarCli(cli[i]);
-            getchar();
-        }
-}
-
-void limpar_matriz(vehicle vec[], int local[][MAX_ESC]) {
+void cleanMatrix(vehicle vec[], int local[][MAX_ESC]) {
 
     int l, c;
     for (l = 0; l < MAX_VC; l++) {
@@ -142,11 +19,11 @@ void limpar_matriz(vehicle vec[], int local[][MAX_ESC]) {
     }
 }
 
-void mostrar_matriz(vehicle vec[], int local[][MAX_ESC], int qtd) {
+void showMatrix(vehicle vec[], int local[][MAX_ESC]) {
 
     int l, c;
     printf("               ------------------ ESCRITORIOS -------------------");
-    printf("\nVEICULOS       Braga   Coimbra   Guarda   Faro    Lisboa    Porto");
+    printf("\nVEHICLES       Braga   Coimbra   Guarda   Faro    Lisboa    Porto");
     for (l = 0; l < 6; l++)//for(l=0;l<qtd;l++)
     {
         printf("\n%-9u", vec[l].code);
@@ -177,8 +54,8 @@ void insertData(customer cli[], vehicle vec[], int *qtdcli, int *qtdvec, int loc
     strcpy(vec[0].model, "Ducato");
     strcpy(vec[0].registrationPlate, "LA-35-61");
     vec[0].isUnderContract = false;
-    vec[0].km = 12.000;
-    vec[0].quantityFuel = 1000.00;
+    vec[0].km = 12.000f;
+    vec[0].quantityFuel = 1000.00f;
     vec[0].codeCategory = 0;
     n = 2;
     (local[0][n])++;
@@ -204,12 +81,12 @@ int showMenu() {
         printf("3 - Show data of all customers\n\n");
         printf("----------------- Vehicle Area ------------------\n");
         printf("11- Add vehicle\n");
-        printf("12- Show/Modify/Delete um vehicle\n");
+        printf("12- Show/Modify/Delete a vehicle\n");
         printf("13- Show data of all vehicles\n");
         printf("14- Show location of all vehicles\n\n");
         printf("----------------- Contract area -----------------\n");
         printf("21- Rent vehicle\n");
-        printf("22- Return vehicle || Show/Modify/Delete um contract\n");
+        printf("22- Return vehicle || Show/Modify/Delete a contract\n");
         printf("23- Show data of all contracts\n\n");
         printf("0 - Exit\n");
         printf("Insert an option:");
@@ -222,14 +99,14 @@ int showMenu() {
 }
 
 int main() {
-    int quantityClients = 0, quantityVehicles = 0, quantityContract = 0, quantityDate, clientPosition = -1, vehiclePosition = -1, contractPosition = -1;
+    int quantityClients = 0, quantityVehicles = 0, quantityContract = 0, clientPosition, vehiclePosition, contractPosition;
     customer clients[MAX_CLI];
     int ch, local[MAX_VC][MAX_ESC];
     vehicle vehicles[MAX_VC];
     contract contracts[MAX_CONT];
     date dates[MAX_CLI];
     char op;
-    limpar_matriz(vehicles, local);
+    cleanMatrix(vehicles, local);
     insertData(clients, vehicles, &quantityClients, &quantityVehicles, local);
     do {
 #ifdef WINDOWS
@@ -245,7 +122,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                inserirCli(clients, &quantityClients);
+                insertCustomer(clients, &quantityClients);
                 system("pause");
                 break;
             }
@@ -260,12 +137,12 @@ int main() {
                     printf("\n'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
                     if (op == 'M' || op == 'm') {
-                        editarCli(clients, contracts, clientPosition);
+                        editCustomer(clients, clientPosition);
 
 
                         // colocar aqui o c�digo para chamar o m�dulo modificar customer
                     } else if (op == 'A' || op == 'a') {
-                        apagarCli(clients, contracts, clientPosition, &quantityClients);
+                        deleteCustomer(clients, clientPosition, &quantityClients);
                         // colocar aqui o c�digo para chamar o m�dulo apagar customer
                     }
                 }
@@ -299,7 +176,7 @@ int main() {
                 system("cls");
 #else
                 system("clear");
-#endif// seguindo o sugerido na op��o 2
+#endif
                 vehiclePosition = showVehicleByCode(vehicles, quantityVehicles);
                 if (vehiclePosition >= 0) {
                     printf("\n'M'=Modificar 'A'=Apagar\n");
@@ -335,7 +212,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                mostrar_matriz(vehicles, local, quantityVehicles);
+                showMatrix(vehicles, local);
                 system("pause");
                 break;
             }
@@ -386,6 +263,8 @@ int main() {
                 // Colocar aqui o c�digo para chamar o m�dulo mostrar contratos
                 system("pause");
                 break;
+            }
+            default: {
             }
         }
     } while (ch != 0);

@@ -17,7 +17,7 @@ typedef struct vehicle {
 } vehicle;
 
 void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_ESC]);
-int searchCodeVehicle(vehicle vec[], int qtd, int cod);
+int searchCodeVehicle(vehicle vec[], int qtd, int code);
 void editVehicle(vehicle vec[], int pos, int local[][MAX_ESC]);
 void deleteVehicle(vehicle vec[], int pos, int *qtd, int local[][6]);
 void showVehicle(vehicle vec);
