@@ -5,49 +5,40 @@
 #include <string.h>
 
 int searchCodeClient(customer cli[], int qtd, int cod) {
-    int i, enc = -1;
+    int i, position = -1;
 
-    for (i = 0; i <= qtd && enc == -1; i++)
+    for (i = 0; i <= qtd && position == -1; i++)
         if (cli[i].code == cod)
-            enc = i;
+            position = i;
 
-    return enc;
+    return position;
 }
 
-// L� dados de um customer e guarda no vetor
+
 void insertCustomer(customer cli[], int *qtd) {
-    int n, i, encontrou = -1;
-    char valor[MAX_TXT];
+    int n, position;
 
-    if (*qtd == MAX_CLI)
-        printf("\nDe momento nao admitimos mais clientes!!\n");
-    else {
-        printf("\n--- Dados do customer ---");
-        n = readInt(1000, 9999);
-        encontrou = searchCodeClient(cli, *qtd, n);
-        printf("\n\t\t encontrou %hd e *qtd %hd ", encontrou, *qtd);
-        while (encontrou >= 0) {
-            n = readInt(1000, 9999);
-            encontrou = searchCodeClient(cli, *qtd, n);
-        }
-        printf("\n\t\t Fora: ");
-        cli[*qtd].code = n;
-        readString(valor, 30, "\nNome (max 30 caracteres):");
-        printf("\n\t %s ", valor);
-        strcpy(cli[*qtd].name, valor);
-        readString(valor, 40, "\nMorada (max 40 caracteres):");
-        printf("\n\t %s ", valor);
-        strcpy(cli[*qtd].address, valor);
-        readString(valor, 5, "\nCarta de conducao (max 5 caracteres):");
-        printf("\n\t %s \n", valor);
-        strcpy(cli[*qtd].driverLicense, valor);
-        cli[*qtd].type = 0;
-        getchar();
+    if (*qtd == MAX_CLI) {
+        printf("We reached our full capacity of contracts. Please come back later");
+        return;
     }
-    (*qtd)++;// Incrementa a quantidade de clientes existentes no vector
+    printf("\n--- Customer data ---\n");
+    do {
+        printf("Code");
+        n = readInt(1000, 9999);
+        position = searchCodeClient(cli, *qtd, n);
+        if (position != -1) {
+            printf("This code is already taken. Please insert another one\n");
+        }
+    } while (position >= 0);
+    cli[*qtd].code = n;
+    readString(cli[*qtd].name, 30, "Name (maximum 30 characters):");
+    readString(cli[*qtd].address, 40, "Address (maximum 40 characters):");
+    readString(cli[*qtd].driverLicense, 10, "Driver license (maximum 10 characters):");// check behaviour
+    cli[*qtd].type = 0;
+    (*qtd)++;
 }
 
-// Esta fun��o difere da fun��o insertCustomer pois esta baseia-se em qualquer posi��o da fun��o, modificando-a, logo nao altera o valor da quantidade.
 void editCustomer(customer cli[], int pos) {
     int i, aux = 0;
     if (cli[pos].isUnderContract) {

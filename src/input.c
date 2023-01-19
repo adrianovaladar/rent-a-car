@@ -45,7 +45,7 @@ float readFloat(float lowerLimit, float upperLimit) {
 void readString(char *s, int tam, char *info) {
     if (tam <= 0)
         return;
-    puts(info);
+    printf("%s", info);
     do {
         fgets(s, sizeof s, stdin);
     } while (strlen(s) == 1);

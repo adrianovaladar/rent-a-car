@@ -99,15 +99,15 @@ int showMenu() {
 }
 
 int main() {
-    int quantityClients = 0, quantityVehicles = 0, quantityContract = 0, clientPosition, vehiclePosition, contractPosition;
-    customer clients[MAX_CLI];
+    int quantityCustomers = 0, quantityVehicles = 0, quantityContract = 0, clientPosition, vehiclePosition, contractPosition;
+    customer customer[MAX_CLI];
     int ch, local[MAX_VC][MAX_ESC];
     vehicle vehicles[MAX_VC];
     contract contracts[MAX_CONT];
     date dates[MAX_CLI];
     char op;
     cleanMatrix(vehicles, local);
-    insertData(clients, vehicles, &quantityClients, &quantityVehicles, local);
+    insertData(customer, vehicles, &quantityCustomers, &quantityVehicles, local);
     do {
 #ifdef WINDOWS
         system("cls");
@@ -122,8 +122,10 @@ int main() {
 #else
                 system("clear");
 #endif
-                insertCustomer(clients, &quantityClients);
-                system("pause");
+                insertCustomer(customer, &quantityCustomers);
+                printf("Press enter to continue\n");
+                while (getchar() != '\n')
+                    ;
                 break;
             }
             case 2: {
@@ -132,17 +134,17 @@ int main() {
 #else
                 system("clear");
 #endif
-                clientPosition = mostrarDadosCli(clients, quantityClients);
+                clientPosition = mostrarDadosCli(customer, quantityCustomers);
                 if (clientPosition >= 0) {
                     printf("\n'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
                     if (op == 'M' || op == 'm') {
-                        editCustomer(clients, clientPosition);
+                        editCustomer(customer, clientPosition);
 
 
                         // colocar aqui o c�digo para chamar o m�dulo modificar customer
                     } else if (op == 'A' || op == 'a') {
-                        deleteCustomer(clients, clientPosition, &quantityClients);
+                        deleteCustomer(customer, clientPosition, &quantityCustomers);
                         // colocar aqui o c�digo para chamar o m�dulo apagar customer
                     }
                 }
@@ -155,7 +157,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                mostrarDadosClis(clients, quantityClients);
+                mostrarDadosClis(customer, quantityCustomers);
                 system("pause");
                 break;
             }
@@ -222,7 +224,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                startContract(contracts, clients, vehicles, local, dates, quantityClients, quantityVehicles, &quantityContract);
+                startContract(contracts, customer, vehicles, local, dates, quantityCustomers, quantityVehicles, &quantityContract);
                 // Colocar aqui o c�digo para chamar o m�dulo alugar vehicle
                 system("pause");
                 break;
@@ -239,7 +241,7 @@ int main() {
                     printf("\n 'T'=Terminar contract 'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
                     if (op == 'T' || op == 't') {
-                        endContract(contracts, contractPosition, dates, vehicles, clients, quantityClients, quantityVehicles, quantityContract, local);
+                        endContract(contracts, contractPosition, dates, vehicles, customer, quantityCustomers, quantityVehicles, quantityContract, local);
                         //Colocar aqui o c�digo para devolver ve�culo
                     }
                     if (op == 'M' || op == 'm') {
