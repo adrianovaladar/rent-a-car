@@ -64,7 +64,7 @@ void insertData(customer cli[], vehicle vec[], int *qtdcli, int *qtdvec, int loc
     (*qtdvec)++;
 }
 
-int showMenu() {
+int showMenuAndGetOption() {
     int op;
     do {
 #ifdef WINDOWS
@@ -89,7 +89,7 @@ int showMenu() {
         printf("22- Return vehicle || Show/Modify/Delete a contract\n");
         printf("23- Show data of all contracts\n\n");
         printf("0 - Exit\n");
-        printf("Insert an option:");
+        printf("Insert an option: ");
         scanf("%d", &op);
     } while (op != 0 &&
              op != 1 && op != 2 && op != 3 &&
@@ -98,8 +98,15 @@ int showMenu() {
     return op;
 }
 
+void end() {
+    if (getchar() == '\n') {}
+    printf("-----------------------\n");
+    printf("Press enter to continue\n");
+    while (getchar() != '\n') {}
+}
+
 int main() {
-    int quantityCustomers = 0, quantityVehicles = 0, quantityContract = 0, clientPosition, vehiclePosition, contractPosition;
+    int quantityCustomers = 0, quantityVehicles = 0, quantityContract = 0, customerPosition, vehiclePosition, contractPosition;
     customer customer[MAX_CLI];
     int ch, local[MAX_VC][MAX_ESC];
     vehicle vehicles[MAX_VC];
@@ -114,7 +121,7 @@ int main() {
 #else
         system("clear");
 #endif
-        ch = showMenu();
+        ch = showMenuAndGetOption();
         switch (ch) {
             case 1: {
 #ifdef WINDOWS
@@ -123,9 +130,7 @@ int main() {
                 system("clear");
 #endif
                 insertCustomer(customer, &quantityCustomers);
-                printf("Press enter to continue\n");
-                while (getchar() != '\n')
-                    ;
+                end();
                 break;
             }
             case 2: {
@@ -134,21 +139,8 @@ int main() {
 #else
                 system("clear");
 #endif
-                clientPosition = mostrarDadosCli(customer, quantityCustomers);
-                if (clientPosition >= 0) {
-                    printf("\n'M'=Modificar 'A'=Apagar\n");
-                    op = getchar();
-                    if (op == 'M' || op == 'm') {
-                        editCustomer(customer, clientPosition);
-
-
-                        // colocar aqui o c�digo para chamar o m�dulo modificar customer
-                    } else if (op == 'A' || op == 'a') {
-                        deleteCustomer(customer, clientPosition, &quantityCustomers);
-                        // colocar aqui o c�digo para chamar o m�dulo apagar customer
-                    }
-                }
-                system("pause");
+                showCustomerByCode(customer, quantityCustomers);
+                end();
                 break;
             }
             case 3: {
@@ -157,11 +149,10 @@ int main() {
 #else
                 system("clear");
 #endif
-                mostrarDadosClis(customer, quantityCustomers);
-                system("pause");
+                showAllCustomers(customer, quantityCustomers);
+                end();
                 break;
             }
-
             case 11: {
 #ifdef WINDOWS
                 system("cls");
@@ -270,6 +261,6 @@ int main() {
             }
         }
     } while (ch != 0);
-    system("PAUSE");
+    end();
     return 0;
 }

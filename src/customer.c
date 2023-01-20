@@ -2,7 +2,6 @@
 #include "constants.h"
 #include "input.h"
 #include <stdio.h>
-#include <string.h>
 
 int searchCodeClient(customer cli[], int qtd, int cod) {
     int i, position = -1;
@@ -14,6 +13,12 @@ int searchCodeClient(customer cli[], int qtd, int cod) {
     return position;
 }
 
+
+void readCustomerData(customer *c) {
+    readString(c->name, 30, "Name (maximum 30 characters):");
+    readString(c->address, 40, "Address (maximum 40 characters):");
+    readString(c->driverLicense, 10, "Driver license (maximum 10 characters):");// check behaviour
+}
 
 void insertCustomer(customer cli[], int *qtd) {
     int n, position;
@@ -32,89 +37,74 @@ void insertCustomer(customer cli[], int *qtd) {
         }
     } while (position >= 0);
     cli[*qtd].code = n;
-    readString(cli[*qtd].name, 30, "Name (maximum 30 characters):");
-    readString(cli[*qtd].address, 40, "Address (maximum 40 characters):");
-    readString(cli[*qtd].driverLicense, 10, "Driver license (maximum 10 characters):");// check behaviour
+    readCustomerData(&cli[*qtd]);
     cli[*qtd].type = 0;
     (*qtd)++;
 }
 
-void editCustomer(customer cli[], int pos) {
-    int i, aux = 0;
-    if (cli[pos].isUnderContract) {
-        printf("\nThe vehicle is under a contract at the moment, please come back later\n");
+void editCustomer(customer c[], int pos) {
+    if (c[pos].isUnderContract) {
+        printf("\nThe customer is under a contract at the moment, please come back later\n");
         return;
     }
-    if (aux == 0) {
-        int n;
-        printf("\n--- Dados do customer ---");
-        char valor[MAX_TXT];
-        readString(valor, 30, "\nNome (max 30 caracteres):");
-        printf("\n\t %s ", valor);
-        strcpy(cli[pos].name, valor);
-        readString(valor, 40, "\nMorada (max 40 caracteres):");
-        printf("\n\t %s ", valor);
-        strcpy(cli[pos].address, valor);
-        readString(valor, 5, "\nCarta de conducao (max 5 caracteres):");
-        printf("\n\t %s \n", valor);
-        strcpy(cli[pos].driverLicense, valor);
-    }
+    printf("\n--- Customer data ---\n");
+    readCustomerData(&c[pos]);
 }
 
-void deleteCustomer(customer cli[], int pos, int *qtd) {
-    int aux = 0;
-    if (cli[pos].isUnderContract) {
-        printf("\nThe vehicle is under a contract at the moment, please come back later\n");
+void deleteCustomer(customer c[], int pos, int *qtd) {
+    if (c[pos].isUnderContract) {
+        printf("\nThe customer is under a contract at the moment, please come back later\n");
         return;
     }
-
-    if (aux == 0) {
-        int i;
-        for (i = pos; i <= *qtd; i++) {
-            cli[i] = cli[i + 1];
-        }
-        (*qtd)--;// como retiramos um elemento do vetor o seu tamanho diminui
+    int i;
+    for (i = pos; i <= *qtd; i++) {
+        c[i] = c[i + 1];
     }
+    (*qtd)--;
 }
 
-// Recebe um customer por par�metro e mostra os seus dados
-void mostrarCli(customer cli) {
-    int i, cat;
-    printf("\n--- Dados do customer ---\n");
-    printf("\n Codigo: %hd", cli.code);
-    printf("\n Nome: %s", cli.name);
-    printf("\n Morada: %s", cli.address);
-    printf("\n Tipo: %d", cli.type);
-    printf("\n Carta de condu��o: %s\n", cli.driverLicense);
+void showCustomer(customer c) {
+    printf("\n--- Customer data ---\n");
+    printf("\n Code: %d", c.code);
+    printf("\n Name: %s", c.name);
+    printf("\n Address: %s", c.address);
+    printf("\n Type: %s", c.type == 0 ? "Regular" : "Risky");
+    printf("\n Driver license: %s\n", c.driverLicense);
 }
 
-// Procura um customer e mostra todos os seus dados
-int mostrarDadosCli(customer cli[], int qtd) {
-    int i, n, encontrou = -1;
+void showCustomerByCode(customer c[], int qtd) {
+    int n, codeFound;
 
-    if (qtd == 0)
-        printf("\nNao existem clientes registados!!\n");
-    else {
-        n = readInt(1000, 9999);
-        encontrou = searchCodeClient(cli, qtd, n);
-        if (encontrou >= 0)
-            mostrarCli(cli[encontrou]);
-        else
-            printf("\nNao existe nenhum customer com codigo = %hd\n", n);
-    }
-    getchar();
-    return encontrou;
-}
-
-// Mostrar todos os dados de todos os clientes
-void mostrarDadosClis(customer cli[], int qtd) {
-    int n, i;
     if (qtd == 0) {
-        printf("\nNao existem clientes registados!!\n");
-        getchar();
-    } else
-        for (i = 0; i < qtd; i++) {
-            mostrarCli(cli[i]);
-            getchar();
+        printf("\nThere are no registered customers\n");
+        return;
+    }
+    n = readInt(1000, 9999);
+    codeFound = searchCodeClient(c, qtd, n);
+    if (codeFound >= 0) {
+        showCustomer(c[codeFound]);
+        printf("\nEdit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
+        unsigned char op;
+        do {
+            op = getchar();
+        } while (op == '\n');
+        if (op == 'E' || op == 'e') {
+            editCustomer(c, codeFound);
+        } else if (op == 'D' || op == 'd') {
+            deleteCustomer(c, codeFound, &qtd);
         }
+    } else {
+        printf("\nNo customer found with code %d\n", n);
+    }
+}
+
+void showAllCustomers(customer c[], int qtd) {
+    int i;
+    if (qtd == 0) {
+        printf("\nThere are no registered customers\n");
+        return;
+    }
+    for (i = 0; i < qtd; i++) {
+        showCustomer(c[i]);
+    }
 }
