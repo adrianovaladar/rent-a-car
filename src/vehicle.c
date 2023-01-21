@@ -4,45 +4,46 @@
 #include <stdio.h>
 #include <string.h>
 
-void insertVehicle(vehicle vec[], size_t *qtd, int local[][MAX_OFFICES]) {
-    int n, found;
-    char value[MAX_TEXT];
+static void readVehicleData(vehicle *v) {
+    readString(v->brand, 10, "Brand (maximum 10 characters):");
+    readString(v->model, 10, "Model (maximum 10 characters):");
+    readString(v->registrationPlate, 8, "Registration plate (maximum 8 characters):");// check behaviour
+    printf("\nCategory code:\n");
+    v->codeCategory = readInt(0, 6);
+    v->isUnderContract = false;
+    if (v->codeCategory < 4) {
+        printf("\nKms:\n");
+        v->km = readFloat(0, 9999);
+        printf("\nAmount of fuel:\n");
+        v->quantityFuel = readFloat(0, 9999);
+    } else {
+        v->km = 0;
+        v->quantityFuel = 0;
+    }
+}
+
+void insertVehicle(vehicle v[], size_t *qtd, int local[][MAX_OFFICES]) {
+    int n, position;
     if (*qtd == MAX_VEHICLES) {
         printf("\nThe stand is full, please como back later\n");
         return;
     }
     printf("\n--- Car data ---");
-    n = readInt(10, 99);
-    found = searchCodeVehicle(vec, *qtd, n);
-    printf("\n\t\t found %d and *qtd %d ", found, *qtd);
-    while (found >= 0) {
+    do {
+        printf("Code");
         n = readInt(10, 99);
-        found = searchCodeVehicle(vec, *qtd, n);
-    }
-    vec[*qtd].code = n;
-    readString(value, 10, "\nBrand (maximum 10 characters):");
-    printf("\n\t %s ", value);
-    strcpy(vec[*qtd].brand, value);
-    readString(value, 10, "\nModel (maximum 10 characters):");
-    printf("\n\t %s ", value);
-    strcpy(vec[*qtd].model, value);
-    readString(value, 8, "\nRegistration plate (maximum 8 characters):");
-    printf("\n\t %s ", value);
-    strcpy(vec[*qtd].registrationPlate, value);
-    printf("\nCategory code:\n");
-    vec[*qtd].codeCategory = readInt(0, 6);
-    vec[*qtd].isUnderContract = false;
-    if (vec[*qtd].codeCategory < 4) {
-        printf("\nKms:\n");
-        vec[*qtd].km = readFloat(0, 9999);
-        printf("\nAmount of fuel:\n");
-        vec[*qtd].quantityFuel = readFloat(0, 9999);
-    }
-    printf("\nOffice where the vehicle is:");
-    printf("\n0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
+        position = searchCodeVehicle(v, *qtd, n);
+        if (position != -1) {
+            printf("This code is already taken. Please insert another one\n");
+        }
+    } while (position >= 0);
+    v[*qtd].code = n;
+    readVehicleData(&v[*qtd]);
+    printf("Office where the vehicle is:\n");
+    printf("0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
     n = readInt(0, 5);
     (local[*qtd][n])++;
-    vec[*qtd].startPlace = n;
+    v[*qtd].startPlace = n;
     (*qtd)++;
 }
 

@@ -161,8 +161,7 @@ int main() {
                 system("clear");
 #endif
                 insertVehicle(vehicles, &quantityVehicles, local);
-                // colocar aqui o c�digo para chamar o m�dulo inserir vehicle
-                system("pause");
+                end();
                 break;
             }
             case 12: {
@@ -184,7 +183,7 @@ int main() {
                         deleteVehicle(vehicles, vehiclePosition, &quantityVehicles, local);
                     }
                 }// colocar aqui o c�digo para chamar o m�dulo apagar vehicle
-                system("pause");
+                end();
                 break;
             }
             case 13: {
@@ -207,7 +206,7 @@ int main() {
                 system("clear");
 #endif
                 showMatrix(vehicles, local);
-                system("pause");
+                end();
                 break;
             }
             case 21: {
@@ -218,7 +217,7 @@ int main() {
 #endif
                 startContract(contracts, customer, vehicles, local, dates, quantityCustomers, quantityVehicles, &quantityContract);
                 // Colocar aqui o c�digo para chamar o m�dulo alugar vehicle
-                system("pause");
+                end();
                 break;
             }
             case 22: {
@@ -244,7 +243,7 @@ int main() {
                         deleteContract(contracts, contractPosition, &quantityContract);
                     }
                 }
-                system("pause");
+                end();
                 break;
             }
             case 23: {
@@ -255,7 +254,7 @@ int main() {
 #endif
                 showContractData(contracts, quantityContract);
                 // Colocar aqui o c�digo para chamar o m�dulo mostrar contratos
-                system("pause");
+                end();
                 break;
             }
             default: {
