@@ -1,10 +1,10 @@
 #ifndef RENT_A_CAR_CONSTANTS_H
 #define RENT_A_CAR_CONSTANTS_H
 
-#define MAX_CLI 500
-#define MAX_VC 20
-#define MAX_ESC 6
-#define MAX_TXT 40
-#define MAX_CONT 1000
+#define MAX_CUSTOMERS 500
+#define MAX_VEHICLES 20
+#define MAX_OFFICES 6
+#define MAX_TEXT 40
+#define MAX_CONTRACTS 1000
 
 #endif//RENT_A_CAR_CONSTANTS_H

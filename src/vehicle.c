@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 
-void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_ESC]) {
+void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_OFFICES]) {
     int n, found;
-    char value[MAX_TXT];
-    if (*qtd == MAX_VC) {
+    char value[MAX_TEXT];
+    if (*qtd == MAX_VEHICLES) {
         printf("\nThe stand is full, please como back later\n");
         return;
     }
@@ -56,13 +56,13 @@ int searchCodeVehicle(vehicle vec[], int qtd, int code) {
     return enc;
 }
 
-void editVehicle(vehicle vec[], int pos, int local[][MAX_ESC]) {
+void editVehicle(vehicle vec[], int pos, int local[][MAX_OFFICES]) {
     if (vec[pos].isUnderContract) {
         printf("\nThe vehicle is under a contract at the moment, please come back later\n");
         return;
     }
     int n, i;
-    char value[MAX_TXT];
+    char value[MAX_TEXT];
     printf("\n--- Car data ---");
     readString(value, 10, "\nBrand (maximum 10 characters:");
     //  printf("\n\t %s ", value);
@@ -84,7 +84,7 @@ void editVehicle(vehicle vec[], int pos, int local[][MAX_ESC]) {
         vec[pos].km = 0;
         vec[pos].quantityFuel = 0;
     }
-    for (i = 0; i < MAX_ESC; i++) {
+    for (i = 0; i < MAX_OFFICES; i++) {
         if (local[pos][i] == 1)
             (local[pos][i])--;
     }
@@ -105,7 +105,7 @@ void deleteVehicle(vehicle vec[], int pos, int *qtd, int local[][6]) {
     }
     (*qtd)--;
 
-    for (int i = 0; i < MAX_ESC; i++) {
+    for (int i = 0; i < MAX_OFFICES; i++) {
         if (local[pos][i] == 1)
             (local[pos][i])--;
     }

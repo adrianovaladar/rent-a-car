@@ -9,17 +9,17 @@
 
 char category[][10] = {"capucine", "integral", "perfilada", "furgao", "citadina", "utilitaria", "familiar"};
 
-void cleanMatrix(vehicle vec[], int local[][MAX_ESC]) {
+void cleanMatrix(vehicle vec[], int local[][MAX_OFFICES]) {
 
     int l, c;
-    for (l = 0; l < MAX_VC; l++) {
+    for (l = 0; l < MAX_VEHICLES; l++) {
         vec[l].code = 0;
-        for (c = 0; c < MAX_ESC; c++)
+        for (c = 0; c < MAX_OFFICES; c++)
             local[l][c] = 0;
     }
 }
 
-void showMatrix(vehicle vec[], int local[][MAX_ESC]) {
+void showMatrix(vehicle vec[], int local[][MAX_OFFICES]) {
 
     int l, c;
     printf("               ------------------ ESCRITORIOS -------------------");
@@ -27,13 +27,13 @@ void showMatrix(vehicle vec[], int local[][MAX_ESC]) {
     for (l = 0; l < 6; l++)//for(l=0;l<qtd;l++)
     {
         printf("\n%-9u", vec[l].code);
-        for (c = 0; c < MAX_ESC; c++)
+        for (c = 0; c < MAX_OFFICES; c++)
             printf("%9u", local[l][c]);
     }
     getchar();
 }
 
-void insertData(customer cli[], vehicle vec[], int *qtdcli, int *qtdvec, int local[][MAX_ESC]) {
+void insertData(customer cli[], vehicle vec[], int *qtdcli, int *qtdvec, int local[][MAX_OFFICES]) {
     int n;
     cli[0].code = 1000;
     strcpy(cli[0].name, "customer 1");
@@ -107,11 +107,11 @@ void end() {
 
 int main() {
     int quantityCustomers = 0, quantityVehicles = 0, quantityContract = 0, customerPosition, vehiclePosition, contractPosition;
-    customer customer[MAX_CLI];
-    int ch, local[MAX_VC][MAX_ESC];
-    vehicle vehicles[MAX_VC];
-    contract contracts[MAX_CONT];
-    date dates[MAX_CLI];
+    customer customer[MAX_CUSTOMERS];
+    int ch, local[MAX_VEHICLES][MAX_OFFICES];
+    vehicle vehicles[MAX_VEHICLES];
+    contract contracts[MAX_CONTRACTS];
+    date dates[MAX_CUSTOMERS];
     char op;
     cleanMatrix(vehicles, local);
     insertData(customer, vehicles, &quantityCustomers, &quantityVehicles, local);

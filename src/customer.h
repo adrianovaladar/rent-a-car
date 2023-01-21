@@ -13,7 +13,7 @@ typedef struct customer {
 
 } customer;
 
-void insertCustomer(customer cli[], int *qtd);
+void insertCustomer(customer c[], int *qtd);
 void showCustomerByCode(customer c[], int qtd);
 void showAllCustomers(customer c[], int qtd);
 

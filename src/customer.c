@@ -3,55 +3,55 @@
 #include "input.h"
 #include <stdio.h>
 
-int searchCodeClient(customer cli[], int qtd, int cod) {
+static int searchCodeClient(customer c[], int qtd, int cod) {
     int i, position = -1;
 
     for (i = 0; i <= qtd && position == -1; i++)
-        if (cli[i].code == cod)
+        if (c[i].code == cod)
             position = i;
 
     return position;
 }
 
 
-void readCustomerData(customer *c) {
+static void readCustomerData(customer *c) {
     readString(c->name, 30, "Name (maximum 30 characters):");
     readString(c->address, 40, "Address (maximum 40 characters):");
     readString(c->driverLicense, 10, "Driver license (maximum 10 characters):");// check behaviour
 }
 
-void insertCustomer(customer cli[], int *qtd) {
+void insertCustomer(customer c[], int *qtd) {
     int n, position;
 
-    if (*qtd == MAX_CLI) {
-        printf("We reached our full capacity of contracts. Please come back later");
+    if (*qtd == MAX_CUSTOMERS) {
+        printf("We reached our full capacity of customers. Please come back later");
         return;
     }
     printf("\n--- Customer data ---\n");
     do {
         printf("Code");
         n = readInt(1000, 9999);
-        position = searchCodeClient(cli, *qtd, n);
+        position = searchCodeClient(c, *qtd, n);
         if (position != -1) {
             printf("This code is already taken. Please insert another one\n");
         }
     } while (position >= 0);
-    cli[*qtd].code = n;
-    readCustomerData(&cli[*qtd]);
-    cli[*qtd].type = 0;
+    c[*qtd].code = n;
+    readCustomerData(&c[*qtd]);
+    c[*qtd].type = 0;
     (*qtd)++;
 }
 
-void editCustomer(customer c[], int pos) {
-    if (c[pos].isUnderContract) {
+static void editCustomer(customer *c) {
+    if (c->isUnderContract) {
         printf("\nThe customer is under a contract at the moment, please come back later\n");
         return;
     }
     printf("\n--- Customer data ---\n");
-    readCustomerData(&c[pos]);
+    readCustomerData(c);
 }
 
-void deleteCustomer(customer c[], int pos, int *qtd) {
+static void deleteCustomer(customer c[], int pos, int *qtd) {
     if (c[pos].isUnderContract) {
         printf("\nThe customer is under a contract at the moment, please come back later\n");
         return;
@@ -63,7 +63,7 @@ void deleteCustomer(customer c[], int pos, int *qtd) {
     (*qtd)--;
 }
 
-void showCustomer(customer c) {
+static void showCustomer(customer c) {
     printf("\n--- Customer data ---\n");
     printf("\n Code: %d", c.code);
     printf("\n Name: %s", c.name);
@@ -89,12 +89,13 @@ void showCustomerByCode(customer c[], int qtd) {
             op = getchar();
         } while (op == '\n');
         if (op == 'E' || op == 'e') {
-            editCustomer(c, codeFound);
+            editCustomer(&c[codeFound]);
         } else if (op == 'D' || op == 'd') {
             deleteCustomer(c, codeFound, &qtd);
+            printf("Customer deleted successfully");
         }
     } else {
-        printf("\nNo customer found with code %d\n", n);
+        printf("No customer found with code %d\n", n);
     }
 }
 

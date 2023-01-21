@@ -123,8 +123,8 @@ int searchDate(contract cont[], date data[], int qtd) {
 }
 
 
-void startContract(contract contracts[], customer customers[], vehicle vehicles[], int local[][MAX_ESC], date data[], int qtdcli, int qtdvec, int *qtd) {
-    if (*qtd == MAX_CONT)
+void startContract(contract contracts[], customer customers[], vehicle vehicles[], int local[][MAX_OFFICES], date data[], int qtdcli, int qtdvec, int *qtd) {
+    if (*qtd == MAX_CONTRACTS)
         printf("We reached our full capacity of contracts. Please come back later");
     else {
         int n, positionCustomer, positionVehicle, aux = 0, i;
@@ -184,7 +184,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
                 contracts[*qtd].startOffice = contracts[aux].endOffice;
             }
             (*qtd)++;
-            for (i = 0; i < MAX_ESC; i++) {
+            for (i = 0; i < MAX_OFFICES; i++) {
                 if (local[positionVehicle][i] == 1)
                     (local[positionVehicle][i])--;
             }
@@ -193,7 +193,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
 }
 
 
-void endContract(contract contracts[], int pos, date data[], vehicle vehicles[], customer customers[], int quantityCustomers, int quantityVehicles, int quantityContracts, int local[][MAX_ESC]) {
+void endContract(contract contracts[], int pos, date data[], vehicle vehicles[], customer customers[], int quantityCustomers, int quantityVehicles, int quantityContracts, int local[][MAX_OFFICES]) {
     if (contracts[pos].endDate.day != 0)
         printf("\n This contract was already closed\n");
     else {

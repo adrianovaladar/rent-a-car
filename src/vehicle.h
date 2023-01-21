@@ -16,9 +16,9 @@ typedef struct vehicle {
     bool isUnderContract;
 } vehicle;
 
-void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_ESC]);
+void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_OFFICES]);
 int searchCodeVehicle(vehicle vec[], int qtd, int code);
-void editVehicle(vehicle vec[], int pos, int local[][MAX_ESC]);
+void editVehicle(vehicle vec[], int pos, int local[][MAX_OFFICES]);
 void deleteVehicle(vehicle vec[], int pos, int *qtd, int local[][6]);
 void showVehicle(vehicle vec);
 void showAllVehicles(vehicle vec[], int qtd);
