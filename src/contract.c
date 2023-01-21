@@ -3,7 +3,7 @@
 #include "vehicle.h"
 #include <stdio.h>
 
-void showContractData(contract c[], int qtd) {
+void showContractData(contract c[], size_t qtd) {
     int i, j;
     char valor;
     contract contaux[0];
@@ -55,7 +55,7 @@ void showContract(contract c) {
     }
 }
 
-void editContract(contract cont[], vehicle vec[], int pos, date d[], int qtdvec, int qtd) {
+void editContract(contract cont[], vehicle vec[], int pos, date d[], size_t qtdvec, size_t qtd) {
     if (cont[pos].endDate.year != 0)
         printf("\nNot possible to edit this contract because it is already closed\n");
     else {
@@ -80,7 +80,7 @@ void editContract(contract cont[], vehicle vec[], int pos, date d[], int qtdvec,
     }
 }
 
-void deleteContract(contract c[], int pos, int *qtd) {
+void deleteContract(contract c[], int pos, size_t *qtd) {
     if (c[pos].endDate.day == 0)
         printf("\nThe contract cannot be deleted because it was not closed yet\n");
     else {
@@ -92,7 +92,7 @@ void deleteContract(contract c[], int pos, int *qtd) {
     }
 }
 
-int ShowContract(contract c[], date data[], int qtd) {
+int ShowContract(contract c[], date data[], size_t qtd) {
     int aux = -1;
     if (qtd == 0) {
         printf("\nThere are no registered contracts\n");
@@ -113,7 +113,7 @@ int ShowContract(contract c[], date data[], int qtd) {
     return aux;
 }
 
-int searchDate(contract cont[], date data[], int qtd) {
+int searchDate(contract cont[], date data[], size_t qtd) {
     int i, enc = -1;
     validateDate(data);
     for (i = 0; i <= qtd; i++)
@@ -123,7 +123,7 @@ int searchDate(contract cont[], date data[], int qtd) {
 }
 
 
-void startContract(contract contracts[], customer customers[], vehicle vehicles[], int local[][MAX_OFFICES], date data[], int qtdcli, int qtdvec, int *qtd) {
+void startContract(contract contracts[], customer customers[], vehicle vehicles[], int local[][MAX_OFFICES], date data[], size_t qtdcli, size_t qtdvec, size_t *qtd) {
     if (*qtd == MAX_CONTRACTS)
         printf("We reached our full capacity of contracts. Please come back later");
     else {
@@ -134,7 +134,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
             printf("\nInsert code number of customers\n");
             do {
                 n = readInt(1000, 9999);
-                positionCustomer = searchCodeClient(customers, qtdcli, n);
+                positionCustomer = searchCodeCustomer(customers, qtdcli, n);
                 printf("\n\t\t position %d and *qtd %d ", positionCustomer, *qtd);
             } while (positionCustomer < 0);
             if (customers[positionCustomer].type == 1) {
@@ -205,7 +205,7 @@ void endContract(contract contracts[], int pos, date data[], vehicle vehicles[],
         while (valor2 != 'y' && valor2 != 'Y' && valor2 != 'n' && valor2 != 'N') {
             scanf("%c", &valor2);
         }
-        positionCustomer = searchCodeClient(customers, quantityCustomers, contracts[pos].codeCustomer);
+        positionCustomer = searchCodeCustomer(customers, quantityCustomers, contracts[pos].codeCustomer);
         if (valor2 == 'n' || valor2 == 'N') {
             customers[positionCustomer].type = 1;
         }

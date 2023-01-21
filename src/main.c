@@ -106,7 +106,8 @@ void end() {
 }
 
 int main() {
-    int quantityCustomers = 0, quantityVehicles = 0, quantityContract = 0, customerPosition, vehiclePosition, contractPosition;
+    size_t quantityCustomers = 0, quantityVehicles = 0, quantityContract = 0;
+    int customerPosition, vehiclePosition, contractPosition;
     customer customer[MAX_CUSTOMERS];
     int ch, local[MAX_VEHICLES][MAX_OFFICES];
     vehicle vehicles[MAX_VEHICLES];

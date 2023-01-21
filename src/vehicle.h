@@ -2,6 +2,7 @@
 #define RENT_A_CAR_VEHICLE_H
 
 #include "constants.h"
+#include <glob.h>
 #include <stdbool.h>
 
 typedef struct vehicle {
@@ -16,12 +17,12 @@ typedef struct vehicle {
     bool isUnderContract;
 } vehicle;
 
-void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_OFFICES]);
-int searchCodeVehicle(vehicle vec[], int qtd, int code);
+void insertVehicle(vehicle vec[], size_t *qtd, int local[][MAX_OFFICES]);
+int searchCodeVehicle(vehicle vec[], size_t qtd, int code);
 void editVehicle(vehicle vec[], int pos, int local[][MAX_OFFICES]);
-void deleteVehicle(vehicle vec[], int pos, int *qtd, int local[][6]);
+void deleteVehicle(vehicle vec[], int pos, size_t *qtd, int local[][6]);
 void showVehicle(vehicle vec);
-void showAllVehicles(vehicle vec[], int qtd);
-int showVehicleByCode(vehicle vec[], int qtd);
+void showAllVehicles(vehicle vec[], size_t qtd);
+int showVehicleByCode(vehicle vec[], size_t qtd);
 
 #endif//RENT_A_CAR_VEHICLE_H

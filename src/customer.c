@@ -3,7 +3,7 @@
 #include "input.h"
 #include <stdio.h>
 
-static int searchCodeClient(customer c[], int qtd, int cod) {
+int searchCodeCustomer(customer c[], size_t qtd, int cod) {
     int i, position = -1;
 
     for (i = 0; i <= qtd && position == -1; i++)
@@ -20,7 +20,7 @@ static void readCustomerData(customer *c) {
     readString(c->driverLicense, 10, "Driver license (maximum 10 characters):");// check behaviour
 }
 
-void insertCustomer(customer c[], int *qtd) {
+void insertCustomer(customer c[], size_t *qtd) {
     int n, position;
 
     if (*qtd == MAX_CUSTOMERS) {
@@ -31,7 +31,7 @@ void insertCustomer(customer c[], int *qtd) {
     do {
         printf("Code");
         n = readInt(1000, 9999);
-        position = searchCodeClient(c, *qtd, n);
+        position = searchCodeCustomer(c, *qtd, n);
         if (position != -1) {
             printf("This code is already taken. Please insert another one\n");
         }
@@ -51,7 +51,7 @@ static void editCustomer(customer *c) {
     readCustomerData(c);
 }
 
-static void deleteCustomer(customer c[], int pos, int *qtd) {
+static void deleteCustomer(customer c[], int pos, size_t *qtd) {
     if (c[pos].isUnderContract) {
         printf("\nThe customer is under a contract at the moment, please come back later\n");
         return;
@@ -72,7 +72,7 @@ static void showCustomer(customer c) {
     printf("\n Driver license: %s\n", c.driverLicense);
 }
 
-void showCustomerByCode(customer c[], int qtd) {
+void showCustomerByCode(customer c[], size_t qtd) {
     int n, codeFound;
 
     if (qtd == 0) {
@@ -80,7 +80,7 @@ void showCustomerByCode(customer c[], int qtd) {
         return;
     }
     n = readInt(1000, 9999);
-    codeFound = searchCodeClient(c, qtd, n);
+    codeFound = searchCodeCustomer(c, qtd, n);
     if (codeFound >= 0) {
         showCustomer(c[codeFound]);
         printf("\nEdit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
@@ -99,7 +99,7 @@ void showCustomerByCode(customer c[], int qtd) {
     }
 }
 
-void showAllCustomers(customer c[], int qtd) {
+void showAllCustomers(customer c[], size_t qtd) {
     int i;
     if (qtd == 0) {
         printf("\nThere are no registered customers\n");

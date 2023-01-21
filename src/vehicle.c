@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_OFFICES]) {
+void insertVehicle(vehicle vec[], size_t *qtd, int local[][MAX_OFFICES]) {
     int n, found;
     char value[MAX_TEXT];
     if (*qtd == MAX_VEHICLES) {
@@ -46,7 +46,7 @@ void insertVehicle(vehicle vec[], int *qtd, int local[][MAX_OFFICES]) {
     (*qtd)++;
 }
 
-int searchCodeVehicle(vehicle vec[], int qtd, int code) {
+int searchCodeVehicle(vehicle vec[], size_t qtd, int code) {
     int i, enc = -1;
 
     for (i = 0; i <= qtd && enc == -1; i++)
@@ -95,7 +95,7 @@ void editVehicle(vehicle vec[], int pos, int local[][MAX_OFFICES]) {
     vec[pos].startPlace = n;
 }
 
-void deleteVehicle(vehicle vec[], int pos, int *qtd, int local[][6]) {
+void deleteVehicle(vehicle vec[], int pos, size_t *qtd, int local[][6]) {
     if (vec[pos].isUnderContract) {
         printf("\nThe vehicle is under a contract at the moment, please come back later\n");
         return;
@@ -123,7 +123,7 @@ void showVehicle(vehicle vec) {
     printf("\n Status: %s\n", vec.isUnderContract ? "Unavailable" : "Available");
 }
 
-void showAllVehicles(vehicle vec[], int qtd) {
+void showAllVehicles(vehicle vec[], size_t qtd) {
     int i;
     if (qtd == 0) {
         printf("\nThere are no registered vehicles\n");
@@ -135,7 +135,7 @@ void showAllVehicles(vehicle vec[], int qtd) {
         }
 }
 
-int showVehicleByCode(vehicle vec[], int qtd) {
+int showVehicleByCode(vehicle vec[], size_t qtd) {
     int n, found = -1;
     if (qtd == 0)
         printf("\nThere are no registered vehicles\n");
