@@ -20,30 +20,29 @@ static void readVehicleData(vehicle *v) {
         v->km = 0;
         v->quantityFuel = 0;
     }
+    printf("Office where the vehicle is:\n");
+    printf("0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
+    v->startPlace = readInt(0, 5);
 }
 
-void insertVehicle(vehicle v[], size_t *qtd, int local[][MAX_OFFICES]) {
+void insertVehicle(vehicle vehicles[], size_t *qtd, int local[][MAX_OFFICES]) {
     int n, position;
     if (*qtd == MAX_VEHICLES) {
         printf("\nThe stand is full, please como back later\n");
         return;
     }
-    printf("\n--- Car data ---");
+    printf("--- Car data ---\n");
     do {
         printf("Code");
         n = readInt(10, 99);
-        position = searchCodeVehicle(v, *qtd, n);
+        position = searchCodeVehicle(vehicles, *qtd, n);
         if (position != -1) {
             printf("This code is already taken. Please insert another one\n");
         }
     } while (position >= 0);
-    v[*qtd].code = n;
-    readVehicleData(&v[*qtd]);
-    printf("Office where the vehicle is:\n");
-    printf("0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
-    n = readInt(0, 5);
-    (local[*qtd][n])++;
-    v[*qtd].startPlace = n;
+    vehicles[*qtd].code = n;
+    readVehicleData(&vehicles[*qtd]);
+    (local[*qtd][vehicles[*qtd].startPlace])++;
     (*qtd)++;
 }
 
@@ -57,52 +56,27 @@ int searchCodeVehicle(vehicle vec[], size_t qtd, int code) {
     return enc;
 }
 
-void editVehicle(vehicle vec[], int pos, int local[][MAX_OFFICES]) {
-    if (vec[pos].isUnderContract) {
+void editVehicle(vehicle *v, int pos, int local[][6]) {
+    if (v->isUnderContract) {
         printf("\nThe vehicle is under a contract at the moment, please come back later\n");
         return;
     }
-    int n, i;
-    char value[MAX_TEXT];
-    printf("\n--- Car data ---");
-    readString(value, 10, "\nBrand (maximum 10 characters:");
-    //  printf("\n\t %s ", value);
-    strcpy(vec[pos].brand, value);
-    readString(value, 10, "\nModel (maximum 10 characters):");
-    printf("\n\t %s ", value);
-    strcpy(vec[pos].model, value);
-    readString(value, 8, "\nRegistration plate (maximum 8 characters):");
-    printf("\n\t %s ", value);
-    strcpy(vec[pos].registrationPlate, value);
-    printf("\nCategory code:\n");
-    vec[pos].codeCategory = readInt(0, 6);
-    if (vec[pos].codeCategory < 4) {
-        printf("\nKms:\n");
-        vec[pos].km = readFloat(0, 9999);
-        printf("\nAmount of fuel:\n");
-        vec[pos].quantityFuel = readFloat(0, 9999);
-    } else if (vec[pos].codeCategory >= 4) {
-        vec[pos].km = 0;
-        vec[pos].quantityFuel = 0;
-    }
-    for (i = 0; i < MAX_OFFICES; i++) {
+    printf("--- Car data ---\n");
+    readVehicleData(v);
+    for (int i = 0; i < MAX_OFFICES; i++) {
         if (local[pos][i] == 1)
             (local[pos][i])--;
     }
-    printf("\nOffice where the vehicle is:");
-    printf("\n0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
-    n = readInt(0, 5);
-    (local[pos][n])++;
-    vec[pos].startPlace = n;
+    (local[pos][v->startPlace])++;
 }
 
-void deleteVehicle(vehicle vec[], int pos, size_t *qtd, int local[][6]) {
-    if (vec[pos].isUnderContract) {
+void deleteVehicle(vehicle vehicles[], int pos, size_t *qtd, int local[][6]) {
+    if (vehicles[pos].isUnderContract) {
         printf("\nThe vehicle is under a contract at the moment, please come back later\n");
         return;
     }
     for (int i = pos; i <= *qtd; i++) {
-        vec[i] = vec[i + 1];
+        vehicles[i] = vehicles[i + 1];
     }
     (*qtd)--;
 
@@ -112,42 +86,53 @@ void deleteVehicle(vehicle vec[], int pos, size_t *qtd, int local[][6]) {
     }
 }
 
-void showVehicle(vehicle vec) {
-    printf("\n--- Car data ---\n");
-    printf("\n Code: %d", vec.code);
-    printf("\n Brand: %s", vec.brand);
-    printf("\n Model: %s", vec.model);
-    printf("\n Registration plate: %s", vec.registrationPlate);
-    printf("\n Category code: %d", vec.codeCategory);
-    printf("\n Kms: %.2f", vec.km);
-    printf("\n Amount of fuel: %.2f", vec.quantityFuel);
-    printf("\n Status: %s\n", vec.isUnderContract ? "Unavailable" : "Available");
+void showVehicleByCode(vehicle vehicles[], size_t qtd, int local[][6]) {
+    int n, codeFound;
+
+    if (qtd == 0) {
+        printf("\nThere are no registered vehicles\n");
+        return;
+    }
+    n = readInt(10, 99);
+    codeFound = searchCodeVehicle(vehicles, qtd, n);
+    if (codeFound >= 0) {
+        showVehicle(vehicles[codeFound]);
+        printf("\nEdit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
+        unsigned char op;
+        do {
+            op = getchar();
+        } while (op == '\n');
+        if (op == 'E' || op == 'e') {
+            editVehicle(&vehicles[codeFound], codeFound, local);
+        } else if (op == 'D' || op == 'd') {
+            deleteVehicle(vehicles, codeFound, &qtd, local);
+            printf("Vehicle deleted successfully\n");
+        }
+    } else {
+        printf("No vehicle found with code %d\n", n);
+    }
 }
 
-void showAllVehicles(vehicle vec[], size_t qtd) {
+void showVehicle(vehicle v) {
+    printf("\n--- Car data ---\n");
+    printf("\nCode: %d", v.code);
+    printf("\nBrand: %s", v.brand);
+    printf("\nModel: %s", v.model);
+    printf("\nRegistration plate: %s", v.registrationPlate);
+    printf("\nCategory code: %d", v.codeCategory);
+    printf("\nKms: %.2f", v.km);
+    printf("\nAmount of fuel: %.2f", v.quantityFuel);
+    printf("\nStatus: %s\n", v.isUnderContract ? "Unavailable" : "Available");
+}
+
+void showAllVehicles(vehicle vehicles[], size_t qtd) {
     int i;
     if (qtd == 0) {
         printf("\nThere are no registered vehicles\n");
         getchar();
     } else
         for (i = 0; i < qtd; i++) {
-            showVehicle(vec[i]);
+            showVehicle(vehicles[i]);
             getchar();
         }
-}
-
-int showVehicleByCode(vehicle vec[], size_t qtd) {
-    int n, found = -1;
-    if (qtd == 0)
-        printf("\nThere are no registered vehicles\n");
-    else {
-        n = readInt(10, 99);
-        found = searchCodeVehicle(vec, qtd, n);
-        if (found >= 0)
-            showVehicle(vec[found]);
-        else
-            printf("\nNo vehicle found with code %d\n", n);
-    }
-    getchar();
-    return found;
 }

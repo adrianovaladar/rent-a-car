@@ -170,19 +170,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                vehiclePosition = showVehicleByCode(vehicles, quantityVehicles);
-                if (vehiclePosition >= 0) {
-                    printf("\n'M'=Modificar 'A'=Apagar\n");
-                    op = getchar();
-                    if (op == 'M' || op == 'm') {
-                        editVehicle(vehicles, vehiclePosition, local);
-
-                    }
-                    // colocar aqui o c�digo para chamar o m�dulo modificar vehicle
-                    else if (op == 'A' || op == 'a') {
-                        deleteVehicle(vehicles, vehiclePosition, &quantityVehicles, local);
-                    }
-                }// colocar aqui o c�digo para chamar o m�dulo apagar vehicle
+                showVehicleByCode(vehicles, quantityVehicles, local);
                 end();
                 break;
             }

@@ -92,7 +92,7 @@ void showCustomerByCode(customer c[], size_t qtd) {
             editCustomer(&c[codeFound]);
         } else if (op == 'D' || op == 'd') {
             deleteCustomer(c, codeFound, &qtd);
-            printf("Customer deleted successfully");
+            printf("Customer deleted successfully\n");
         }
     } else {
         printf("No customer found with code %d\n", n);

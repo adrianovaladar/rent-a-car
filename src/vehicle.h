@@ -19,10 +19,10 @@ typedef struct vehicle {
 
 void insertVehicle(vehicle v[], size_t *qtd, int local[][MAX_OFFICES]);
 int searchCodeVehicle(vehicle vec[], size_t qtd, int code);
-void editVehicle(vehicle vec[], int pos, int local[][MAX_OFFICES]);
-void deleteVehicle(vehicle vec[], int pos, size_t *qtd, int local[][6]);
-void showVehicle(vehicle vec);
-void showAllVehicles(vehicle vec[], size_t qtd);
-int showVehicleByCode(vehicle vec[], size_t qtd);
+void editVehicle(vehicle *v, int pos, int local[][6]);
+void deleteVehicle(vehicle v[], int pos, size_t *qtd, int local[][6]);
+void showVehicle(vehicle v);
+void showAllVehicles(vehicle v[], size_t qtd);
+void showVehicleByCode(vehicle v[], size_t qtd, int local[][6]);
 
 #endif//RENT_A_CAR_VEHICLE_H
