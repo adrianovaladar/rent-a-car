@@ -15,7 +15,7 @@ typedef struct customer {
 } customer;
 
 void insertCustomer(customer c[], size_t *qtd);
-void showCustomerByCode(customer c[], size_t qtd);
+void showCustomerByCodeAndShowOptions(customer c[], size_t qtd);
 void showAllCustomers(customer c[], size_t qtd);
 int searchCodeCustomer(customer c[], size_t qtd, int cod);
 

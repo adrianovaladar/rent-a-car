@@ -18,11 +18,8 @@ typedef struct vehicle {
 } vehicle;
 
 void insertVehicle(vehicle v[], size_t *qtd, int local[][MAX_OFFICES]);
-int searchCodeVehicle(vehicle vec[], size_t qtd, int code);
-void editVehicle(vehicle *v, int pos, int local[][6]);
-void deleteVehicle(vehicle v[], int pos, size_t *qtd, int local[][6]);
-void showVehicle(vehicle v);
 void showAllVehicles(vehicle v[], size_t qtd);
-void showVehicleByCode(vehicle v[], size_t qtd, int local[][6]);
+void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t qtd, int local[][6]);
+int searchCodeVehicle(vehicle vec[], size_t qtd, int code);
 
 #endif//RENT_A_CAR_VEHICLE_H

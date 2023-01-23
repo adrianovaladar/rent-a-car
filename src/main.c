@@ -33,7 +33,7 @@ void showMatrix(vehicle vec[], int local[][MAX_OFFICES]) {
     getchar();
 }
 
-void insertData(customer cli[], vehicle vec[], int *qtdcli, int *qtdvec, int local[][MAX_OFFICES]) {
+void insertData(customer cli[], vehicle vec[], size_t *qtdcli, size_t *qtdvec, int local[][MAX_OFFICES]) {
     int n;
     cli[0].code = 1000;
     strcpy(cli[0].name, "customer 1");
@@ -90,7 +90,10 @@ int showMenuAndGetOption() {
         printf("23- Show data of all contracts\n\n");
         printf("0 - Exit\n");
         printf("Insert an option: ");
-        scanf("%d", &op);
+        int check = scanf("%d", &op);
+        if (check != 1) {
+            while ((check = fgetc(stdin)) != '\n' && check != EOF) {}
+        }
     } while (op != 0 &&
              op != 1 && op != 2 && op != 3 &&
              op != 11 && op != 12 && op != 13 && op != 14 &&
@@ -140,7 +143,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showCustomerByCode(customer, quantityCustomers);
+                showCustomerByCodeAndShowOptions(customer, quantityCustomers);
                 end();
                 break;
             }
@@ -170,7 +173,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showVehicleByCode(vehicles, quantityVehicles, local);
+                showVehicleByCodeAndShowOptions(vehicles, quantityVehicles, local);
                 end();
                 break;
             }
@@ -181,9 +184,7 @@ int main() {
                 system("clear");
 #endif
                 showAllVehicles(vehicles, quantityVehicles);
-                // Colocar aqui c�digo para chamar m�dulo mostrar veiculos
-                printf("Press any key to continue\n");
-                getchar();
+                end();
                 break;
             }
 

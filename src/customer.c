@@ -72,7 +72,7 @@ static void showCustomer(customer c) {
     printf("\n Driver license: %s\n", c.driverLicense);
 }
 
-void showCustomerByCode(customer c[], size_t qtd) {
+void showCustomerByCodeAndShowOptions(customer c[], size_t qtd) {
     int n, codeFound;
 
     if (qtd == 0) {
