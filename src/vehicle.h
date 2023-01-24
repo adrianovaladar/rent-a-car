@@ -5,6 +5,13 @@
 #include <glob.h>
 #include <stdbool.h>
 
+enum office { Braga = 0,
+              Coimbra = 1,
+              Guarda = 2,
+              Faro = 3,
+              Lisbon = 4,
+              Porto = 5 };
+
 typedef struct vehicle {
     int code;
     char brand[10];
@@ -13,7 +20,7 @@ typedef struct vehicle {
     int codeCategory;// check this
     float km;
     float quantityFuel;
-    int startPlace;
+    int location;
     bool isUnderContract;
 } vehicle;
 

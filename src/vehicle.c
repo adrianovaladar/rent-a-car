@@ -21,8 +21,8 @@ static void readVehicleData(vehicle *v) {
         v->quantityFuel = 0;
     }
     printf("Office where the vehicle is:\n");
-    printf("0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisboa 5 Porto");
-    v->startPlace = readInt(0, 5);
+    printf("Braga %d Coimbra %d Guarda %d Faro %d Lisbon %d Porto %d", Braga, Coimbra, Guarda, Faro, Lisbon, Porto);
+    v->location = readInt(0, 5);
 }
 
 int searchCodeVehicle(vehicle vec[], size_t qtd, int code) {
@@ -52,7 +52,7 @@ void insertVehicle(vehicle vehicles[], size_t *qtd, int local[][MAX_OFFICES]) {
     } while (position >= 0);
     vehicles[*qtd].code = n;
     readVehicleData(&vehicles[*qtd]);
-    (local[*qtd][vehicles[*qtd].startPlace])++;
+    (local[*qtd][vehicles[*qtd].location])++;
     (*qtd)++;
 }
 
@@ -67,7 +67,7 @@ static void editVehicle(vehicle *v, int pos, int local[][6]) {
         if (local[pos][i] == 1)
             (local[pos][i])--;
     }
-    (local[pos][v->startPlace])++;
+    (local[pos][v->location])++;
 }
 
 static void deleteVehicle(vehicle vehicles[], int pos, size_t *qtd, int local[][6]) {

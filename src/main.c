@@ -23,7 +23,7 @@ void showMatrix(vehicle vec[], int local[][MAX_OFFICES]) {
 
     int l, c;
     printf("               ------------------ ESCRITORIOS -------------------");
-    printf("\nVEHICLES       Braga   Coimbra   Guarda   Faro    Lisboa    Porto");
+    printf("\nVEHICLES       Braga   Coimbra   Guarda   Faro    Lisbon    Porto");
     for (l = 0; l < 6; l++)//for(l=0;l<qtd;l++)
     {
         printf("\n%-9u", vec[l].code);
@@ -59,7 +59,7 @@ void insertData(customer cli[], vehicle vec[], size_t *qtdcli, size_t *qtdvec, i
     vec[0].codeCategory = 0;
     n = 2;
     (local[0][n])++;
-    vec[0].startPlace = n;
+    vec[0].location = n;
 
     (*qtdvec)++;
 }
