@@ -18,8 +18,8 @@ void cleanMatrix(vehicle vec[], int local[][MAX_OFFICES]) {
             local[l][c] = 0;
     }
 }
-
-void showMatrix(vehicle vec[], int local[][MAX_OFFICES]) {
+/*
+void showVehiclesLocation(vehicle vec[], int local[][MAX_OFFICES]) {
 
     int l, c;
     printf("               ------------------ ESCRITORIOS -------------------");
@@ -32,8 +32,9 @@ void showMatrix(vehicle vec[], int local[][MAX_OFFICES]) {
     }
     getchar();
 }
+*/
 
-void insertData(customer cli[], vehicle vec[], size_t *qtdcli, size_t *qtdvec, int local[][MAX_OFFICES]) {
+void insertData(customer cli[], vehicle vec[], size_t *qtdcli, size_t *qtdvec) {
     int n;
     cli[0].code = 1000;
     strcpy(cli[0].name, "customer 1");
@@ -57,9 +58,7 @@ void insertData(customer cli[], vehicle vec[], size_t *qtdcli, size_t *qtdvec, i
     vec[0].km = 12.000f;
     vec[0].quantityFuel = 1000.00f;
     vec[0].codeCategory = 0;
-    n = 2;
-    (local[0][n])++;
-    vec[0].location = n;
+    vec[0].location = Lisbon;
 
     (*qtdvec)++;
 }
@@ -112,13 +111,13 @@ int main() {
     size_t quantityCustomers = 0, quantityVehicles = 0, quantityContract = 0;
     int customerPosition, vehiclePosition, contractPosition;
     customer customer[MAX_CUSTOMERS];
-    int ch, local[MAX_VEHICLES][MAX_OFFICES];
+    int ch;
     vehicle vehicles[MAX_VEHICLES];
     contract contracts[MAX_CONTRACTS];
     date dates[MAX_CUSTOMERS];
     char op;
-    cleanMatrix(vehicles, local);
-    insertData(customer, vehicles, &quantityCustomers, &quantityVehicles, local);
+    //cleanMatrix(vehicles, local);
+    insertData(customer, vehicles, &quantityCustomers, &quantityVehicles);
     do {
 #ifdef WINDOWS
         system("cls");
@@ -163,7 +162,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                insertVehicle(vehicles, &quantityVehicles, local);
+                insertVehicle(vehicles, &quantityVehicles);
                 end();
                 break;
             }
@@ -173,7 +172,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showVehicleByCodeAndShowOptions(vehicles, quantityVehicles, local);
+                showVehicleByCodeAndShowOptions(vehicles, quantityVehicles);
                 end();
                 break;
             }
@@ -194,7 +193,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showMatrix(vehicles, local);
+                showVehiclesLocation(vehicles, quantityVehicles);
                 end();
                 break;
             }
@@ -204,7 +203,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                startContract(contracts, customer, vehicles, local, dates, quantityCustomers, quantityVehicles, &quantityContract);
+                startContract(contracts, customer, vehicles, dates, quantityCustomers, quantityVehicles, &quantityContract);
                 // Colocar aqui o c�digo para chamar o m�dulo alugar vehicle
                 end();
                 break;
@@ -221,7 +220,7 @@ int main() {
                     printf("\n 'T'=Terminar contract 'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
                     if (op == 'T' || op == 't') {
-                        endContract(contracts, contractPosition, dates, vehicles, customer, quantityCustomers, quantityVehicles, quantityContract, local);
+                        endContract(contracts, contractPosition, dates, vehicles, customer, quantityCustomers, quantityVehicles, quantityContract);
                         //Colocar aqui o c�digo para devolver ve�culo
                     }
                     if (op == 'M' || op == 'm') {
