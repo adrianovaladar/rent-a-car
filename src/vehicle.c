@@ -127,15 +127,18 @@ void showAllVehicles(vehicle vehicles[], size_t qtd) {
 
 void showVehiclesLocation(vehicle v[], size_t quantityVehicles) {
 
-    int l, c;
-    printf("               ------------------ OFFICES -------------------");
-    printf("\nVEHICLES       Braga   Coimbra   Guarda   Faro    Lisbon    Porto    Unknown");
-    for (l = 0; l < quantityVehicles; l++)//for(l=0;l<qtd;l++)
+    int i, j;
+    printf("                                            OFFICES\n");
+    printf("VEHICLES   |   Braga    Coimbra  Guarda   Faro     Lisbon   Porto    Unknown\n");
+    for (i = 0; i < quantityVehicles; i++)//for(i=0;i<qtd;i++)
     {
-        printf("\n%-9u", v[l].code);
-        for (c = 0; c < MAX_OFFICES; c++)
-            ;
-        //printf("%9u", local[l][c]);
+        printf("%-9u", v[i].code);
+        for (j = 0; j < MAX_OFFICES; j++) {
+            char symbol[10] = "        ";
+            symbol[8] = j == v[i].location ? 'x' : ' ';
+            symbol[9] = '\0';
+            printf("%s", symbol);
+        };
+        printf("\n");
     }
-    getchar();
 }

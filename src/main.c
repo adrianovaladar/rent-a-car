@@ -9,31 +9,6 @@
 
 char category[][10] = {"capucine", "integral", "perfilada", "furgao", "citadina", "utilitaria", "familiar"};
 
-void cleanMatrix(vehicle vec[], int local[][MAX_OFFICES]) {
-
-    int l, c;
-    for (l = 0; l < MAX_VEHICLES; l++) {
-        vec[l].code = 0;
-        for (c = 0; c < MAX_OFFICES; c++)
-            local[l][c] = 0;
-    }
-}
-/*
-void showVehiclesLocation(vehicle vec[], int local[][MAX_OFFICES]) {
-
-    int l, c;
-    printf("               ------------------ ESCRITORIOS -------------------");
-    printf("\nVEHICLES       Braga   Coimbra   Guarda   Faro    Lisbon    Porto");
-    for (l = 0; l < 6; l++)//for(l=0;l<qtd;l++)
-    {
-        printf("\n%-9u", vec[l].code);
-        for (c = 0; c < MAX_OFFICES; c++)
-            printf("%9u", local[l][c]);
-    }
-    getchar();
-}
-*/
-
 void insertData(customer cli[], vehicle vec[], size_t *qtdcli, size_t *qtdvec) {
     int n;
     cli[0].code = 1000;
