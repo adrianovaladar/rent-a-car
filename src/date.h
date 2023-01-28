@@ -9,7 +9,7 @@ typedef struct date {
     int year;
 } date;
 
-void validateDate(date date[]);
+void validateDate(date *date);
 bool isLeapYear(int year);
 bool isEmptyDate(date d);
 

@@ -3,8 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-
-void validateDate(date date[]) {
+void validateDate(date *date) {
     int month, year, day;
     printf("Insert the year");
     year = readInt(1950, 2050);
@@ -27,9 +26,9 @@ void validateDate(date date[]) {
             day = readInt(1, 30);
         }
     }
-    date[0].day = day;
-    date[0].month = month;
-    date[0].year = year;
+    date->day = day;
+    date->month = month;
+    date->year = year;
 }
 
 bool isLeapYear(int year) {

@@ -178,8 +178,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                startContract(contracts, customer, vehicles, dates, quantityCustomers, quantityVehicles, &quantityContract);
-                // Colocar aqui o c�digo para chamar o m�dulo alugar vehicle
+                startContract(contracts, customer, vehicles, quantityCustomers, quantityVehicles, &quantityContract);
                 end();
                 break;
             }
@@ -190,16 +189,16 @@ int main() {
                 system("clear");
 #endif
                 // Colocar aqui o c�digo para chamar o m�dulo modificar contract e/ou apagar contract
-                contractPosition = ShowContract(contracts, dates, quantityContract);
+                contractPosition = ShowContract(contracts, quantityContract);
                 if (contractPosition >= 0) {
                     printf("\n 'T'=Terminar contract 'M'=Modificar 'A'=Apagar\n");
                     op = getchar();
                     if (op == 'T' || op == 't') {
-                        endContract(contracts, contractPosition, dates, vehicles, customer, quantityCustomers, quantityVehicles, quantityContract);
+                        endContract(contracts, contractPosition, vehicles, customer, quantityCustomers, quantityVehicles, quantityContract);
                         //Colocar aqui o c�digo para devolver ve�culo
                     }
                     if (op == 'M' || op == 'm') {
-                        editContract(contracts, vehicles, contractPosition, dates, quantityContract, quantityContract);
+                        editContract(contracts, vehicles, contractPosition, quantityContract, quantityContract);
 
                         // colocar aqui o c�digo para chamar o m�dulo modificar contract
                     } else if (op == 'A' || op == 'a') {
