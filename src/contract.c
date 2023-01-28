@@ -3,13 +3,12 @@
 #include "vehicle.h"
 #include <stdio.h>
 
-void showContractData(contract c[], size_t qtd) {
+void showContracts(contract c[], size_t qtd) {
     int i, j;
     char valor;
     contract contaux[0];
     if (qtd == 0) {
-        printf("\nThere are no registered contracts\n");
-        getchar();
+        printf("There are no registered contracts\n");
     } else {
         for (i = 0; i < qtd; i++) {
             showContract(c[i]);
@@ -36,23 +35,22 @@ void showContractData(contract c[], size_t qtd) {
             }
         }
     }
-    getchar();
 }
 
 void showContract(contract c) {
     printf("\n--- Contract data ---\n");
-    printf("\n Customer Code: %d", c.codeCustomer);
-    printf("\n Vehicle code: %d", c.codeVehicle);
-    printf("\n Price by day: %.2f", c.priceDay);
-    printf("\n Price by km: %.2f", c.priceKm);
-    printf("\n Quantity kms: %.2f", c.quantityKm);
-    printf("\n Start date: day %d month %d year %d", c.startDate.day, c.startDate.month, c.startDate.year);
-    printf("\n End date: day %d month %d year %d ", c.endDate.day, c.endDate.month, c.endDate.year);
-    printf("\n Start office: %d", c.startOffice);
+    printf("Customer Code: %d\n", c.codeCustomer);
+    printf("Vehicle code: %d\n", c.codeVehicle);
+    printf("Price by day: %.2f\n", c.priceDay);
+    printf("Price by km: %.2f\n", c.priceKm);
+    printf("Quantity kms: %.2f\n", c.quantityKm);
+    printf("Start date: %d/%d/%d\n", c.startDate.day, c.startDate.month, c.startDate.year);
+    printf("End date: %d/%d/%d\n", c.endDate.day, c.endDate.month, c.endDate.year);
+    printf("Start office: %s\n", officeEnumToText(c.startOffice));
     if (!isEmptyDate(c.endDate)) {
-        printf("\n End office: %d", c.endOffice);
-        printf("\n Note: \n 0 Braga 1 Coimbra 2 Guarda 3 Faro 4 Lisbon 5 Porto");
+        printf("End office: %s\n", officeEnumToText(c.startOffice));
     }
+    printf("Note: date format is dd/mm/yyyy\n");
 }
 
 void editContract(contract cont[], vehicle vec[], int pos, size_t qtdvec, size_t qtd) {
@@ -135,7 +133,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
         printf("There are no registered clients or vehicles so a contract cannot be started\n");
     else {
         do {
-            printf("Insert code number of the customer: ");
+            printf("Customer code\n");
             n = readInt(1000, 9999);
             positionCustomer = searchCodeCustomer(customers, quantityClients, n);
             if (positionCustomer < 0) {
@@ -147,7 +145,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
             return;
         }
         do {
-            printf("\nInsert code number of the vehicle: ");
+            printf("Vehicle code\n");
             n = readInt(10, 99);
             positionVehicle = searchCodeVehicle(vehicles, quantityVehicles, n);
             if (positionVehicle < 0) {
@@ -176,19 +174,8 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
                 validateDate(&contracts[*quantityContracts].startDate);
             }
         }
-        //refactor this
-        for (i = 0; i < *quantityContracts; i++)
-            if (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle)
-                aux++;
-
-        if (aux == 0)
-            contracts[*quantityContracts].startOffice = vehicles[positionVehicle].location;
-        else if (aux > 0) {
-            for (i = 0; i < *quantityContracts; i++)
-                if (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle)
-                    aux = i;
-            contracts[*quantityContracts].startOffice = contracts[aux].endOffice;
-        }
+        printf("Information: This vehicle is in %s, this will be considered for the start office of the contract\n", officeEnumToText(vehicles[positionVehicle].location));
+        contracts[*quantityContracts].startOffice = vehicles[positionVehicle].location;
         vehicles[positionVehicle].location = Unknown;
         (*quantityContracts)++;
     }
@@ -238,7 +225,7 @@ void endContract(contract contracts[], int pos, vehicle vehicles[], customer cus
             contracts[pos].endDate = date;
         }
         printf("\nOffice where the vehicle is:\n");
-        printf("Braga %d Coimbra %d Guarda %d Faro %d Lisbon %d Porto %d", Braga, Coimbra, Guarda, Faro, Lisbon, Porto);
+        printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
         contracts[pos].endOffice = readInt(0, 5);
         vehicles[positionVehicle].location = contracts[pos].endOffice;
     }

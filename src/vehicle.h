@@ -30,5 +30,6 @@ void showAllVehicles(vehicle v[], size_t qtd);
 void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t qtd);
 int searchCodeVehicle(vehicle vec[], size_t qtd, int code);
 void showVehiclesLocation(vehicle v[], size_t quantityVehicles);
+char *officeEnumToText(enum office o);
 
 #endif//RENT_A_CAR_VEHICLE_H

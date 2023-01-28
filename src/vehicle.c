@@ -4,6 +4,23 @@
 #include <stdio.h>
 #include <string.h>
 
+char *officeEnumToText(enum office o) {
+    if (o == Unknown)
+        return "Unknown\0";
+    else if (o == Porto)
+        return "Porto\0";
+    else if (o == Guarda)
+        return "Guarda\0";
+    else if (o == Coimbra)
+        return "Coimbra\0";
+    else if (o == Braga)
+        return "Braga\0";
+    else if (o == Faro)
+        return "Faro\0";
+    else if (o == Lisbon)
+        return "Lisbon\0";
+}
+
 static void readVehicleData(vehicle *v) {
     readString(v->brand, 10, "Brand (maximum 10 characters):");
     readString(v->model, 10, "Model (maximum 10 characters):");
