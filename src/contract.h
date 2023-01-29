@@ -18,12 +18,7 @@ typedef struct contract {
 } contract;
 
 void showContracts(contract c[], size_t qtd);
-void showContract(contract c);
-void editContract(contract cont[], vehicle vec[], int pos, size_t qtdvec, size_t qtd);
-void deleteContract(contract c[], int pos, size_t *qtd);
-int ShowContract(contract c[], size_t qtd);
-int searchDate(contract cont[], date date, size_t qtd);
-void startContract(contract contracts[], customer customers[], vehicle vehicles[], size_t quantityClients, size_t quantityVehicles, size_t *quantityContracts);
-void endContract(contract contracts[], int pos, vehicle vehicles[], customer customers[], int quantityCustomers, int quantityVehicles, int quantityContracts);
+void startContract(contract contracts[], customer customers[], vehicle vehicles[], size_t quantityCustomers, size_t quantityVehicles, size_t *quantityContracts);
+void showContractByVehicleCodeAndStartDateAndShowOptions(contract contracts[], vehicle vehicles[], customer customers[], size_t quantityContracts, size_t quantityVehicles, size_t quantityCustomers);
 
 #endif//RENT_A_CAR_CONTRACT_H

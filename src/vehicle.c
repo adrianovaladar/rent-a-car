@@ -38,7 +38,7 @@ static void readVehicleData(vehicle *v) {
         v->quantityFuel = 0;
     }
     printf("Office where the vehicle is:\n");
-    printf("Braga %d Coimbra %d Guarda %d Faro %d Lisbon %d Porto %d", Braga, Coimbra, Guarda, Faro, Lisbon, Porto);
+    printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
     v->location = readInt(0, 5);
 }
 

@@ -3,6 +3,23 @@
 #include "vehicle.h"
 #include <stdio.h>
 
+
+static void showContract(contract c) {
+    printf("\n--- Contract data ---\n");
+    printf("Customer Code: %d\n", c.codeCustomer);
+    printf("Vehicle code: %d\n", c.codeVehicle);
+    printf("Price by day: %.2f\n", c.priceDay);
+    printf("Price by km: %.2f\n", c.priceKm);
+    printf("Quantity kms: %.2f\n", c.quantityKm);
+    printf("Start date: %d/%d/%d\n", c.startDate.day, c.startDate.month, c.startDate.year);
+    printf("End date: %d/%d/%d\n", c.endDate.day, c.endDate.month, c.endDate.year);
+    printf("Start office: %s\n", officeEnumToText(c.startOffice));
+    if (!isEmptyDate(c.endDate)) {
+        printf("End office: %s\n", officeEnumToText(c.startOffice));
+    }
+    printf("Note: date format is dd/mm/yyyy\n");
+}
+
 void showContracts(contract c[], size_t qtd) {
     int i, j;
     char valor;
@@ -37,34 +54,18 @@ void showContracts(contract c[], size_t qtd) {
     }
 }
 
-void showContract(contract c) {
-    printf("\n--- Contract data ---\n");
-    printf("Customer Code: %d\n", c.codeCustomer);
-    printf("Vehicle code: %d\n", c.codeVehicle);
-    printf("Price by day: %.2f\n", c.priceDay);
-    printf("Price by km: %.2f\n", c.priceKm);
-    printf("Quantity kms: %.2f\n", c.quantityKm);
-    printf("Start date: %d/%d/%d\n", c.startDate.day, c.startDate.month, c.startDate.year);
-    printf("End date: %d/%d/%d\n", c.endDate.day, c.endDate.month, c.endDate.year);
-    printf("Start office: %s\n", officeEnumToText(c.startOffice));
-    if (!isEmptyDate(c.endDate)) {
-        printf("End office: %s\n", officeEnumToText(c.startOffice));
-    }
-    printf("Note: date format is dd/mm/yyyy\n");
-}
-
-void editContract(contract cont[], vehicle vec[], int pos, size_t qtdvec, size_t qtd) {
+static void editContract(contract cont[], vehicle vec[], int pos, size_t qtdvec, size_t qtd) {
     if (cont[pos].endDate.year != 0)
-        printf("\nNot possible to edit this contract because it is already closed\n");
+        printf("Not possible to edit this contract because it is already closed\n");
     else {
 
         int i, encontrou;
         encontrou = searchCodeVehicle(vec, qtdvec, cont[pos].codeVehicle);
         if (vec[encontrou].codeCategory > 3) {
-            printf("\nInsert the price per day\n");
+            printf("Insert the price per day\n");
             cont[pos].priceDay = readFloat(0.01f, 9999);
         } else {
-            printf("\nInsert the price per km\n");
+            printf("Insert the price per km\n");
             cont[pos].priceKm = readFloat(0.01f, 9999);
         }
         date d;
@@ -72,16 +73,16 @@ void editContract(contract cont[], vehicle vec[], int pos, size_t qtdvec, size_t
         cont[pos].startDate = d;
         for (i = 0; i < qtd; i++)
             while ((cont[pos].codeVehicle == cont[i].codeVehicle && cont[pos].startDate.day >= cont[i].startDate.day && cont[pos].startDate.day < cont[pos].endDate.day && cont[pos].startDate.month == cont[i].startDate.month && cont[pos].startDate.month == cont[i].endDate.month && cont[pos].startDate.year == cont[i].startDate.year && cont[pos].startDate.year == cont[i].endDate.year) || (cont[pos].codeVehicle == cont[i].codeVehicle && cont[pos].startDate.month >= cont[i].startDate.month && cont[pos].startDate.month < cont[i].endDate.month && cont[pos].startDate.year == cont[i].startDate.year && cont[pos].startDate.year == cont[i].endDate.year) || (cont[pos].codeVehicle == cont[i].codeVehicle && cont[pos].startDate.year >= cont[i].startDate.year && cont[pos].startDate.year < cont[i].endDate.year)) {
-                printf("\nThis vehicle was under a contract in the intended date so it was not available\n");
+                printf("This vehicle was under a contract in the intended date so it was not available\n");
                 validateDate(&d);
                 cont[pos].startDate = d;
             }
     }
 }
 
-void deleteContract(contract c[], int pos, size_t *qtd) {
+static void deleteContract(contract c[], int pos, size_t *qtd) {
     if (c[pos].endDate.day == 0)
-        printf("\nThe contract cannot be deleted because it was not closed yet\n");
+        printf("The contract cannot be deleted because it was not closed yet\n");
     else {
         int i;
         for (i = pos; i <= *qtd; i++) {
@@ -91,29 +92,7 @@ void deleteContract(contract c[], int pos, size_t *qtd) {
     }
 }
 
-int ShowContract(contract c[], size_t qtd) {
-    int aux = -1;
-    if (qtd == 0) {
-        printf("\nThere are no registered contracts\n");
-        return aux;
-    }
-    int i, found, insertedCodeValue;
-    date date;
-    printf("Insert the start date of the contract\n");
-    found = searchDate(c, date, qtd);
-    printf("Insert the code of the vehicle\n");
-    insertedCodeValue = readInt(10, 99);
-    for (i = 0; i <= qtd; i++) {
-        if (c[i].startDate.day == date.day && c[i].startDate.month == date.month && c[i].startDate.year == date.year && c[i].codeVehicle == insertedCodeValue) {
-            showContract(c[found]);
-            aux = i;
-        }
-    }
-    getchar();
-    return aux;
-}
-
-int searchDate(contract cont[], date date, size_t qtd) {
+static int searchDate(contract cont[], date date, size_t qtd) {
     int i, enc = -1;
     validateDate(&date);
     for (i = 0; i <= qtd; i++)
@@ -122,20 +101,36 @@ int searchDate(contract cont[], date date, size_t qtd) {
     return enc;
 }
 
+static int searchContract(contract c[], size_t quantityContracts) {
+    int aux = -1;
+    int i, found, insertedCodeValue;
+    date date;
+    printf("Contract start date\n");
+    found = searchDate(c, date, quantityContracts);
+    printf("Vehicle code\n");
+    insertedCodeValue = readInt(10, 99);
+    for (i = 0; i <= quantityContracts; i++) {
+        if (c[i].startDate.day == date.day && c[i].startDate.month == date.month && c[i].startDate.year == date.year && c[i].codeVehicle == insertedCodeValue) {
+            showContract(c[found]);
+            aux = i;
+        }
+    }
+    return aux;
+}
 
-void startContract(contract contracts[], customer customers[], vehicle vehicles[], size_t quantityClients, size_t quantityVehicles, size_t *quantityContracts) {
+void startContract(contract contracts[], customer customers[], vehicle vehicles[], size_t quantityCustomers, size_t quantityVehicles, size_t *quantityContracts) {
     if (*quantityContracts == MAX_CONTRACTS) {
         printf("We reached our full capacity of contracts. Please come back later");
         return;
     }
-    int n, positionCustomer, positionVehicle, aux = 0, i;
-    if (quantityVehicles == 0 || quantityClients == 0)
+    int n, positionCustomer, positionVehicle, i;
+    if (quantityVehicles == 0 || quantityCustomers == 0)
         printf("There are no registered clients or vehicles so a contract cannot be started\n");
     else {
         do {
             printf("Customer code\n");
             n = readInt(1000, 9999);
-            positionCustomer = searchCodeCustomer(customers, quantityClients, n);
+            positionCustomer = searchCodeCustomer(customers, quantityCustomers, n);
             if (positionCustomer < 0) {
                 printf("Customer not found, try another code\n");
             }
@@ -182,7 +177,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
 }
 
 
-void endContract(contract contracts[], int pos, vehicle vehicles[], customer customers[], int quantityCustomers, int quantityVehicles, int quantityContracts) {
+static void endContract(contract contracts[], int pos, vehicle vehicles[], customer customers[], size_t quantityCustomers, size_t quantityVehicles, size_t quantityContracts) {
     if (contracts[pos].endDate.day != 0)
         printf("\n This contract was already closed\n");
     else {
@@ -228,5 +223,32 @@ void endContract(contract contracts[], int pos, vehicle vehicles[], customer cus
         printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
         contracts[pos].endOffice = readInt(0, 5);
         vehicles[positionVehicle].location = contracts[pos].endOffice;
+    }
+}
+
+void showContractByVehicleCodeAndStartDateAndShowOptions(contract contracts[], vehicle vehicles[], customer customers[], size_t quantityContracts, size_t quantityVehicles, size_t quantityCustomers) {
+    int contractPosition;
+    if (quantityContracts == 0) {
+        printf("There are no registered contracts\n");
+        return;
+    }
+    contractPosition = searchContract(contracts, quantityContracts);
+    if (contractPosition >= 0) {
+        showContract(contracts[contractPosition]);
+        printf("\nEdit(e) Delete(d) Terminate (t) (Press any other key plus enter to leave this menu)\n");
+        unsigned char op;
+        do {
+            op = getchar();
+        } while (op == '\n');
+        if (op == 'T' || op == 't') {
+            endContract(contracts, contractPosition, vehicles, customers, quantityCustomers, quantityVehicles, quantityContracts);
+        } else if (op == 'E' || op == 'e') {
+            editContract(contracts, vehicles, contractPosition, quantityVehicles, quantityContracts);
+        } else if (op == 'D' || op == 'd') {
+            deleteContract(contracts, contractPosition, &quantityContracts);
+            printf("Contract deleted successfully\n");
+        }
+    } else {
+        printf("No contract found with data provided\n");
     }
 }

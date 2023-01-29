@@ -83,16 +83,16 @@ void end() {
 }
 
 int main() {
-    size_t quantityCustomers = 0, quantityVehicles = 0, quantityContract = 0;
+    size_t quantityCustomers = 0, quantityVehicles = 0, quantityContracts = 0;
     int customerPosition, vehiclePosition, contractPosition;
-    customer customer[MAX_CUSTOMERS];
+    customer customers[MAX_CUSTOMERS];
     int ch;
     vehicle vehicles[MAX_VEHICLES];
     contract contracts[MAX_CONTRACTS];
     date dates[MAX_CUSTOMERS];
     char op;
     //cleanMatrix(vehicles, local);
-    insertData(customer, vehicles, &quantityCustomers, &quantityVehicles);
+    insertData(customers, vehicles, &quantityCustomers, &quantityVehicles);
     do {
 #ifdef WINDOWS
         system("cls");
@@ -107,7 +107,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                insertCustomer(customer, &quantityCustomers);
+                insertCustomer(customers, &quantityCustomers);
                 end();
                 break;
             }
@@ -117,7 +117,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showCustomerByCodeAndShowOptions(customer, quantityCustomers);
+                showCustomerByCodeAndShowOptions(customers, quantityCustomers);
                 end();
                 break;
             }
@@ -127,7 +127,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showAllCustomers(customer, quantityCustomers);
+                showAllCustomers(customers, quantityCustomers);
                 end();
                 break;
             }
@@ -178,7 +178,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                startContract(contracts, customer, vehicles, quantityCustomers, quantityVehicles, &quantityContract);
+                startContract(contracts, customers, vehicles, quantityCustomers, quantityVehicles, &quantityContracts);
                 end();
                 break;
             }
@@ -188,23 +188,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                // Colocar aqui o c�digo para chamar o m�dulo modificar contract e/ou apagar contract
-                contractPosition = ShowContract(contracts, quantityContract);
-                if (contractPosition >= 0) {
-                    printf("\n 'T'=Terminar contract 'M'=Modificar 'A'=Apagar\n");
-                    op = getchar();
-                    if (op == 'T' || op == 't') {
-                        endContract(contracts, contractPosition, vehicles, customer, quantityCustomers, quantityVehicles, quantityContract);
-                        //Colocar aqui o c�digo para devolver ve�culo
-                    }
-                    if (op == 'M' || op == 'm') {
-                        editContract(contracts, vehicles, contractPosition, quantityContract, quantityContract);
-
-                        // colocar aqui o c�digo para chamar o m�dulo modificar contract
-                    } else if (op == 'A' || op == 'a') {
-                        deleteContract(contracts, contractPosition, &quantityContract);
-                    }
-                }
+                showContractByVehicleCodeAndStartDateAndShowOptions(contracts, vehicles, customers, quantityContracts, quantityVehicles, quantityCustomers);
                 end();
                 break;
             }
@@ -214,7 +198,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showContracts(contracts, quantityContract);
+                showContracts(contracts, quantityContracts);
                 end();
                 break;
             }
