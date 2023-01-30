@@ -25,11 +25,11 @@ typedef struct vehicle {
     bool isUnderContract;
 } vehicle;
 
-void insertVehicle(vehicle vehicles[], size_t *qtd);
-void showAllVehicles(vehicle v[], size_t qtd);
-void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t qtd);
-int searchCodeVehicle(vehicle vec[], size_t qtd, int code);
-void showVehiclesLocation(vehicle v[], size_t quantityVehicles);
+void insertVehicle(vehicle vehicles[], size_t *quantity);
+void showAllVehicles(vehicle vehicles[], size_t quantity);
+void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t quantity);
+int searchCodeVehicle(vehicle vehicles[], size_t quantity, int code);
+void showVehiclesLocation(vehicle vehicles[], size_t quantityVehicles);
 char *officeEnumToText(enum office o);
 
 #endif//RENT_A_CAR_VEHICLE_H

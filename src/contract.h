@@ -17,7 +17,7 @@ typedef struct contract {
     int endOffice;
 } contract;
 
-void showContracts(contract c[], size_t qtd);
+void showContracts(contract c[], size_t quantity);
 void startContract(contract contracts[], customer customers[], vehicle vehicles[], size_t quantityCustomers, size_t quantityVehicles, size_t *quantityContracts);
 void showContractByVehicleCodeAndStartDateAndShowOptions(contract contracts[], vehicle vehicles[], customer customers[], size_t quantityContracts, size_t quantityVehicles, size_t quantityCustomers);
 

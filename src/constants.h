@@ -4,7 +4,6 @@
 #define MAX_CUSTOMERS 500
 #define MAX_VEHICLES 20
 #define MAX_OFFICES 7
-#define MAX_TEXT 40
 #define MAX_CONTRACTS 1000
 
 #endif//RENT_A_CAR_CONSTANTS_H

@@ -3,11 +3,11 @@
 #include "input.h"
 #include <stdio.h>
 
-int searchCodeCustomer(customer c[], size_t qtd, int cod) {
+int searchCodeCustomer(customer customers[], size_t quantity, int code) {
     int i, position = -1;
 
-    for (i = 0; i <= qtd && position == -1; i++)
-        if (c[i].code == cod)
+    for (i = 0; i <= quantity && position == -1; i++)
+        if (customers[i].code == code)
             position = i;
 
     return position;
@@ -20,10 +20,10 @@ static void readCustomerData(customer *c) {
     readString(c->driverLicense, 10, "Driver license (maximum 10 characters):");// check behaviour
 }
 
-void insertCustomer(customer c[], size_t *qtd) {
+void insertCustomer(customer customers[], size_t *quantity) {
     int n, position;
 
-    if (*qtd == MAX_CUSTOMERS) {
+    if (*quantity == MAX_CUSTOMERS) {
         printf("We reached our full capacity of customers. Please come back later");
         return;
     }
@@ -31,15 +31,15 @@ void insertCustomer(customer c[], size_t *qtd) {
     do {
         printf("Code");
         n = readInt(1000, 9999);
-        position = searchCodeCustomer(c, *qtd, n);
+        position = searchCodeCustomer(customers, *quantity, n);
         if (position != -1) {
             printf("This code is already taken. Please insert another one\n");
         }
     } while (position >= 0);
-    c[*qtd].code = n;
-    readCustomerData(&c[*qtd]);
-    c[*qtd].type = 0;
-    (*qtd)++;
+    customers[*quantity].code = n;
+    readCustomerData(&customers[*quantity]);
+    customers[*quantity].type = 0;
+    (*quantity)++;
 }
 
 static void editCustomer(customer *c) {
@@ -51,16 +51,16 @@ static void editCustomer(customer *c) {
     readCustomerData(c);
 }
 
-static void deleteCustomer(customer c[], int pos, size_t *qtd) {
-    if (c[pos].isUnderContract) {
+static void deleteCustomer(customer customers[], int position, size_t *quantity) {
+    if (customers[position].isUnderContract) {
         printf("\nThe customer is under a contract at the moment, please come back later\n");
         return;
     }
     int i;
-    for (i = pos; i <= *qtd; i++) {
-        c[i] = c[i + 1];
+    for (i = position; i <= *quantity; i++) {
+        customers[i] = customers[i + 1];
     }
-    (*qtd)--;
+    (*quantity)--;
 }
 
 static void showCustomer(customer c) {
@@ -72,26 +72,26 @@ static void showCustomer(customer c) {
     printf("\n Driver license: %s\n", c.driverLicense);
 }
 
-void showCustomerByCodeAndShowOptions(customer c[], size_t qtd) {
+void showCustomerByCodeAndShowOptions(customer customers[], size_t quantity) {
     int n, codeFound;
 
-    if (qtd == 0) {
+    if (quantity == 0) {
         printf("\nThere are no registered customers\n");
         return;
     }
     n = readInt(1000, 9999);
-    codeFound = searchCodeCustomer(c, qtd, n);
+    codeFound = searchCodeCustomer(customers, quantity, n);
     if (codeFound >= 0) {
-        showCustomer(c[codeFound]);
+        showCustomer(customers[codeFound]);
         printf("\nEdit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
         unsigned char op;
         do {
             op = getchar();
         } while (op == '\n');
         if (op == 'E' || op == 'e') {
-            editCustomer(&c[codeFound]);
+            editCustomer(&customers[codeFound]);
         } else if (op == 'D' || op == 'd') {
-            deleteCustomer(c, codeFound, &qtd);
+            deleteCustomer(customers, codeFound, &quantity);
             printf("Customer deleted successfully\n");
         }
     } else {
@@ -99,13 +99,13 @@ void showCustomerByCodeAndShowOptions(customer c[], size_t qtd) {
     }
 }
 
-void showAllCustomers(customer c[], size_t qtd) {
+void showAllCustomers(customer customers[], size_t quantity) {
     int i;
-    if (qtd == 0) {
+    if (quantity == 0) {
         printf("\nThere are no registered customers\n");
         return;
     }
-    for (i = 0; i < qtd; i++) {
-        showCustomer(c[i]);
+    for (i = 0; i < quantity; i++) {
+        showCustomer(customers[i]);
     }
 }

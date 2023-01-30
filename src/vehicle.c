@@ -42,19 +42,19 @@ static void readVehicleData(vehicle *v) {
     v->location = readInt(0, 5);
 }
 
-int searchCodeVehicle(vehicle vec[], size_t qtd, int code) {
+int searchCodeVehicle(vehicle vehicles[], size_t quantity, int code) {
     int i, enc = -1;
 
-    for (i = 0; i <= qtd && enc == -1; i++)
-        if (vec[i].code == code)
+    for (i = 0; i <= quantity && enc == -1; i++)
+        if (vehicles[i].code == code)
             enc = i;
 
     return enc;
 }
 
-void insertVehicle(vehicle vehicles[], size_t *qtd) {
+void insertVehicle(vehicle vehicles[], size_t *quantity) {
     int n, position;
-    if (*qtd == MAX_VEHICLES) {
+    if (*quantity == MAX_VEHICLES) {
         printf("\nThe stand is full, please como back later\n");
         return;
     }
@@ -62,17 +62,17 @@ void insertVehicle(vehicle vehicles[], size_t *qtd) {
     do {
         printf("Code");
         n = readInt(10, 99);
-        position = searchCodeVehicle(vehicles, *qtd, n);
+        position = searchCodeVehicle(vehicles, *quantity, n);
         if (position != -1) {
             printf("This code is already taken. Please insert another one\n");
         }
     } while (position >= 0);
-    vehicles[*qtd].code = n;
-    readVehicleData(&vehicles[*qtd]);
-    (*qtd)++;
+    vehicles[*quantity].code = n;
+    readVehicleData(&vehicles[*quantity]);
+    (*quantity)++;
 }
 
-static void editVehicle(vehicle *v, int pos) {
+static void editVehicle(vehicle *v) {
     if (v->isUnderContract) {
         printf("\nThe vehicle is under a contract at the moment, please come back later\n");
         return;
@@ -104,15 +104,15 @@ static void showVehicle(vehicle v) {
     printf("\nStatus: %s\n", v.isUnderContract ? "Unavailable" : "Available");
 }
 
-void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t qtd) {
+void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t quantity) {
     int n, codeFound;
 
-    if (qtd == 0) {
+    if (quantity == 0) {
         printf("\nThere are no registered vehicles\n");
         return;
     }
     n = readInt(10, 99);
-    codeFound = searchCodeVehicle(vehicles, qtd, n);
+    codeFound = searchCodeVehicle(vehicles, quantity, n);
     if (codeFound >= 0) {
         showVehicle(vehicles[codeFound]);
         printf("\nEdit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
@@ -121,9 +121,9 @@ void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t qtd) {
             op = getchar();
         } while (op == '\n');
         if (op == 'E' || op == 'e') {
-            editVehicle(&vehicles[codeFound], codeFound);
+            editVehicle(&vehicles[codeFound]);
         } else if (op == 'D' || op == 'd') {
-            deleteVehicle(vehicles, codeFound, &qtd);
+            deleteVehicle(vehicles, codeFound, &quantity);
             printf("Vehicle deleted successfully\n");
         }
     } else {
@@ -131,30 +131,30 @@ void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t qtd) {
     }
 }
 
-void showAllVehicles(vehicle vehicles[], size_t qtd) {
+void showAllVehicles(vehicle vehicles[], size_t quantity) {
     int i;
-    if (qtd == 0) {
+    if (quantity == 0) {
         printf("\nThere are no registered vehicles\n");
         getchar();
     } else
-        for (i = 0; i < qtd; i++) {
+        for (i = 0; i < quantity; i++) {
             showVehicle(vehicles[i]);
         }
 }
 
-void showVehiclesLocation(vehicle v[], size_t quantityVehicles) {
+void showVehiclesLocation(vehicle vehicles[], size_t quantityVehicles) {
 
     int i, j;
     printf("              |                             OFFICES                          |\n");
     printf("VEHICLES      |Braga   |Coimbra |Guarda  |Faro    |Lisbon  |Porto   |Unknown |\n");
     printf("--------------|--------|--------|--------|--------|--------|--------|--------|\n");
     for (i = 0; i < quantityVehicles; i++) {
-        printf("%-5d", v[i].code);
+        printf("%-5d", vehicles[i].code);
         printf("         |");
         for (j = 0; j < MAX_OFFICES; j++) {
             char text[10] = "\0";
             strcat(text, "    \0");
-            text[4] = j == v[i].location ? 'x' : ' ';
+            text[4] = j == vehicles[i].location ? 'x' : ' ';
             strcat(text, "   |\0");
             printf("%s", text);
         }

@@ -9,33 +9,32 @@
 
 char category[][10] = {"capucine", "integral", "perfilada", "furgao", "citadina", "utilitaria", "familiar"};
 
-void insertData(customer cli[], vehicle vec[], size_t *qtdcli, size_t *qtdvec) {
-    int n;
-    cli[0].code = 1000;
-    strcpy(cli[0].name, "customer 1");
-    strcpy(cli[0].address, "Example Address 1");
-    strcpy(cli[0].driverLicense, "P-12345678");
-    cli[0].type = 0;
-    (*qtdcli)++;
+void insertData(customer customers[], vehicle vehicles[], size_t *quantityCustomers, size_t *quantityVehicles) {
+    customers[0].code = 1000;
+    strcpy(customers[0].name, "customer 1");
+    strcpy(customers[0].address, "Example Address 1");
+    strcpy(customers[0].driverLicense, "P-12345678");
+    customers[0].type = 0;
+    (*quantityCustomers)++;
 
-    cli[1].code = 1001;
-    strcpy(cli[1].name, "customer 2");
-    strcpy(cli[1].address, "Example Address 2");
-    strcpy(cli[1].driverLicense, "P-98765432");
-    cli[1].type = 1;
-    (*qtdcli)++;
+    customers[1].code = 1001;
+    strcpy(customers[1].name, "customer 2");
+    strcpy(customers[1].address, "Example Address 2");
+    strcpy(customers[1].driverLicense, "P-98765432");
+    customers[1].type = 1;
+    (*quantityCustomers)++;
 
-    vec[0].code = 10;
-    strcpy(vec[0].brand, "Fiat");
-    strcpy(vec[0].model, "Ducato");
-    strcpy(vec[0].registrationPlate, "LA-35-61");
-    vec[0].isUnderContract = false;
-    vec[0].km = 12.000f;
-    vec[0].quantityFuel = 1000.00f;
-    vec[0].codeCategory = 0;
-    vec[0].location = Lisbon;
+    vehicles[0].code = 10;
+    strcpy(vehicles[0].brand, "Fiat");
+    strcpy(vehicles[0].model, "Ducato");
+    strcpy(vehicles[0].registrationPlate, "LA-35-61");
+    vehicles[0].isUnderContract = false;
+    vehicles[0].km = 12.000f;
+    vehicles[0].quantityFuel = 1000.00f;
+    vehicles[0].codeCategory = 0;
+    vehicles[0].location = Lisbon;
 
-    (*qtdvec)++;
+    (*quantityVehicles)++;
 }
 
 int showMenuAndGetOption() {
@@ -84,14 +83,10 @@ void end() {
 
 int main() {
     size_t quantityCustomers = 0, quantityVehicles = 0, quantityContracts = 0;
-    int customerPosition, vehiclePosition, contractPosition;
     customer customers[MAX_CUSTOMERS];
-    int ch;
+    int option;
     vehicle vehicles[MAX_VEHICLES];
     contract contracts[MAX_CONTRACTS];
-    date dates[MAX_CUSTOMERS];
-    char op;
-    //cleanMatrix(vehicles, local);
     insertData(customers, vehicles, &quantityCustomers, &quantityVehicles);
     do {
 #ifdef WINDOWS
@@ -99,8 +94,8 @@ int main() {
 #else
         system("clear");
 #endif
-        ch = showMenuAndGetOption();
-        switch (ch) {
+        option = showMenuAndGetOption();
+        switch (option) {
             case 1: {
 #ifdef WINDOWS
                 system("cls");
@@ -205,7 +200,7 @@ int main() {
             default: {
             }
         }
-    } while (ch != 0);
+    } while (option != 0);
     end();
     return 0;
 }
