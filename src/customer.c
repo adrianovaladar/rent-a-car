@@ -20,6 +20,14 @@ static void readCustomerData(customer *c) {
     readString(c->driverLicense, 10, "Driver license (maximum 10 characters):");// check behaviour
 }
 
+static void setCodeNewCustomer(customer customers[], size_t *quantity) {
+    customers[*quantity].code = 0;
+    for (size_t i = 0; i < *quantity; i++) {
+        if (customers[i].code == customers[*quantity].code)
+            customers[*quantity].code++;
+    }
+}
+
 void insertCustomer(customer customers[], size_t *quantity) {
     int n, position;
 
@@ -28,14 +36,8 @@ void insertCustomer(customer customers[], size_t *quantity) {
         return;
     }
     printf("\n--- Customer data ---\n");
-    do {
-        printf("Code");
-        n = readInt(1000, 9999);
-        position = searchCodeCustomer(customers, *quantity, n);
-        if (position != -1) {
-            printf("This code is already taken. Please insert another one\n");
-        }
-    } while (position >= 0);
+    setCodeNewCustomer(customers, quantity);
+    printf("Code: %d\n", customers[*quantity].code);
     customers[*quantity].code = n;
     readCustomerData(&customers[*quantity]);
     customers[*quantity].type = 0;

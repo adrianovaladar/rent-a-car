@@ -52,6 +52,14 @@ int searchCodeVehicle(vehicle vehicles[], size_t quantity, int code) {
     return enc;
 }
 
+static void setCodeNewVehicle(vehicle vehicles[], size_t *quantity) {
+    vehicles[*quantity].code = 0;
+    for (size_t i = 0; i < *quantity; i++) {
+        if (vehicles[i].code == vehicles[*quantity].code)
+            vehicles[*quantity].code++;
+    }
+}
+
 void insertVehicle(vehicle vehicles[], size_t *quantity) {
     int n, position;
     if (*quantity == MAX_VEHICLES) {
@@ -59,15 +67,8 @@ void insertVehicle(vehicle vehicles[], size_t *quantity) {
         return;
     }
     printf("--- Car data ---\n");
-    do {
-        printf("Code");
-        n = readInt(10, 99);
-        position = searchCodeVehicle(vehicles, *quantity, n);
-        if (position != -1) {
-            printf("This code is already taken. Please insert another one\n");
-        }
-    } while (position >= 0);
-    vehicles[*quantity].code = n;
+    setCodeNewVehicle(vehicles, quantity);
+    printf("Code: %d\n", vehicles[*quantity].code);
     readVehicleData(&vehicles[*quantity]);
     (*quantity)++;
 }
