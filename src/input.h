@@ -3,6 +3,6 @@
 
 int readInt(int lowerLimit, int upperLimit);
 float readFloat(float lowerLimit, float upperLimit);
-void readString(char *s, int tam, char *info);
+void readString(char *s, int size, char *info);
 
 #endif//RENT_A_CAR_INPUT_H

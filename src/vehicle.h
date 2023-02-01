@@ -15,8 +15,8 @@ enum office { Braga = 0,
 
 typedef struct vehicle {
     int code;
-    char brand[10];
-    char model[10];
+    char brand[11];
+    char model[11];
     char registrationPlate[9];
     int codeCategory;// check this
     float km;

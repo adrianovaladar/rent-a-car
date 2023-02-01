@@ -42,11 +42,11 @@ float readFloat(float lowerLimit, float upperLimit) {
     return value;
 }
 
-void readString(char *s, int tam, char *info) {
-    if (tam <= 0)
+void readString(char *s, int size, char *info) {
+    if (size <= 0)
         return;
     printf("%s", info);
     do {
-        fgets(s, sizeof s, stdin);
+        fgets(s, sizeof size, stdin);
     } while (strlen(s) == 1);
 }

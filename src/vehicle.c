@@ -22,9 +22,9 @@ char *officeEnumToText(enum office o) {
 }
 
 static void readVehicleData(vehicle *v) {
-    readString(v->brand, 10, "Brand (maximum 10 characters):");
-    readString(v->model, 10, "Model (maximum 10 characters):");
-    readString(v->registrationPlate, 8, "Registration plate (maximum 8 characters):");// check behaviour
+    readString(v->brand, 11, "Brand (maximum 10 characters):");
+    readString(v->model, 11, "Model (maximum 10 characters):");
+    readString(v->registrationPlate, 9, "Registration plate (maximum 8 characters):");// check behaviour
     printf("\nCategory code:\n");
     v->codeCategory = readInt(0, 6);
     v->isUnderContract = false;
