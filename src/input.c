@@ -47,6 +47,6 @@ void readString(char *s, int size, char *info) {
         return;
     printf("%s", info);
     do {
-        fgets(s, sizeof size, stdin);
+        fgets(s, size, stdin);
     } while (strlen(s) == 1);
 }
