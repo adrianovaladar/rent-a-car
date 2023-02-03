@@ -49,4 +49,5 @@ void readString(char *s, int size, char *info) {
     do {
         fgets(s, size, stdin);
     } while (strlen(s) == 1);
+    s[strcspn(s, "\n")] = '\0';
 }
