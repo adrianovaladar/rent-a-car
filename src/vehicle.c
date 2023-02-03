@@ -24,19 +24,11 @@ char *officeEnumToText(enum office o) {
 static void readVehicleData(vehicle *v) {
     readString(v->brand, 11, "Brand (maximum 10 characters):");
     readString(v->model, 11, "Model (maximum 10 characters):");
-    readString(v->registrationPlate, 9, "Registration plate (maximum 8 characters):");// check behaviour
+    readString(v->registrationPlate, 9, "Registration plate (maximum 8 characters):");
     printf("\nCategory code:\n");
-    v->codeCategory = readInt(0, 6);
     v->isUnderContract = false;
-    if (v->codeCategory < 4) {
-        printf("\nKms:\n");
-        v->km = readFloat(0, 9999);
-        printf("\nAmount of fuel:\n");
-        v->quantityFuel = readFloat(0, 9999);
-    } else {
-        v->km = 0;
-        v->quantityFuel = 0;
-    }
+    printf("\nKms:\n");
+    v->km = readFloat(0, 9999);
     printf("Office where the vehicle is:\n");
     printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
     v->location = readInt(0, 5);
@@ -99,9 +91,7 @@ static void showVehicle(vehicle v) {
     printf("\nBrand: %s", v.brand);
     printf("\nModel: %s", v.model);
     printf("\nRegistration plate: %s", v.registrationPlate);
-    printf("\nCategory code: %d", v.codeCategory);
     printf("\nKms: %.2f", v.km);
-    printf("\nAmount of fuel: %.2f", v.quantityFuel);
     printf("\nStatus: %s\n", v.isUnderContract ? "Unavailable" : "Available");
 }
 

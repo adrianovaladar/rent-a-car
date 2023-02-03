@@ -9,12 +9,12 @@ typedef struct contract {
     int codeVehicle;
     int codeCustomer;
     float priceDay;
-    float priceKm;
     float quantityKm;
     date startDate;
     date endDate;
     int startOffice;
     int endOffice;
+    float cost;
 } contract;
 
 void showContracts(contract c[], size_t quantity);

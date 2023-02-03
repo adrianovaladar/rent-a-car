@@ -30,8 +30,6 @@ void insertData(customer customers[], vehicle vehicles[], size_t *quantityCustom
     strcpy(vehicles[0].registrationPlate, "LA-35-61");
     vehicles[0].isUnderContract = false;
     vehicles[0].km = 12.000f;
-    vehicles[0].quantityFuel = 1000.00f;
-    vehicles[0].codeCategory = 0;
     vehicles[0].location = Lisbon;
 
     (*quantityVehicles)++;
