@@ -9,8 +9,8 @@ typedef struct date {
     int year;
 } date;
 
-void validateDate(date *date);
-bool isLeapYear(int year);
 bool isEmptyDate(date d);
+int diffInDays(date date1, date date2);
+int daysInMonth(int month, int year);
 
 #endif//RENT_A_CAR_DATE_H

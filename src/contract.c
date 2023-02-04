@@ -4,7 +4,6 @@
 #include <math.h>
 #include <stdio.h>
 
-
 static void showContract(contract c) {
     printf("\n--- Contract data ---\n");
     printf("Customer Code: %d\n", c.codeCustomer);
@@ -64,12 +63,12 @@ static void editContract(contract contracts[], vehicle vehicles[], int pos, size
     printf("Insert the price per day\n");
     contracts[pos].priceDay = readFloat(0.01f, 9999);
     date d;
-    validateDate(&d);
+    readDate(&d);
     contracts[pos].startDate = d;
     for (int i = 0; i < quantity; i++) {
         while ((contracts[pos].codeVehicle == contracts[i].codeVehicle && contracts[pos].startDate.day >= contracts[i].startDate.day && contracts[pos].startDate.day < contracts[pos].endDate.day && contracts[pos].startDate.month == contracts[i].startDate.month && contracts[pos].startDate.month == contracts[i].endDate.month && contracts[pos].startDate.year == contracts[i].startDate.year && contracts[pos].startDate.year == contracts[i].endDate.year) || (contracts[pos].codeVehicle == contracts[i].codeVehicle && contracts[pos].startDate.month >= contracts[i].startDate.month && contracts[pos].startDate.month < contracts[i].endDate.month && contracts[pos].startDate.year == contracts[i].startDate.year && contracts[pos].startDate.year == contracts[i].endDate.year) || (contracts[pos].codeVehicle == contracts[i].codeVehicle && contracts[pos].startDate.year >= contracts[i].startDate.year && contracts[pos].startDate.year < contracts[i].endDate.year)) {
             printf("This vehicle was under a contract in the intended date so it was not available\n");
-            validateDate(&d);
+            readDate(&d);
             contracts[pos].startDate = d;
         }
     }
@@ -93,7 +92,7 @@ static void deleteContract(contract c[], int pos, size_t *quantity, vehicle vehi
 
 static int searchDate(contract cont[], date date, size_t quantity) {
     int i, enc = -1;
-    validateDate(&date);
+    readDate(&date);
     for (i = 0; i <= quantity; i++)
         if (cont[i].startDate.day == date.day && cont[i].startDate.month == date.month && cont[i].startDate.year == date.year)// create a function in date
             enc = i;
@@ -156,11 +155,11 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
         contracts[*quantityContracts].codeVehicle = vehicles[positionVehicle].code;
         printf("Insert the price per day\n");
         contracts[*quantityContracts].priceDay = readFloat(0.01f, 9999.0f);
-        validateDate(&contracts[*quantityContracts].startDate);
+        readDate(&contracts[*quantityContracts].startDate);
         for (i = 0; i < *quantityContracts; i++) {
             while ((contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && contracts[*quantityContracts].startDate.day >= contracts[i].startDate.day && contracts[*quantityContracts].startDate.day < contracts[*quantityContracts].endDate.day && contracts[*quantityContracts].startDate.month == contracts[i].startDate.month && contracts[*quantityContracts].startDate.month == contracts[i].endDate.month && contracts[*quantityContracts].startDate.year == contracts[i].startDate.year && contracts[*quantityContracts].startDate.year == contracts[i].endDate.year) || (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && contracts[*quantityContracts].startDate.month >= contracts[i].startDate.month && contracts[*quantityContracts].startDate.month < contracts[i].endDate.month && contracts[*quantityContracts].startDate.year == contracts[i].startDate.year && contracts[*quantityContracts].startDate.year == contracts[i].endDate.year) || (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && contracts[*quantityContracts].startDate.year >= contracts[i].startDate.year && contracts[*quantityContracts].startDate.year < contracts[i].endDate.year)) {
                 printf("The vehicle was unavailable for the intended date\n");
-                validateDate(&contracts[*quantityContracts].startDate);
+                readDate(&contracts[*quantityContracts].startDate);
             }
         }
         printf("Information: This vehicle is in %s, this will be considered for the start office of the contract\n", officeEnumToText(vehicles[positionVehicle].location));
@@ -192,16 +191,16 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
         contracts[pos].quantityKm = readFloat(vehicles[positionVehicle].km, INFINITY);
         vehicles[positionVehicle].km += contracts[pos].quantityKm;
         // insert code to obtain cost
-        validateDate(&contracts[pos].endDate);
+        readDate(&contracts[pos].endDate);
         for (i = 0; i < quantityContracts; i++) {
             while ((contracts[pos].codeVehicle == contracts[i].codeVehicle && contracts[pos].endDate.day > contracts[i].startDate.day && contracts[pos].endDate.month == contracts[i].startDate.month && contracts[pos].startDate.month == contracts[i].endDate.month && contracts[pos].endDate.year == contracts[i].startDate.year && contracts[pos].endDate.year == contracts[i].endDate.year) || (contracts[pos].codeVehicle == contracts[i].codeVehicle && contracts[pos].endDate.month >= contracts[i].startDate.month && contracts[pos].endDate.month < contracts[i].endDate.month && contracts[pos].endDate.year == contracts[i].startDate.year && contracts[pos].endDate.year == contracts[i].endDate.year) || (contracts[pos].codeVehicle == contracts[i].codeVehicle && contracts[pos].endDate.year >= contracts[i].startDate.year && contracts[pos].endDate.year < contracts[i].endDate.year)) {
                 printf("\nThe vehicle was unavailable for the intended date\n");
-                validateDate(&contracts[pos].endDate);
+                readDate(&contracts[pos].endDate);
             }
         }
         while ((contracts[pos].startDate.day > contracts[pos].endDate.day && contracts[pos].startDate.month == contracts[pos].endDate.month && contracts[pos].startDate.year == contracts[pos].endDate.year) || (contracts[pos].startDate.month > contracts[pos].endDate.month && contracts[pos].startDate.year == contracts[pos].endDate.year) || contracts[pos].startDate.year > contracts[pos].endDate.year) {
             printf("\n Invalid date\n");
-            validateDate(&contracts[pos].endDate);
+            readDate(&contracts[pos].endDate);
         }
         printf("\nOffice where the vehicle is:\n");
         printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
