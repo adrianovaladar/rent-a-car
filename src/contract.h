@@ -14,7 +14,7 @@ typedef struct contract {
     date endDate;
     int startOffice;
     int endOffice;
-    float cost;
+    float price;
 } contract;
 
 void showContracts(contract c[], size_t quantity);

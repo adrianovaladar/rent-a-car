@@ -12,5 +12,6 @@ typedef struct date {
 bool isEmptyDate(date d);
 int diffInDays(date date1, date date2);
 int daysInMonth(int month, int year);
+bool areDatesEqual(date date1, date date2);
 
 #endif//RENT_A_CAR_DATE_H
