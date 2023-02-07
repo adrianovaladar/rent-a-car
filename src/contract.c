@@ -148,15 +148,21 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
         contracts[*quantityContracts].codeCustomer = customers[positionCustomer].code;
         vehicles[positionVehicle].isUnderContract = true;
         contracts[*quantityContracts].codeVehicle = vehicles[positionVehicle].code;
-        printf("Insert the price per day\n");
+        printf("Price per day\n");
         contracts[*quantityContracts].priceDay = readFloat(0.01f, 9999.0f);
-        readDate(&contracts[*quantityContracts].startDate);
-        for (i = 0; i < *quantityContracts; i++) {
-            while ((contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && contracts[*quantityContracts].startDate.day >= contracts[i].startDate.day && contracts[*quantityContracts].startDate.day < contracts[*quantityContracts].endDate.day && contracts[*quantityContracts].startDate.month == contracts[i].startDate.month && contracts[*quantityContracts].startDate.month == contracts[i].endDate.month && contracts[*quantityContracts].startDate.year == contracts[i].startDate.year && contracts[*quantityContracts].startDate.year == contracts[i].endDate.year) || (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && contracts[*quantityContracts].startDate.month >= contracts[i].startDate.month && contracts[*quantityContracts].startDate.month < contracts[i].endDate.month && contracts[*quantityContracts].startDate.year == contracts[i].startDate.year && contracts[*quantityContracts].startDate.year == contracts[i].endDate.year) || (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && contracts[*quantityContracts].startDate.year >= contracts[i].startDate.year && contracts[*quantityContracts].startDate.year < contracts[i].endDate.year)) {
-                printf("The vehicle was unavailable for the intended date\n");
-                readDate(&contracts[*quantityContracts].startDate);
+        bool isLegalDate;
+        printf("Start date\n");
+        do {
+            isLegalDate = true;
+            readDate(&contracts[*quantityContracts].startDate);
+            for (i = 0; i < *quantityContracts && isLegalDate != false; i++) {
+                if (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[*quantityContracts].startDate)) {
+                    printf("The vehicle was unavailable for the intended date. It was under other contract\n");
+                    isLegalDate = false;
+                    break;
+                }
             }
-        }
+        } while (!isLegalDate);
         printf("Information: This vehicle is in %s, this will be considered for the start office of the contract\n", officeEnumToText(vehicles[positionVehicle].location));
         contracts[*quantityContracts].startOffice = vehicles[positionVehicle].location;
         vehicles[positionVehicle].location = Unknown;
@@ -185,21 +191,28 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
         printf("Quantity of km\n");
         contracts[pos].quantityKm = readFloat(vehicles[positionVehicle].km, INFINITY);
         vehicles[positionVehicle].km += contracts[pos].quantityKm;
-        readDate(&contracts[pos].endDate);
-        // check this
-        for (i = 0; i < quantityContracts; i++) {
-            if (i == pos)
-                continue;
-            while ((contracts[pos].codeVehicle == contracts[i].codeVehicle && contracts[pos].endDate.day > contracts[i].startDate.day && contracts[pos].endDate.month == contracts[i].startDate.month && contracts[pos].startDate.month == contracts[i].endDate.month && contracts[pos].endDate.year == contracts[i].startDate.year && contracts[pos].endDate.year == contracts[i].endDate.year) || (contracts[pos].codeVehicle == contracts[i].codeVehicle && contracts[pos].endDate.month >= contracts[i].startDate.month && contracts[pos].endDate.month < contracts[i].endDate.month && contracts[pos].endDate.year == contracts[i].startDate.year && contracts[pos].endDate.year == contracts[i].endDate.year) || (contracts[pos].codeVehicle == contracts[i].codeVehicle && contracts[pos].endDate.year >= contracts[i].startDate.year && contracts[pos].endDate.year < contracts[i].endDate.year)) {
-                printf("The vehicle was unavailable for the intended date");
-                readDate(&contracts[pos].endDate);
-            }
-        }
-        while ((contracts[pos].startDate.day > contracts[pos].endDate.day && contracts[pos].startDate.month == contracts[pos].endDate.month && contracts[pos].startDate.year == contracts[pos].endDate.year) || (contracts[pos].startDate.month > contracts[pos].endDate.month && contracts[pos].startDate.year == contracts[pos].endDate.year) || contracts[pos].startDate.year > contracts[pos].endDate.year) {
-            printf("Invalid date");
+        bool isLegalDate = true;
+        printf("End date\n");
+        do {
+            isLegalDate = true;
             readDate(&contracts[pos].endDate);
-        }
-        contracts[pos].price = (float) diffInDays(contracts[pos].startDate, contracts[pos].endDate) * contracts[pos].priceDay;
+            if (isDateEarlier(contracts[pos].startDate, contracts[pos].endDate)) {
+                printf("End date cannot be less than start date\n");
+                printf("Start date: %d/%d/%d\n", contracts[pos].startDate.day, contracts[pos].startDate.month, contracts[pos].startDate.year);
+                isLegalDate = false;
+            }
+            for (i = 0; i < quantityContracts && isLegalDate != false; i++) {
+                if (i == pos) {
+                    continue;
+                }
+                if (contracts[pos].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[pos].endDate)) {
+                    printf("The vehicle was unavailable for the intended date. It was under other contract\n");
+                    isLegalDate = false;
+                    break;
+                }
+            }
+        } while (!isLegalDate);
+        contracts[pos].price = (float) (diffInDays(contracts[pos].startDate, contracts[pos].endDate) + 1) * contracts[pos].priceDay;
         printf("Office where the vehicle is:\n");
         printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
         contracts[pos].endOffice = readInt(0, 5);
