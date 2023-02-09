@@ -152,3 +152,46 @@ void showVehiclesLocation(vehicle vehicles[], size_t quantityVehicles) {
         printf("\n");
     }
 }
+
+void readVehicles(char *fileName, vehicle vehicles[], size_t *quantityVehicles) {
+    FILE *file;
+    file = fopen(fileName, "rb");
+    if (file == NULL) {
+        printf("Error opening file '%s'!\n", fileName);
+        return;
+    }
+
+    // calculate the number of vehicles
+    fseek(file, 0, SEEK_END);
+    *quantityVehicles = ftell(file) / sizeof(vehicle);
+
+    // set the file position back to the beginning
+    rewind(file);
+
+    // check that the number of vehicles is not negative
+    if (*quantityVehicles < 0) {
+        printf("Error: invalid file size in '%s'\n", fileName);
+        fclose(file);
+        return;
+    }
+
+    // read the vehicles
+    fread(vehicles, sizeof(vehicle), *quantityVehicles, file);
+
+    fclose(file);
+}
+
+// function to write vehicles to a binary file
+void writeVehicles(char *fileName, vehicle vehicles[], size_t quantityVehicles) {
+    FILE *file;
+    file = fopen(fileName, "wb");
+    if (file == NULL) {
+        printf("Error opening file '%s'!\n", fileName);
+        return;
+    }
+
+    // write the vehicles
+    fwrite(vehicles, sizeof(vehicle), quantityVehicles, file);
+
+    fclose(file);
+}

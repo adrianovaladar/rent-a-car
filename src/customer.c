@@ -78,7 +78,7 @@ void showCustomerByCodeAndShowOptions(customer customers[], size_t quantity) {
     int n, codeFound;
 
     if (quantity == 0) {
-        printf("\nThere are no registered customers\n");
+        printf("There are no registered customers\n");
         return;
     }
     n = readInt(1000, 9999);
@@ -110,4 +110,47 @@ void showAllCustomers(customer customers[], size_t quantity) {
     for (i = 0; i < quantity; i++) {
         showCustomer(customers[i]);
     }
+}
+
+void readCustomers(char *fileName, customer customers[], size_t *quantityCustomers) {
+    FILE *file;
+    file = fopen(fileName, "rb");
+    if (file == NULL) {
+        printf("Error opening file '%s'!\n", fileName);
+        return;
+    }
+
+    // calculate the number of customers
+    fseek(file, 0, SEEK_END);
+    *quantityCustomers = ftell(file) / sizeof(customer);
+
+    // set the file position back to the beginning
+    rewind(file);
+
+    // check that the number of customers is not negative
+    if (*quantityCustomers < 0) {
+        printf("Error: invalid file size in '%s'\n", fileName);
+        fclose(file);
+        return;
+    }
+
+    // read the customers
+    fread(customers, sizeof(customer), *quantityCustomers, file);
+
+    fclose(file);
+}
+
+// function to write customers to a binary file
+void writeCustomers(char *fileName, customer customers[], size_t quantityCustomers) {
+    FILE *file;
+    file = fopen(fileName, "wb");
+    if (file == NULL) {
+        printf("Error opening file '%s'!\n", fileName);
+        return;
+    }
+
+    // write the customers
+    fwrite(customers, sizeof(customer), quantityCustomers, file);
+
+    fclose(file);
 }

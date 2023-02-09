@@ -1,39 +1,10 @@
 #include "constants.h"
 #include "contract.h"
 #include "customer.h"
-#include "date.h"
 #include "vehicle.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-char category[][10] = {"capucine", "integral", "perfilada", "furgao", "citadina", "utilitaria", "familiar"};
-
-void insertData(customer customers[], vehicle vehicles[], size_t *quantityCustomers, size_t *quantityVehicles) {
-    customers[0].code = 1000;
-    strcpy(customers[0].name, "customer 1");
-    strcpy(customers[0].address, "Example Address 1");
-    strcpy(customers[0].driverLicense, "P-12345678");
-    customers[0].type = 0;
-    (*quantityCustomers)++;
-
-    customers[1].code = 1001;
-    strcpy(customers[1].name, "customer 2");
-    strcpy(customers[1].address, "Example Address 2");
-    strcpy(customers[1].driverLicense, "P-98765432");
-    customers[1].type = 1;
-    (*quantityCustomers)++;
-
-    vehicles[0].code = 10;
-    strcpy(vehicles[0].brand, "Fiat");
-    strcpy(vehicles[0].model, "Ducato");
-    strcpy(vehicles[0].registrationPlate, "LA-35-61");
-    vehicles[0].isUnderContract = false;
-    vehicles[0].km = 12.000f;
-    vehicles[0].location = Lisbon;
-
-    (*quantityVehicles)++;
-}
 
 int showMenuAndGetOption() {
     int op;
@@ -72,6 +43,38 @@ int showMenuAndGetOption() {
     return op;
 }
 
+void readData(customer customers[], vehicle vehicles[], contract contracts[], size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
+    char customersFile[14], vehiclesFile[13], contractsFile[14];
+#ifdef WINDOWS
+    strcat(customersFile, "customers.bin\0");
+    strcat(vehiclesFile, "vehicles.bin\0");
+    strcat(contractsFile, "contracts.bin\0");
+#else
+    strcat(customersFile, "customers\0");
+    strcat(vehiclesFile, "vehicles\0");
+    strcat(contractsFile, "contracts\0");
+#endif
+    readCustomers(customersFile, customers, quantityCustomers);
+    readVehicles(vehiclesFile, vehicles, quantityVehicles);
+    readContracts(contractsFile, contracts, quantityContracts);
+}
+
+void writeData(customer customers[], vehicle vehicles[], contract contracts[], size_t quantityCustomers, size_t quantityVehicles, size_t quantityContracts) {
+    char customersFile[14], vehiclesFile[13], contractsFile[14];
+#ifdef WINDOWS
+    strcat(customersFile, "customers.bin\0");
+    strcat(vehiclesFile, "vehicles.bin\0");
+    strcat(contractsFile, "contracts.bin\0");
+#else
+    strcat(customersFile, "customers\0");
+    strcat(vehiclesFile, "vehicles\0");
+    strcat(contractsFile, "contracts\0");
+#endif
+    writeCustomers(customersFile, customers, quantityCustomers);
+    writeVehicles(vehiclesFile, vehicles, quantityVehicles);
+    writeContracts(contractsFile, contracts, quantityContracts);
+}
+
 void end() {
     if (getchar() == '\n') {}
     printf("-----------------------\n");
@@ -85,7 +88,7 @@ int main() {
     int option;
     vehicle vehicles[MAX_VEHICLES];
     contract contracts[MAX_CONTRACTS];
-    insertData(customers, vehicles, &quantityCustomers, &quantityVehicles);
+    readData(customers, vehicles, contracts, &quantityCustomers, &quantityVehicles, &quantityContracts);
     do {
 #ifdef WINDOWS
         system("cls");
@@ -200,5 +203,6 @@ int main() {
         }
     } while (option != 0);
     end();
+    writeData(customers, vehicles, contracts, quantityCustomers, quantityVehicles, quantityContracts);
     return 0;
 }

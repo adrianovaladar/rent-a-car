@@ -20,5 +20,7 @@ typedef struct contract {
 void showContracts(contract c[], size_t quantity);
 void startContract(contract contracts[], customer customers[], vehicle vehicles[], size_t quantityCustomers, size_t quantityVehicles, size_t *quantityContracts);
 void showContractByVehicleCodeAndStartDateAndShowOptions(contract contracts[], vehicle vehicles[], customer customers[], size_t quantityContracts, size_t quantityVehicles, size_t quantityCustomers);
+void readContracts(char *fileName, contract contracts[], size_t *quantityContracts);
+void writeContracts(char *fileName, contract contracts[], size_t quantitycontracts);
 
 #endif//RENT_A_CAR_CONTRACT_H

@@ -246,3 +246,46 @@ void showContractByVehicleCodeAndStartDateAndShowOptions(contract contracts[], v
         printf("No contract found with data provided\n");
     }
 }
+
+void readContracts(char *fileName, contract contracts[], size_t *quantityContracts) {
+    FILE *file;
+    file = fopen(fileName, "rb");
+    if (file == NULL) {
+        printf("Error opening file '%s'!\n", fileName);
+        return;
+    }
+
+    // calculate the number of contracts
+    fseek(file, 0, SEEK_END);
+    *quantityContracts = ftell(file) / sizeof(contract);
+
+    // set the file position back to the beginning
+    rewind(file);
+
+    // check that the number of contracts is not negative
+    if (*quantityContracts < 0) {
+        printf("Error: invalid file size in '%s'\n", fileName);
+        fclose(file);
+        return;
+    }
+
+    // read the contracts
+    fread(contracts, sizeof(contract), *quantityContracts, file);
+
+    fclose(file);
+}
+
+// function to write contracts to a binary file
+void writeContracts(char *fileName, contract contracts[], size_t quantitycontracts) {
+    FILE *file;
+    file = fopen(fileName, "wb");
+    if (file == NULL) {
+        printf("Error opening file '%s'!\n", fileName);
+        return;
+    }
+
+    // write the contracts
+    fwrite(contracts, sizeof(contract), quantitycontracts, file);
+
+    fclose(file);
+}
