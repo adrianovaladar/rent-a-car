@@ -20,7 +20,7 @@ static void readCustomerData(customer *c) {
     readString(c->driverLicense, 10, "Driver license (maximum 10 characters):");
 }
 
-static void setCodeNewCustomer(customer customers[], size_t *quantity) {
+static void setCodeNewCustomer(customer customers[], const size_t *quantity) {
     customers[*quantity].code = 0;
     for (size_t i = 0; i < *quantity; i++) {
         if (customers[i].code == customers[*quantity].code)
@@ -29,8 +29,6 @@ static void setCodeNewCustomer(customer customers[], size_t *quantity) {
 }
 
 void insertCustomer(customer customers[], size_t *quantity) {
-    int n, position;
-
     if (*quantity == MAX_CUSTOMERS) {
         printf("We reached our full capacity of customers. Please come back later");
         return;
@@ -38,7 +36,6 @@ void insertCustomer(customer customers[], size_t *quantity) {
     printf("\n--- Customer data ---\n");
     setCodeNewCustomer(customers, quantity);
     printf("Code: %d\n", customers[*quantity].code);
-    customers[*quantity].code = n;
     readCustomerData(&customers[*quantity]);
     customers[*quantity].type = 0;
     (*quantity)++;
@@ -112,7 +109,7 @@ void showAllCustomers(customer customers[], size_t quantity) {
     }
 }
 
-void readCustomers(char *fileName, customer customers[], size_t *quantityCustomers) {
+void readCustomers(char *fileName, customer customers[], size_t *quantity) {
     FILE *file;
     file = fopen(fileName, "rb");
     if (file == NULL) {
@@ -122,26 +119,26 @@ void readCustomers(char *fileName, customer customers[], size_t *quantityCustome
 
     // calculate the number of customers
     fseek(file, 0, SEEK_END);
-    *quantityCustomers = ftell(file) / sizeof(customer);
+    *quantity = ftell(file) / sizeof(customer);
 
     // set the file position back to the beginning
     rewind(file);
 
-    // check that the number of customers is not negative
-    if (*quantityCustomers < 0) {
+    // check that the number of customers is not negative or bigger than expected
+    if (*quantity < 0 || *quantity > MAX_CUSTOMERS) {
         printf("Error: invalid file size in '%s'\n", fileName);
         fclose(file);
         return;
     }
 
     // read the customers
-    fread(customers, sizeof(customer), *quantityCustomers, file);
+    fread(customers, sizeof(customer), *quantity, file);
 
     fclose(file);
 }
 
 // function to write customers to a binary file
-void writeCustomers(char *fileName, customer customers[], size_t quantityCustomers) {
+void writeCustomers(char *fileName, customer customers[], size_t quantity) {
     FILE *file;
     file = fopen(fileName, "wb");
     if (file == NULL) {
@@ -150,7 +147,7 @@ void writeCustomers(char *fileName, customer customers[], size_t quantityCustome
     }
 
     // write the customers
-    fwrite(customers, sizeof(customer), quantityCustomers, file);
+    fwrite(customers, sizeof(customer), quantity, file);
 
     fclose(file);
 }

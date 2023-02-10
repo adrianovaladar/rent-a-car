@@ -25,9 +25,8 @@ static void readVehicleData(vehicle *v) {
     readString(v->brand, 11, "Brand (maximum 10 characters):");
     readString(v->model, 11, "Model (maximum 10 characters):");
     readString(v->registrationPlate, 9, "Registration plate (maximum 8 characters):");
-    printf("\nCategory code:\n");
     v->isUnderContract = false;
-    printf("\nKms:\n");
+    printf("Kms:\n");
     v->km = readFloat(0, 9999);
     printf("Office where the vehicle is:\n");
     printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
@@ -44,7 +43,7 @@ int searchCodeVehicle(vehicle vehicles[], size_t quantity, int code) {
     return enc;
 }
 
-static void setCodeNewVehicle(vehicle vehicles[], size_t *quantity) {
+static void setCodeNewVehicle(vehicle vehicles[], const size_t *quantity) {
     vehicles[*quantity].code = 0;
     for (size_t i = 0; i < *quantity; i++) {
         if (vehicles[i].code == vehicles[*quantity].code)
@@ -53,7 +52,6 @@ static void setCodeNewVehicle(vehicle vehicles[], size_t *quantity) {
 }
 
 void insertVehicle(vehicle vehicles[], size_t *quantity) {
-    int n, position;
     if (*quantity == MAX_VEHICLES) {
         printf("\nThe stand is full, please como back later\n");
         return;
@@ -126,7 +124,6 @@ void showAllVehicles(vehicle vehicles[], size_t quantity) {
     int i;
     if (quantity == 0) {
         printf("\nThere are no registered vehicles\n");
-        getchar();
     } else
         for (i = 0; i < quantity; i++) {
             showVehicle(vehicles[i]);
@@ -153,7 +150,7 @@ void showVehiclesLocation(vehicle vehicles[], size_t quantityVehicles) {
     }
 }
 
-void readVehicles(char *fileName, vehicle vehicles[], size_t *quantityVehicles) {
+void readVehicles(char *fileName, vehicle vehicles[], size_t *quantity) {
     FILE *file;
     file = fopen(fileName, "rb");
     if (file == NULL) {
@@ -163,26 +160,26 @@ void readVehicles(char *fileName, vehicle vehicles[], size_t *quantityVehicles) 
 
     // calculate the number of vehicles
     fseek(file, 0, SEEK_END);
-    *quantityVehicles = ftell(file) / sizeof(vehicle);
+    *quantity = ftell(file) / sizeof(vehicle);
 
     // set the file position back to the beginning
     rewind(file);
 
-    // check that the number of vehicles is not negative
-    if (*quantityVehicles < 0) {
+    // check that the number of vehicles is not negative or bigger than expected
+    if (*quantity < 0 || *quantity > MAX_VEHICLES) {
         printf("Error: invalid file size in '%s'\n", fileName);
         fclose(file);
         return;
     }
 
     // read the vehicles
-    fread(vehicles, sizeof(vehicle), *quantityVehicles, file);
+    fread(vehicles, sizeof(vehicle), *quantity, file);
 
     fclose(file);
 }
 
 // function to write vehicles to a binary file
-void writeVehicles(char *fileName, vehicle vehicles[], size_t quantityVehicles) {
+void writeVehicles(char *fileName, vehicle vehicles[], size_t quantity) {
     FILE *file;
     file = fopen(fileName, "wb");
     if (file == NULL) {
@@ -191,7 +188,7 @@ void writeVehicles(char *fileName, vehicle vehicles[], size_t quantityVehicles) 
     }
 
     // write the vehicles
-    fwrite(vehicles, sizeof(vehicle), quantityVehicles, file);
+    fwrite(vehicles, sizeof(vehicle), quantity, file);
 
     fclose(file);
 }

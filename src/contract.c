@@ -30,7 +30,7 @@ void showContracts(contract c[], size_t quantity) {
             showContract(c[i]);
         }
         if (quantity > 1) {
-            printf("\nSort by date? Yes(y) No(n): ");
+            printf("Sort by date? Yes(y) No(n): ");
             scanf("%c", &valor);
             while (valor != 'n' && valor != 'N' && valor != 'y' && valor != 'Y') {
                 scanf("%c", &valor);
@@ -122,7 +122,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
     else {
         do {
             printf("Customer code\n");
-            n = readInt(1000, 9999);
+            n = readInt(0, MAX_CUSTOMERS - 1);
             positionCustomer = searchCodeCustomer(customers, quantityCustomers, n);
             if (positionCustomer < 0) {
                 printf("Customer not found, try another code\n");
@@ -134,7 +134,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
         }
         do {
             printf("Vehicle code\n");
-            n = readInt(10, 99);
+            n = readInt(0, MAX_VEHICLES - 1);
             positionVehicle = searchCodeVehicle(vehicles, quantityVehicles, n);
             if (positionVehicle < 0) {
                 printf("Vehicle not found, try another code\n");
@@ -159,7 +159,6 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
                 if (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[*quantityContracts].startDate)) {
                     printf("The vehicle was unavailable for the intended date. It was under other contract\n");
                     isLegalDate = false;
-                    break;
                 }
             }
         } while (!isLegalDate);
@@ -208,7 +207,6 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
                 if (contracts[pos].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[pos].endDate)) {
                     printf("The vehicle was unavailable for the intended date. It was under other contract\n");
                     isLegalDate = false;
-                    break;
                 }
             }
         } while (!isLegalDate);
@@ -247,7 +245,7 @@ void showContractByVehicleCodeAndStartDateAndShowOptions(contract contracts[], v
     }
 }
 
-void readContracts(char *fileName, contract contracts[], size_t *quantityContracts) {
+void readContracts(char *fileName, contract contracts[], size_t *quantity) {
     FILE *file;
     file = fopen(fileName, "rb");
     if (file == NULL) {
@@ -257,26 +255,26 @@ void readContracts(char *fileName, contract contracts[], size_t *quantityContrac
 
     // calculate the number of contracts
     fseek(file, 0, SEEK_END);
-    *quantityContracts = ftell(file) / sizeof(contract);
+    *quantity = ftell(file) / sizeof(contract);
 
     // set the file position back to the beginning
     rewind(file);
 
-    // check that the number of contracts is not negative
-    if (*quantityContracts < 0) {
+    // check that the number of contracts is not negative or bigger than expected
+    if (*quantity < 0 || *quantity > MAX_CONTRACTS) {
         printf("Error: invalid file size in '%s'\n", fileName);
         fclose(file);
         return;
     }
 
     // read the contracts
-    fread(contracts, sizeof(contract), *quantityContracts, file);
+    fread(contracts, sizeof(contract), *quantity, file);
 
     fclose(file);
 }
 
 // function to write contracts to a binary file
-void writeContracts(char *fileName, contract contracts[], size_t quantitycontracts) {
+void writeContracts(char *fileName, contract contracts[], size_t quantity) {
     FILE *file;
     file = fopen(fileName, "wb");
     if (file == NULL) {
@@ -285,7 +283,7 @@ void writeContracts(char *fileName, contract contracts[], size_t quantitycontrac
     }
 
     // write the contracts
-    fwrite(contracts, sizeof(contract), quantitycontracts, file);
+    fwrite(contracts, sizeof(contract), quantity, file);
 
     fclose(file);
 }

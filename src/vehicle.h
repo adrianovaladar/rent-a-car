@@ -29,7 +29,7 @@ void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t quantity);
 int searchCodeVehicle(vehicle vehicles[], size_t quantity, int code);
 void showVehiclesLocation(vehicle vehicles[], size_t quantityVehicles);
 char *officeEnumToText(enum office o);
-void readVehicles(char *fileName, vehicle vehicles[], size_t *quantityVehicles);
-void writeVehicles(char *fileName, vehicle vehicles[], size_t quantityVehicles);
+void readVehicles(char *fileName, vehicle vehicles[], size_t *quantity);
+void writeVehicles(char *fileName, vehicle vehicles[], size_t quantity);
 
 #endif//RENT_A_CAR_VEHICLE_H

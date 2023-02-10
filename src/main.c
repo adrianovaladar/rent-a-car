@@ -43,33 +43,13 @@ int showMenuAndGetOption() {
     return op;
 }
 
-void readData(customer customers[], vehicle vehicles[], contract contracts[], size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
-    char customersFile[14], vehiclesFile[13], contractsFile[14];
-#ifdef WINDOWS
-    strcat(customersFile, "customers.bin\0");
-    strcat(vehiclesFile, "vehicles.bin\0");
-    strcat(contractsFile, "contracts.bin\0");
-#else
-    strcat(customersFile, "customers\0");
-    strcat(vehiclesFile, "vehicles\0");
-    strcat(contractsFile, "contracts\0");
-#endif
+void readData(char *customersFile, char *vehiclesFile, char *contractsFile, customer customers[], vehicle vehicles[], contract contracts[], size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
     readCustomers(customersFile, customers, quantityCustomers);
     readVehicles(vehiclesFile, vehicles, quantityVehicles);
     readContracts(contractsFile, contracts, quantityContracts);
 }
 
-void writeData(customer customers[], vehicle vehicles[], contract contracts[], size_t quantityCustomers, size_t quantityVehicles, size_t quantityContracts) {
-    char customersFile[14], vehiclesFile[13], contractsFile[14];
-#ifdef WINDOWS
-    strcat(customersFile, "customers.bin\0");
-    strcat(vehiclesFile, "vehicles.bin\0");
-    strcat(contractsFile, "contracts.bin\0");
-#else
-    strcat(customersFile, "customers\0");
-    strcat(vehiclesFile, "vehicles\0");
-    strcat(contractsFile, "contracts\0");
-#endif
+void writeData(char *customersFile, char *vehiclesFile, char *contractsFile, customer customers[], vehicle vehicles[], contract contracts[], size_t quantityCustomers, size_t quantityVehicles, size_t quantityContracts) {
     writeCustomers(customersFile, customers, quantityCustomers);
     writeVehicles(vehiclesFile, vehicles, quantityVehicles);
     writeContracts(contractsFile, contracts, quantityContracts);
@@ -88,7 +68,18 @@ int main() {
     int option;
     vehicle vehicles[MAX_VEHICLES];
     contract contracts[MAX_CONTRACTS];
-    readData(customers, vehicles, contracts, &quantityCustomers, &quantityVehicles, &quantityContracts);
+    // variables to read/write data
+    char customersFile[14], vehiclesFile[13], contractsFile[14];
+#ifdef WINDOWS
+    strcat(customersFile, "customers.bin\0");
+    strcat(vehiclesFile, "vehicles.bin\0");
+    strcat(contractsFile, "contracts.bin\0");
+#else
+    strcat(customersFile, "customers\0");
+    strcat(vehiclesFile, "vehicles\0");
+    strcat(contractsFile, "contracts\0");
+#endif
+    readData(customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, &quantityCustomers, &quantityVehicles, &quantityContracts);
     do {
 #ifdef WINDOWS
         system("cls");
@@ -203,6 +194,6 @@ int main() {
         }
     } while (option != 0);
     end();
-    writeData(customers, vehicles, contracts, quantityCustomers, quantityVehicles, quantityContracts);
+    writeData(customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, quantityCustomers, quantityVehicles, quantityContracts);
     return 0;
 }
