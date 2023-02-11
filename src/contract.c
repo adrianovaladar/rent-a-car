@@ -5,7 +5,6 @@
 #include <stdio.h>
 
 static void showContract(contract c) {
-    printf("--- Contract data ---\n");
     printf("Customer Code: %d\n", c.codeCustomer);
     printf("Vehicle code: %d\n", c.codeVehicle);
     printf("Price per day: %.2f\n", c.priceDay);
@@ -13,7 +12,7 @@ static void showContract(contract c) {
     printf("Start office: %s\n", officeEnumToText(c.startOffice));
     if (!isEmptyDate(c.endDate)) {
         printf("End date: %d/%d/%d\n", c.endDate.day, c.endDate.month, c.endDate.year);
-        printf("End office: %s\n", officeEnumToText(c.startOffice));
+        printf("End office: %s\n", officeEnumToText(c.endOffice));
         printf("Quantity kms: %.2f\n", c.quantityKm);
         printf("Price: %.2f\n", c.price);
     }
@@ -21,34 +20,42 @@ static void showContract(contract c) {
 }
 
 void showContracts(contract c[], size_t quantity) {
-    int i, j;
-    char valor;
     if (quantity == 0) {
         printf("There are no registered contracts\n");
-    } else {
-        for (i = 0; i < quantity; i++) {
-            showContract(c[i]);
-        }
-        if (quantity > 1) {
-            printf("Sort by date? Yes(y) No(n): ");
-            scanf("%c", &valor);
-            while (valor != 'n' && valor != 'N' && valor != 'y' && valor != 'Y') {
-                scanf("%c", &valor);
+        return;
+    }
+    int i, j;
+    char value;
+    printf("--- Contract data ---\n\n");
+    for (i = 0; i < quantity; i++) {
+        showContract(c[i]);
+        printf("\n");
+    }
+    if (quantity > 1) {
+        printf("Sort by start date? Yes(y) No(n): ");
+        do {
+            scanf("%c", &value);
+        } while (value != 'n' && value != 'N' && value != 'y' && value != 'Y');
+        if (value == 'y' || value == 'Y') {
+            contract tmp;
+            contract copyContracts[quantity];
+            for (int i = 0; i < quantity; i++) {
+                copyContracts[i] = c[i];
             }
-            if (valor == 'y' || valor == 'Y') {
-                contract tmp;
-                for (j = 1; j < quantity; j++) {
-                    for (i = 0; i < quantity - 1; i++) {
-                        if ((c[i].startDate.day > c[i + 1].startDate.day && c[i].startDate.month == c[i + 1].startDate.month && c[i].startDate.year == c[i + 1].startDate.year) || (c[i].startDate.month > c[i + 1].startDate.month && c[i].startDate.year == c[i + 1].startDate.year) || (c[i].startDate.year > c[i + 1].startDate.year)) {
-                            tmp = c[i];
-                            c[i] = c[i + 1];
-                            c[i + 1] = tmp;
-                        }
+            for (j = 1; j < quantity; j++) {
+                for (i = 0; i < quantity - 1; i++) {
+                    if (isDateAfter(copyContracts[i].startDate, copyContracts[i + 1].startDate)) {
+                        tmp = copyContracts[i];
+                        copyContracts[i] = copyContracts[i + 1];
+                        copyContracts[i + 1] = tmp;
                     }
                 }
-                for (i = 0; i < quantity; i++) {
-                    showContract(c[i]);
-                }
+            }
+            printf("\n");
+            printf("--- Contract data ---\n\n");
+            for (i = 0; i < quantity; i++) {
+                showContract(copyContracts[i]);
+                printf("\n");
             }
         }
     }
