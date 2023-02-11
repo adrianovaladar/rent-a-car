@@ -104,7 +104,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showCustomerByCodeAndShowOptions(customers, quantityCustomers);
+                showCustomerByCodeAndShowOptions(customers, &quantityCustomers);
                 end();
                 break;
             }
@@ -134,7 +134,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showVehicleByCodeAndShowOptions(vehicles, quantityVehicles);
+                showVehicleByCodeAndShowOptions(vehicles, &quantityVehicles);
                 end();
                 break;
             }
@@ -175,7 +175,7 @@ int main() {
 #else
                 system("clear");
 #endif
-                showContractByVehicleCodeAndStartDateAndShowOptions(contracts, vehicles, customers, quantityContracts, quantityVehicles, quantityCustomers);
+                showContractByVehicleCodeAndStartDateAndShowOptions(contracts, vehicles, customers, &quantityContracts, quantityVehicles, quantityCustomers);
                 end();
                 break;
             }
@@ -193,7 +193,6 @@ int main() {
             }
         }
     } while (option != 0);
-    end();
     writeData(customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, quantityCustomers, quantityVehicles, quantityContracts);
     return 0;
 }

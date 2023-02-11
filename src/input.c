@@ -1,4 +1,5 @@
 #include "input.h"
+#include "constants.h"
 #include "date.h"
 #include <limits.h>
 #include <stdio.h>
@@ -56,7 +57,7 @@ void readString(char *s, int size, char *info) {
 
 void readDate(date *date) {
     printf("Insert the year\n");
-    date->year = readInt(2020, INT_MAX);
+    date->year = readInt(START_YEAR, INT_MAX);
     printf("Insert the month\n");
     date->month = readInt(1, 12);
     int numberOfDays = daysInMonth(date->month, date->year);

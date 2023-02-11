@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 static void showContract(contract c) {
-    printf("\n--- Contract data ---\n");
+    printf("--- Contract data ---\n");
     printf("Customer Code: %d\n", c.codeCustomer);
     printf("Vehicle code: %d\n", c.codeVehicle);
     printf("Price per day: %.2f\n", c.priceDay);
@@ -105,7 +105,7 @@ static int searchContract(contract c[], size_t quantityContracts) {
     printf("Contract start date\n");
     position = searchByStartingDate(c, quantityContracts);
     printf("Vehicle code\n");
-    insertedCodeValue = readInt(10, 99);
+    insertedCodeValue = readInt(0, MAX_VEHICLES - 1);
     if (insertedCodeValue == c[position].codeVehicle)
         aux = position;
     return aux;
@@ -176,7 +176,7 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
     else {
         char value;
         int i, positionCustomer, positionVehicle;
-        printf("\nIs the vehicle in a good status? Yes(y) No(n) ");
+        printf("Is the vehicle in a good status? Yes(y) No(n) ");
         do {
             scanf("%c", &value);
         } while (value != 'y' && value != 'Y' && value != 'n' && value != 'N');
@@ -218,26 +218,26 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
     }
 }
 
-void showContractByVehicleCodeAndStartDateAndShowOptions(contract contracts[], vehicle vehicles[], customer customers[], size_t quantityContracts, size_t quantityVehicles, size_t quantityCustomers) {
+void showContractByVehicleCodeAndStartDateAndShowOptions(contract contracts[], vehicle vehicles[], customer customers[], size_t *quantityContracts, size_t quantityVehicles, size_t quantityCustomers) {
     int contractPosition;
-    if (quantityContracts == 0) {
+    if (*quantityContracts == 0) {
         printf("There are no registered contracts\n");
         return;
     }
-    contractPosition = searchContract(contracts, quantityContracts);
+    contractPosition = searchContract(contracts, *quantityContracts);
     if (contractPosition >= 0) {
         showContract(contracts[contractPosition]);
-        printf("\nEdit(e) Delete(d) End (t) (Press any other key plus enter to leave this menu)\n");
+        printf("Edit(e) Delete(d) End (t) (Press any other key plus enter to leave this menu)\n");
         unsigned char op;
         do {
             op = getchar();
         } while (op == '\n');
         if (op == 'T' || op == 't') {
-            endContract(contracts, contractPosition, vehicles, customers, quantityCustomers, quantityVehicles, quantityContracts);
+            endContract(contracts, contractPosition, vehicles, customers, quantityCustomers, quantityVehicles, *quantityContracts);
         } else if (op == 'E' || op == 'e') {
-            editContract(contracts, contractPosition, quantityContracts);
+            editContract(contracts, contractPosition, *quantityContracts);
         } else if (op == 'D' || op == 'd') {
-            deleteContract(contracts, contractPosition, &quantityContracts, vehicles, customers, quantityVehicles, quantityCustomers);
+            deleteContract(contracts, contractPosition, quantityContracts, vehicles, customers, quantityVehicles, quantityCustomers);
             printf("Contract deleted successfully\n");
         }
     } else {

@@ -1,6 +1,7 @@
 #include "vehicle.h"
 #include "constants.h"
 #include "input.h"
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -27,20 +28,20 @@ static void readVehicleData(vehicle *v) {
     readString(v->registrationPlate, 9, "Registration plate (maximum 8 characters):");
     v->isUnderContract = false;
     printf("Kms:\n");
-    v->km = readFloat(0, 9999);
+    v->km = readFloat(0, INFINITY);
     printf("Office where the vehicle is:\n");
     printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
     v->location = readInt(0, 5);
 }
 
 int searchCodeVehicle(vehicle vehicles[], size_t quantity, int code) {
-    int i, enc = -1;
+    int i, position = -1;
 
-    for (i = 0; i <= quantity && enc == -1; i++)
+    for (i = 0; i <= quantity && position == -1; i++)
         if (vehicles[i].code == code)
-            enc = i;
+            position = i;
 
-    return enc;
+    return position;
 }
 
 static void setCodeNewVehicle(vehicle vehicles[], const size_t *quantity) {
@@ -53,7 +54,7 @@ static void setCodeNewVehicle(vehicle vehicles[], const size_t *quantity) {
 
 void insertVehicle(vehicle vehicles[], size_t *quantity) {
     if (*quantity == MAX_VEHICLES) {
-        printf("\nThe stand is full, please como back later\n");
+        printf("The stand is full, please como back later\n");
         return;
     }
     printf("--- Car data ---\n");
@@ -65,7 +66,7 @@ void insertVehicle(vehicle vehicles[], size_t *quantity) {
 
 static void editVehicle(vehicle *v) {
     if (v->isUnderContract) {
-        printf("\nThe vehicle is under a contract at the moment, please come back later\n");
+        printf("The vehicle is under a contract at the moment, please come back later\n");
         return;
     }
     printf("--- Car data ---\n");
@@ -74,7 +75,7 @@ static void editVehicle(vehicle *v) {
 
 static void deleteVehicle(vehicle vehicles[], int pos, size_t *qtd) {
     if (vehicles[pos].isUnderContract) {
-        printf("\nThe vehicle is under a contract at the moment, please come back later\n");
+        printf("The vehicle is under a contract at the moment, please come back later\n");
         return;
     }
     for (int i = pos; i <= *qtd; i++) {
@@ -84,27 +85,26 @@ static void deleteVehicle(vehicle vehicles[], int pos, size_t *qtd) {
 }
 
 static void showVehicle(vehicle v) {
-    printf("\n--- Car data ---\n");
-    printf("\nCode: %d", v.code);
-    printf("\nBrand: %s", v.brand);
-    printf("\nModel: %s", v.model);
-    printf("\nRegistration plate: %s", v.registrationPlate);
-    printf("\nKms: %.2f", v.km);
-    printf("\nStatus: %s\n", v.isUnderContract ? "Unavailable" : "Available");
+    printf("Code: %d\n", v.code);
+    printf("Brand: %s\n", v.brand);
+    printf("Model: %s\n", v.model);
+    printf("Registration plate: %s\n", v.registrationPlate);
+    printf("Kms: %.2f\n", v.km);
+    printf("Status: %s\n", v.isUnderContract ? "Unavailable" : "Available");
 }
 
-void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t quantity) {
+void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t *quantity) {
     int n, codeFound;
 
-    if (quantity == 0) {
-        printf("\nThere are no registered vehicles\n");
+    if (*quantity == 0) {
+        printf("There are no registered vehicles\n");
         return;
     }
-    n = readInt(10, 99);
-    codeFound = searchCodeVehicle(vehicles, quantity, n);
+    n = readInt(0, MAX_VEHICLES - 1);
+    codeFound = searchCodeVehicle(vehicles, *quantity, n);
     if (codeFound >= 0) {
         showVehicle(vehicles[codeFound]);
-        printf("\nEdit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
+        printf("Edit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
         unsigned char op;
         do {
             op = getchar();
@@ -112,7 +112,7 @@ void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t quantity) {
         if (op == 'E' || op == 'e') {
             editVehicle(&vehicles[codeFound]);
         } else if (op == 'D' || op == 'd') {
-            deleteVehicle(vehicles, codeFound, &quantity);
+            deleteVehicle(vehicles, codeFound, quantity);
             printf("Vehicle deleted successfully\n");
         }
     } else {
@@ -123,20 +123,26 @@ void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t quantity) {
 void showAllVehicles(vehicle vehicles[], size_t quantity) {
     int i;
     if (quantity == 0) {
-        printf("\nThere are no registered vehicles\n");
-    } else
-        for (i = 0; i < quantity; i++) {
-            showVehicle(vehicles[i]);
-        }
+        printf("There are no registered vehicles\n");
+        return;
+    }
+    printf("--- Vehicle data ---\n");
+    for (i = 0; i < quantity; i++) {
+        showVehicle(vehicles[i]);
+        printf("\n");
+    }
 }
 
-void showVehiclesLocation(vehicle vehicles[], size_t quantityVehicles) {
-
+void showVehiclesLocation(vehicle vehicles[], size_t quantity) {
+    if (quantity == 0) {
+        printf("There are no registered vehicles\n");
+        return;
+    }
     int i, j;
     printf("              |                             OFFICES                          |\n");
     printf("VEHICLES      |Braga   |Coimbra |Guarda  |Faro    |Lisbon  |Porto   |Unknown |\n");
     printf("--------------|--------|--------|--------|--------|--------|--------|--------|\n");
-    for (i = 0; i < quantityVehicles; i++) {
+    for (i = 0; i < quantity; i++) {
         printf("%-5d", vehicles[i].code);
         printf("         |");
         for (j = 0; j < MAX_OFFICES; j++) {

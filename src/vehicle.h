@@ -25,9 +25,9 @@ typedef struct vehicle {
 
 void insertVehicle(vehicle vehicles[], size_t *quantity);
 void showAllVehicles(vehicle vehicles[], size_t quantity);
-void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t quantity);
+void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t *quantity);
 int searchCodeVehicle(vehicle vehicles[], size_t quantity, int code);
-void showVehiclesLocation(vehicle vehicles[], size_t quantityVehicles);
+void showVehiclesLocation(vehicle vehicles[], size_t quantity);
 char *officeEnumToText(enum office o);
 void readVehicles(char *fileName, vehicle vehicles[], size_t *quantity);
 void writeVehicles(char *fileName, vehicle vehicles[], size_t quantity);

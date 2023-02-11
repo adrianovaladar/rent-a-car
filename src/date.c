@@ -1,4 +1,5 @@
 #include "date.h"
+#include "constants.h"
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -31,13 +32,13 @@ int diffInDays(date date1, date date2) {
     for (int m = 1; m < date1.month; m++) {
         daysDate1 += daysInMonth(m, date1.year);
     }
-    for (int m = 1970; m < date2.month; m++) {
+    for (int m = 1; m < date2.month; m++) {
         daysDate2 += daysInMonth(m, date2.year);
     }
-    for (int y = 1970; y < date1.year; y++) {
+    for (int y = START_YEAR; y < date1.year; y++) {
         daysDate1 += 365 + isLeapYear(y);
     }
-    for (int y = 1970; y < date2.year; y++) {
+    for (int y = START_YEAR; y < date2.year; y++) {
         daysDate2 += 365 + isLeapYear(y);
     }
     return abs(daysDate2 - daysDate1);

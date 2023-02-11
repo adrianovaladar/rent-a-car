@@ -5,5 +5,6 @@
 #define MAX_VEHICLES 300
 #define MAX_OFFICES 7
 #define MAX_CONTRACTS 1000
+#define START_YEAR 2020
 
 #endif//RENT_A_CAR_CONSTANTS_H
