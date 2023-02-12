@@ -1,8 +1,9 @@
 # rent-a-car
 
-This project is a car rental simulator for Portugal developed in C17. It was originally developed
-at [ISEP](https://www.isep.ipp.pt)
-and was fully refactored later on. It allows the user to manage customers, vehicles and contracts.
+This project is a portuguese car rental simulator developed in C17. It was originally developed
+at [ISEP](https://www.isep.ipp.pt) and was fully refactored later on.
+
+It allows the user to manage customers, vehicles and contracts.
 
 ## Bugs and Issues
 
