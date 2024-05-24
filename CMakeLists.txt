@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
-project(rent_a_car C)
+project(rent_a_car)
 
 set(CMAKE_C_STANDARD 17)
 
@@ -19,3 +19,6 @@ add_executable(rent_a_car
         src/application.h
         src/application.c
 )
+
+# Add tests
+add_subdirectory(tests)
