@@ -6,9 +6,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int showMenuAndGetOption() {
-    int op;
+static int readOption() {
+    int option;
+    bool optionExists;
     do {
+        printf("Insert an option: ");
+        int check = scanf("%d", &option);
+        optionExists = option == 0 || option == 1 || option == 2 || option == 3 ||
+                       option == 11 || option == 12 || option == 13 || option == 14 ||
+                       option == 21 || option == 22 || option == 23;
+        if (check != 1 || !optionExists) {
+            printf("Input not valid\n");
+            while ((check = fgetc(stdin)) != '\n' && check != EOF) {}
+        }
+    } while (!optionExists);
+    return option;
+}
+
+static void showMenu() {
 #ifdef WINDOWS
         system("cls");
         system("title Rent-a-car");
@@ -31,16 +46,6 @@ static int showMenuAndGetOption() {
         printf("22- Show/Modify/Delete a contract or Return vehicle\n");
         printf("23- Show data of all contracts\n\n");
         printf("0 - Exit\n");
-        printf("Insert an option: ");
-        int check = scanf("%d", &op);
-        if (check != 1) {
-            while ((check = fgetc(stdin)) != '\n' && check != EOF) {}
-        }
-    } while (op != 0 &&
-             op != 1 && op != 2 && op != 3 &&
-             op != 11 && op != 12 && op != 13 && op != 14 &&
-             op != 21 && op != 22 && op != 23);
-    return op;
 }
 
 static void readData(char *customersFile, char *vehiclesFile, char *contractsFile, customer customers[], vehicle vehicles[], contract contracts[], size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
@@ -86,7 +91,8 @@ void run() {
 #else
         system("clear");
 #endif
-        option = showMenuAndGetOption();
+        showMenu();
+        option = readOption();
         switch (option) {
             case 1: {
 #ifdef WINDOWS
