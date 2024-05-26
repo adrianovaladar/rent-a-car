@@ -180,6 +180,7 @@ void run() {
                 break;
             }
             default: {
+                // Default behaviour is empty on purpose. Invalid inputs are handled by readInput.
             }
         }
     } while (option != 0);
