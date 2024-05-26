@@ -2,26 +2,10 @@
 #include "contract.h"
 #include "customer.h"
 #include "vehicle.h"
+#include "input.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-static int readOption() {
-    int option;
-    bool optionExists;
-    do {
-        printf("Insert an option: ");
-        int check = scanf("%d", &option);
-        optionExists = option == 0 || option == 1 || option == 2 || option == 3 ||
-                       option == 11 || option == 12 || option == 13 || option == 14 ||
-                       option == 21 || option == 22 || option == 23;
-        if (check != 1 || !optionExists) {
-            printf("Input not valid\n");
-            while ((check = fgetc(stdin)) != '\n' && check != EOF) {}
-        }
-    } while (!optionExists);
-    return option;
-}
 
 static void showMenu() {
 #ifdef WINDOWS
