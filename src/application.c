@@ -76,7 +76,7 @@ void run() {
         system("clear");
 #endif
         showMenu();
-        option = readOption();
+        option = readOption(stdin);
         switch (option) {
             case 1: {
 #ifdef WINDOWS

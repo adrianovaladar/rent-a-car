@@ -1,5 +1,13 @@
 set(CMAKE_CXX_STANDARD 23)
-add_executable(AllTests main.cpp)
+set(CMAKE_C_STANDARD 17)
+add_executable(AllTests main.cpp
+        ../src/input.h
+        ../src/input.c
+        ../src/date.h
+        ../src/date.c
+        InputTests.cpp
+        InputTests.h)
+target_compile_definitions(AllTests PRIVATE TEST=1)
 include(FetchContent)
 FetchContent_Declare(
         googletest
