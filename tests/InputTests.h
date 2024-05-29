@@ -5,7 +5,7 @@
 class InputTests : public ::testing::Test {
 protected:
     FILE* file{};
-    int option{};
+    int value{};
 };
 
 
