@@ -77,7 +77,7 @@ void showCustomerByCodeAndShowOptions(customer customers[], size_t *quantity) {
         printf("There are no registered customers\n");
         return;
     }
-    n = readInt(0, MAX_CUSTOMERS - 1);
+    n = readInt(stdin, 0, MAX_CUSTOMERS - 1);
     codeFound = searchCodeCustomer(customers, *quantity, n);
     if (codeFound >= 0) {
         showCustomer(customers[codeFound]);

@@ -31,7 +31,7 @@ static void readVehicleData(vehicle *v) {
     v->km = readFloat(0, INFINITY);
     printf("Office\n");
     printf("%s %d %s %d %s %d %s %d %s %d %s %d\n", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
-    v->location = readInt(0, 5);
+    v->location = readInt(stdin, 0, 5);
 }
 
 int searchCodeVehicle(vehicle vehicles[], size_t quantity, int code) {
@@ -100,7 +100,7 @@ void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t *quantity) {
         printf("There are no registered vehicles\n");
         return;
     }
-    n = readInt(0, MAX_VEHICLES - 1);
+    n = readInt(stdin, 0, MAX_VEHICLES - 1);
     codeFound = searchCodeVehicle(vehicles, *quantity, n);
     if (codeFound >= 0) {
         showVehicle(vehicles[codeFound]);

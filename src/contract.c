@@ -112,7 +112,7 @@ static int searchContract(contract c[], size_t quantityContracts) {
     printf("Contract start date\n");
     position = searchByStartingDate(c, quantityContracts);
     printf("Vehicle code\n");
-    insertedCodeValue = readInt(0, MAX_VEHICLES - 1);
+    insertedCodeValue = readInt(stdin, 0, MAX_VEHICLES - 1);
     if (insertedCodeValue == c[position].codeVehicle)
         aux = position;
     return aux;
@@ -129,7 +129,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
     else {
         do {
             printf("Customer code\n");
-            n = readInt(0, MAX_CUSTOMERS - 1);
+            n = readInt(stdin, 0, MAX_CUSTOMERS - 1);
             positionCustomer = searchCodeCustomer(customers, quantityCustomers, n);
             if (positionCustomer < 0) {
                 printf("Customer not found, try another code\n");
@@ -141,7 +141,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
         }
         do {
             printf("Vehicle code\n");
-            n = readInt(0, MAX_VEHICLES - 1);
+            n = readInt(stdin, 0, MAX_VEHICLES - 1);
             positionVehicle = searchCodeVehicle(vehicles, quantityVehicles, n);
             if (positionVehicle < 0) {
                 printf("Vehicle not found, try another code\n");
@@ -220,7 +220,7 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
         contracts[pos].price = (float) (diffInDays(contracts[pos].startDate, contracts[pos].endDate) + 1) * contracts[pos].priceDay;
         printf("Office where the vehicle is:\n");
         printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
-        contracts[pos].endOffice = readInt(0, 5);
+        contracts[pos].endOffice = readInt(stdin, 0, 5);
         vehicles[positionVehicle].location = contracts[pos].endOffice;
     }
 }

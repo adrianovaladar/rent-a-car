@@ -5,23 +5,30 @@
 #include <stdio.h>
 #include <string.h>
 
-int readInt(int lowerLimit, int upperLimit) {
+int readInt(FILE *file, const int lowerLimit, const int upperLimit) {
     int value;
-    int check;
     do {
         printf("Insert a number between %d and %d: ", lowerLimit, upperLimit);
-        check = scanf("%d", &value);
+        int check = fscanf(file, "%d", &value);
         if (check != 1) {
-            while ((check = fgetc(stdin)) != '\n' && check != EOF) {
-                // flush stdin
+#ifdef TEST
+            return invalidType;
+#endif
+            while ((check = fgetc(file)) != '\n' && check != EOF) {
+                // flush file
             }
             continue;
         }
         if (value >= lowerLimit && value <= upperLimit)
             break;
-        else
-            printf("Only values between %d and %d are accepted\n", lowerLimit, upperLimit);
+        printf("Only values between %d and %d are accepted\n", lowerLimit, upperLimit);
+#ifdef TEST
+        return limits;
+#endif
     } while (1);
+#ifdef TEST
+    return success;
+#endif
     return value;
 }
 
@@ -57,12 +64,12 @@ void readString(char *s, int size, char *info) {
 
 void readDate(date *date) {
     printf("Insert the year\n");
-    date->year = readInt(START_YEAR, INT_MAX);
+    date->year = readInt(stdin, START_YEAR, INT_MAX);
     printf("Insert the month\n");
-    date->month = readInt(1, 12);
+    date->month = readInt(stdin, 1, 12);
     int numberOfDays = daysInMonth(date->month, date->year);
     printf("Month of %d days\n", numberOfDays);
-    date->day = readInt(1, numberOfDays);
+    date->day = readInt(stdin, 1, numberOfDays);
 }
 
 int readOption(FILE *file) {
@@ -79,7 +86,9 @@ int readOption(FILE *file) {
 #ifdef TEST
             return -1;
 #endif
-            while ((check = fgetc(stdin)) != '\n' && check != EOF) {}
+            while ((check = fgetc(file)) != '\n' && check != EOF) {
+                // flush file
+            }
         }
     } while (!optionExists);
     return option;

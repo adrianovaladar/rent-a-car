@@ -4,7 +4,13 @@
 #include "date.h"
 #include <stdio.h>
 
-int readInt(int lowerLimit, int upperLimit);
+#ifdef TEST
+const int success = 0;
+const int invalidType = -1;
+const int limits = -2;
+#endif
+
+int readInt(FILE *file, int lowerLimit, int upperLimit);
 float readFloat(float lowerLimit, float upperLimit);
 void readString(char *s, int size, char *info);
 void readDate(date *date);
