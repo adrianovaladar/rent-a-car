@@ -23,12 +23,12 @@ char *officeEnumToText(enum office o) {
 }
 
 static void readVehicleData(vehicle *v) {
-    readString(v->brand, 11, "Brand (maximum 10 characters): ");
-    readString(v->model, 11, "Model (maximum 10 characters): ");
-    readString(v->registrationPlate, 9, "Registration plate (maximum 8 characters): ");
+    readString(stdin, v->brand, 11, "Brand (maximum 10 characters): ");
+    readString(stdin, v->model, 11, "Model (maximum 10 characters): ");
+    readString(stdin, v->registrationPlate, 9, "Registration plate (maximum 8 characters): ");
     v->isUnderContract = false;
     printf("Kms\n");
-    v->km = readFloat(0, INFINITY);
+    v->km = readFloat(stdin, 0, INFINITY);
     printf("Office\n");
     printf("%s %d %s %d %s %d %s %d %s %d %s %d\n", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
     v->location = readInt(stdin, 0, 5);

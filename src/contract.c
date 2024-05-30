@@ -66,7 +66,7 @@ static void editContract(contract contracts[], int pos, size_t quantity) {
         return;
     }
     printf("Insert the price per day\n");
-    contracts[pos].priceDay = readFloat(0.01f, 9999);
+    contracts[pos].priceDay = readFloat(stdin, 0.01f, 9999);
     bool isLegalDate;
     do {
         isLegalDate = true;
@@ -156,7 +156,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
         vehicles[positionVehicle].isUnderContract = true;
         contracts[*quantityContracts].codeVehicle = vehicles[positionVehicle].code;
         printf("Price per day\n");
-        contracts[*quantityContracts].priceDay = readFloat(0.01f, 9999.0f);
+        contracts[*quantityContracts].priceDay = readFloat(stdin, 0.01f, 9999.0f);
         bool isLegalDate;
         printf("Start date\n");
         do {
@@ -195,7 +195,7 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
         positionVehicle = searchCodeVehicle(vehicles, quantityVehicles, contracts[pos].codeVehicle);
         vehicles[positionVehicle].isUnderContract = false;
         printf("Quantity of km\n");
-        contracts[pos].quantityKm = readFloat(vehicles[positionVehicle].km, INFINITY);
+        contracts[pos].quantityKm = readFloat(stdin, vehicles[positionVehicle].km, INFINITY);
         vehicles[positionVehicle].km += contracts[pos].quantityKm;
         bool isLegalDate = true;
         printf("End date\n");

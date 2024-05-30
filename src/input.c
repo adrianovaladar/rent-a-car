@@ -32,34 +32,51 @@ int readInt(FILE *file, const int lowerLimit, const int upperLimit) {
     return value;
 }
 
-float readFloat(float lowerLimit, float upperLimit) {
+float readFloat(FILE *file, const float lowerLimit, const float upperLimit) {
     float value;
-    int check;
     do {
         printf("Insert a number between %.2f and %.2f: ", lowerLimit, upperLimit);
-        check = scanf("%f", &value);
+        int check = fscanf(file, "%f", &value);
         if (check != 1) {
-            while ((check = fgetc(stdin)) != '\n' && check != EOF) {
-                // flush stdin
+#ifdef TEST
+            return (float)invalidType;
+#endif
+            while ((check = fgetc(file)) != '\n' && check != EOF) {
+                // flush file
             }
             continue;
         }
-        if (value >= lowerLimit && value <= upperLimit)
+        if (value >= lowerLimit - EPSILON && value <= upperLimit + EPSILON)
             break;
-        else
-            printf("Only values between %.2f and %.2f are accepted\n", lowerLimit, upperLimit);
+        printf("Only values between %.2f and %.2f are accepted\n", lowerLimit, upperLimit);
+#ifdef TEST
+        return (float)limits;
+#endif
     } while (1);
+#ifdef TEST
+    return (float)success;
+#endif
     return value;
 }
 
-void readString(char *s, int size, char *info) {
+void readString(FILE *file, char *s, const int size, const char *info) {
     if (size <= 0)
         return;
     printf("%s", info);
-    do {
-        fgets(s, size, stdin);
-    } while (strlen(s) == 1);
-    s[strcspn(s, "\n")] = '\0';
+    while (1) {
+        if (fgets(s, size, file) == NULL) {
+            s[0] = '\0';
+            break;
+        }
+        s[strcspn(s, "\n")] = '\0';
+        if (strlen(s) > 0) {
+            break;
+        }
+#ifdef TEST
+        if (strlen(s) == 0)
+            break;
+#endif
+    }
 }
 
 void readDate(date *date) {

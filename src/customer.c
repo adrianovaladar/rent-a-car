@@ -15,9 +15,9 @@ int searchCodeCustomer(customer customers[], size_t quantity, int code) {
 
 
 static void readCustomerData(customer *c) {
-    readString(c->name, 30, "Name (maximum 30 characters): ");
-    readString(c->address, 40, "Address (maximum 40 characters): ");
-    readString(c->driverLicense, 10, "Driver license (maximum 10 characters): ");
+    readString(stdin, c->name, 30, "Name (maximum 30 characters): ");
+    readString(stdin, c->address, 40, "Address (maximum 40 characters): ");
+    readString(stdin, c->driverLicense, 10, "Driver license (maximum 10 characters): ");
 }
 
 static void setCodeNewCustomer(customer customers[], const size_t *quantity) {

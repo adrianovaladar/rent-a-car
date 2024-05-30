@@ -11,8 +11,8 @@ const int limits = -2;
 #endif
 
 int readInt(FILE *file, int lowerLimit, int upperLimit);
-float readFloat(float lowerLimit, float upperLimit);
-void readString(char *s, int size, char *info);
+float readFloat(FILE *file, float lowerLimit, float upperLimit);
+void readString(FILE *file, char *s, int size, const char *info);
 void readDate(date *date);
 int readOption(FILE *file);
 
