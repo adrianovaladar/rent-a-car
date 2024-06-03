@@ -6,7 +6,9 @@ add_executable(AllTests main.cpp
         ../src/date.h
         ../src/date.c
         InputTests.cpp
-        InputTests.h)
+        InputTests.h
+        DateTests.cpp
+        DateTests.h)
 target_compile_definitions(AllTests PRIVATE TEST=1)
 include(FetchContent)
 FetchContent_Declare(

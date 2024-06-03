@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-static bool isLeapYear(const int year) {
+bool isLeapYear(const int year) {
     const bool b = (year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0) ? true : false;
     return b;
 }

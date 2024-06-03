@@ -9,6 +9,7 @@ typedef struct date {
     int year;
 } date;
 
+bool isLeapYear(int year);
 bool isEmptyDate(date d);
 int diffInDays(date date1, date date2);
 int daysInMonth(int month, int year);
