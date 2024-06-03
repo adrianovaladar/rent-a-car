@@ -3,12 +3,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-static bool isLeapYear(int year) {
-    bool b = (year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0) ? true : false;
+static bool isLeapYear(const int year) {
+    const bool b = (year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0) ? true : false;
     return b;
 }
 
-int daysInMonth(int month, int year) {
+int daysInMonth(const int month, const int year) {
     switch (month) {
         case 2:
             return isLeapYear(year) ? 29 : 28;
@@ -22,11 +22,11 @@ int daysInMonth(int month, int year) {
     }
 }
 
-bool isEmptyDate(date d) {
+bool isEmptyDate(const date d) {
     return d.day == 0 && d.month == 0 && d.year == 0;
 }
 
-int diffInDays(date date1, date date2) {
+int diffInDays(const date date1, const date date2) {
     int daysDate1 = date1.day;
     int daysDate2 = date2.day;
     for (int m = 1; m < date1.month; m++) {
@@ -36,19 +36,19 @@ int diffInDays(date date1, date date2) {
         daysDate2 += daysInMonth(m, date2.year);
     }
     for (int y = START_YEAR; y < date1.year; y++) {
-        daysDate1 += 365 + isLeapYear(y);
+        daysDate1 += 365 + (int)isLeapYear(y);
     }
     for (int y = START_YEAR; y < date2.year; y++) {
-        daysDate2 += 365 + isLeapYear(y);
+        daysDate2 += 365 + (int)isLeapYear(y);
     }
     return abs(daysDate2 - daysDate1);
 }
 
-bool areDatesEqual(date date1, date date2) {
+bool areDatesEqual(const date date1, const date date2) {
     return date1.day == date2.day && date1.month == date2.month && date1.year == date2.year;
 }
 
-bool isDateWithinRange(date start, date end, date input) {
+bool isDateWithinRange(const date start, const date end, const date input) {
     if (input.year < start.year || input.year > end.year) {
         return 0;
     }
@@ -61,10 +61,10 @@ bool isDateWithinRange(date start, date end, date input) {
     return 1;
 }
 
-bool isDateEarlier(date date1, date date2) {
+bool isDateEarlier(const date date1, const date date2) {
     return (date1.day > date2.day && date1.month == date2.month && date1.year == date2.year) || (date1.month > date2.month && date1.year == date2.year) || date1.year > date2.year;
 }
 
-bool isDateAfter(date date1, date date2) {
+bool isDateAfter(const date date1, const date date2) {
     return (date1.year > date2.year) || (date1.year == date2.year && date1.month > date2.month) || (date1.year == date2.year && date1.month == date2.month && date1.day > date2.day);
 }
