@@ -50,3 +50,33 @@ TEST(DaysInMonthTest, LeapYear) {
     EXPECT_EQ(daysInMonth(11, 2024), 30);
     EXPECT_EQ(daysInMonth(12, 2024), 31);
 }
+
+TEST_F(DateTests, DiffInDaysSameDate) {
+    date1 = setDate(1, 1, 2020);
+    date2 = setDate(1, 1, 2020);
+    EXPECT_EQ(diffInDays(date1, date2), 0);
+}
+
+TEST_F(DateTests, DiffInDaysDifferentDatesSameYear) {
+    date1 = setDate(1, 1, 2020);
+    date2 = setDate(31, 12, 2020);
+    EXPECT_EQ(diffInDays(date1, date2), 365);
+}
+
+TEST_F(DateTests, DiffInDaysDifferentDatesLeapYear) {
+    date1 = setDate(1, 1, 2020);
+    date2 = setDate(1, 1, 2021);
+    EXPECT_EQ(diffInDays(date1, date2), 366);
+}
+
+TEST_F(DateTests, DiffInDaysAcrossYears) {
+    date1 = setDate(31, 12, 2020);
+    date2 = setDate(1, 1, 2022);
+    EXPECT_EQ(diffInDays(date1, date2), 366);
+}
+
+TEST_F(DateTests, DiffInDaysSameMonthDifferentYear) {
+    date1 = setDate(15, 6, 2020);
+    date2 = setDate(15, 6, 2022);
+    EXPECT_EQ(diffInDays(date1, date2), 730);
+}
