@@ -21,7 +21,7 @@ TEST(isLeapYear, ExpectFalse) {
     EXPECT_EQ(isLeapYear(year), false);
 }
 
-TEST(DaysInMonthTest, DaysInMonthCommonYear) {
+TEST(DaysInMonth, DaysInMonthCommonYear) {
     EXPECT_EQ(daysInMonth(1, 2023), 31);
     EXPECT_EQ(daysInMonth(2, 2023), 28);
     EXPECT_EQ(daysInMonth(3, 2023), 31);
@@ -36,7 +36,7 @@ TEST(DaysInMonthTest, DaysInMonthCommonYear) {
     EXPECT_EQ(daysInMonth(12, 2023), 31);
 }
 
-TEST(DaysInMonthTest, LeapYear) {
+TEST(DaysInMonth, LeapYear) {
     EXPECT_EQ(daysInMonth(1, 2024), 31);
     EXPECT_EQ(daysInMonth(2, 2024), 29);
     EXPECT_EQ(daysInMonth(3, 2024), 31);
@@ -79,4 +79,28 @@ TEST_F(DateTests, DiffInDaysSameMonthDifferentYear) {
     date1 = setDate(15, 6, 2020);
     date2 = setDate(15, 6, 2022);
     EXPECT_EQ(diffInDays(date1, date2), 730);
+}
+
+TEST_F(DateTests, AreDatesEqualSameDates) {
+    date1 = setDate(1, 1, 2024);
+    date2 = setDate(1, 1, 2024);
+    EXPECT_EQ(areDatesEqual(date1, date2), true);
+}
+
+TEST_F(DateTests, AreDatesEqualDifferentDay) {
+    date1 = setDate(1, 1, 2024);
+    date2 = setDate(2, 1, 2024);
+    EXPECT_EQ(areDatesEqual(date1, date2), false);
+}
+
+TEST_F(DateTests, AreDatesEqualDifferentMonth) {
+    date1 = setDate(1, 1, 2024);
+    date2 = setDate(1, 2, 2024);
+    EXPECT_EQ(areDatesEqual(date1, date2), false);
+}
+
+TEST_F(DateTests, AreDatesEqualDifferentYear) {
+    date1 = setDate(1, 1, 2024);
+    date2 = setDate(1, 1, 2023);
+    EXPECT_EQ(areDatesEqual(date1, date2), false);
 }
