@@ -61,10 +61,10 @@ bool isDateWithinRange(const date start, const date end, const date input) {
     return 1;
 }
 
-bool isDateEarlier(const date date1, const date date2) {
-    return (date1.day > date2.day && date1.month == date2.month && date1.year == date2.year) || (date1.month > date2.month && date1.year == date2.year) || date1.year > date2.year;
+bool isDateBefore(const date date1, const date date2) {
+    return (date1.day < date2.day && date1.month == date2.month && date1.year == date2.year) || (date1.month < date2.month && date1.year == date2.year) || date1.year < date2.year;
 }
 
 bool isDateAfter(const date date1, const date date2) {
-    return (date1.year > date2.year) || (date1.year == date2.year && date1.month > date2.month) || (date1.year == date2.year && date1.month == date2.month && date1.day > date2.day);
+    return date1.year > date2.year || (date1.year == date2.year && date1.month > date2.month) || (date1.year == date2.year && date1.month == date2.month && date1.day > date2.day);
 }
