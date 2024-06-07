@@ -21,7 +21,7 @@ TEST(isLeapYear, ExpectFalse) {
     EXPECT_EQ(isLeapYear(year), false);
 }
 
-TEST(DaysInMonth, DaysInMonthCommonYear) {
+TEST(DaysInMonth, CommonYear) {
     EXPECT_EQ(daysInMonth(1, 2023), 31);
     EXPECT_EQ(daysInMonth(2, 2023), 28);
     EXPECT_EQ(daysInMonth(3, 2023), 31);
@@ -103,4 +103,52 @@ TEST_F(DateTests, AreDatesEqualDifferentYear) {
     date1 = setDate(1, 1, 2024);
     date2 = setDate(1, 1, 2023);
     EXPECT_EQ(areDatesEqual(date1, date2), false);
+}
+
+TEST_F(DateTests, isDateBeforeDayBefore) {
+    date1 = setDate(1, 1, 2024);
+    date2 = setDate(2, 1, 2024);
+    EXPECT_EQ(isDateBefore(date1, date2), true);
+}
+
+TEST_F(DateTests, isDateBeforeMonthBefore) {
+    date1 = setDate(1, 1, 2024);
+    date2 = setDate(1, 2, 2024);
+    EXPECT_EQ(isDateBefore(date1, date2), true);
+}
+
+TEST_F(DateTests, isDateBeforeYearBefore) {
+    date1 = setDate(1, 1, 2023);
+    date2 = setDate(1, 1, 2024);
+    EXPECT_EQ(isDateBefore(date1, date2), true);
+}
+
+TEST_F(DateTests, isDateBeforeDayAfter) {
+    date1 = setDate(2, 1, 2024);
+    date2 = setDate(1, 1, 2024);
+    EXPECT_EQ(isDateBefore(date1, date2), false);
+}
+
+TEST_F(DateTests, IsDateAfterDayAfter) {
+    date1 = setDate(2, 1, 2024);
+    date2 = setDate(1, 1, 2024);
+    EXPECT_EQ(isDateAfter(date1, date2), true);
+}
+
+TEST_F(DateTests, IsDateAfterMonthAfter) {
+    date1 = setDate(1, 2, 2024);
+    date2 = setDate(1, 1, 2024);
+    EXPECT_EQ(isDateAfter(date1, date2), true);
+}
+
+TEST_F(DateTests, IsDateAfterYearAfter) {
+    date1 = setDate(1, 1, 2024);
+    date2 = setDate(1, 1, 2023);
+    EXPECT_EQ(isDateAfter(date1, date2), true);
+}
+
+TEST_F(DateTests, IsDateAfterDayBefore) {
+    date1 = setDate(1, 1, 2024);
+    date2 = setDate(2, 1, 2024);
+    EXPECT_EQ(isDateAfter(date1, date2), false);
 }
