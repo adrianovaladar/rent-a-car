@@ -14,11 +14,11 @@ typedef struct customer {
 
 } customer;
 
-void insertCustomer(customer customers[], size_t *quantity);
-void showCustomerByCodeAndShowOptions(customer customers[], size_t *quantity);
-void showAllCustomers(customer customers[], size_t quantity);
-int searchCodeCustomer(customer customers[], size_t quantity, int code);
-void readCustomers(char *fileName, customer customers[], size_t *quantity);
-void writeCustomers(char *fileName, customer customers[], size_t quantity);
+void insertCustomer(customer *customers, size_t *quantity);
+void showCustomerByCodeAndShowOptions(customer *customers, size_t *quantity);
+void showAllCustomers(const customer *customers, size_t quantity);
+int searchCodeCustomer(const customer *customers, size_t quantity, int code);
+void readCustomers(char *fileName, customer *customers, size_t *quantity);
+void writeCustomers(char *fileName, const customer *customers, size_t quantity);
 
 #endif//RENT_A_CAR_CUSTOMER_H

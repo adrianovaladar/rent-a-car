@@ -3,13 +3,14 @@
 #include "input.h"
 #include <stdio.h>
 
-int searchCodeCustomer(customer customers[], size_t quantity, int code) {
-    int i, position = -1;
-
-    for (i = 0; i <= quantity && position == -1; i++)
+int searchCodeCustomer(const customer *customers, const size_t quantity, const int code) {
+    int position = -1;
+    int i = 0;
+    while (i <= quantity && position == -1) {
         if (customers[i].code == code)
             position = i;
-
+        i++;
+    }
     return position;
 }
 
@@ -20,7 +21,7 @@ static void readCustomerData(customer *c) {
     readString(stdin, c->driverLicense, 10, "Driver license (maximum 10 characters): ");
 }
 
-static void setCodeNewCustomer(customer customers[], const size_t *quantity) {
+static void setCodeNewCustomer(customer *customers, const size_t *quantity) {
     customers[*quantity].code = 0;
     for (size_t i = 0; i < *quantity; i++) {
         if (customers[i].code == customers[*quantity].code)
@@ -28,7 +29,7 @@ static void setCodeNewCustomer(customer customers[], const size_t *quantity) {
     }
 }
 
-void insertCustomer(customer customers[], size_t *quantity) {
+void insertCustomer(customer *customers, size_t *quantity) {
     if (*quantity == MAX_CUSTOMERS) {
         printf("We reached our full capacity of customers. Please come back later");
         return;
@@ -50,13 +51,12 @@ static void editCustomer(customer *c) {
     readCustomerData(c);
 }
 
-static void deleteCustomer(customer customers[], int position, size_t *quantity) {
+static void deleteCustomer(customer *customers, const int position, size_t *quantity) {
     if (customers[position].isUnderContract) {
         printf("The customer is under a contract at the moment, please come back later\n");
         return;
     }
-    int i;
-    for (i = position; i <= *quantity; i++) {
+    for (int i = position; i <= *quantity; i++) {
         customers[i] = customers[i + 1];
     }
     (*quantity)--;
@@ -71,14 +71,12 @@ static void showCustomer(customer c) {
 }
 
 void showCustomerByCodeAndShowOptions(customer customers[], size_t *quantity) {
-    int n, codeFound;
-
     if (*quantity == 0) {
         printf("There are no registered customers\n");
         return;
     }
-    n = readInt(stdin, 0, MAX_CUSTOMERS - 1);
-    codeFound = searchCodeCustomer(customers, *quantity, n);
+    const int n = readInt(stdin, 0, MAX_CUSTOMERS - 1);
+    const int codeFound = searchCodeCustomer(customers, *quantity, n);
     if (codeFound >= 0) {
         showCustomer(customers[codeFound]);
         printf("Edit(e) Delete(d) (Press any other key plus enter to leave this menu): ");
@@ -97,58 +95,48 @@ void showCustomerByCodeAndShowOptions(customer customers[], size_t *quantity) {
     }
 }
 
-void showAllCustomers(customer customers[], size_t quantity) {
-    int i;
+void showAllCustomers(const customer *customers, const size_t quantity) {
     if (quantity == 0) {
         printf("There are no registered customers\n");
         return;
     }
     printf("--- Customer data ---\n\n");
-    for (i = 0; i < quantity; i++) {
+    for (int i = 0; i < quantity; i++) {
         showCustomer(customers[i]);
         printf("\n");
     }
 }
 
-void readCustomers(char *fileName, customer customers[], size_t *quantity) {
-    FILE *file;
-    file = fopen(fileName, "rb");
+void readCustomers(char *fileName, customer *customers, size_t *quantity) {
+    FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
         printf("Error opening file '%s'!\n", fileName);
         return;
     }
-
     // calculate the number of customers
     fseek(file, 0, SEEK_END);
     *quantity = ftell(file) / sizeof(customer);
-
     // set the file position back to the beginning
     rewind(file);
-
-    // check that the number of customers is not negative or bigger than expected
-    if (*quantity < 0 || *quantity > MAX_CUSTOMERS) {
+    // check if the number of customers is bigger than expected
+    if (*quantity > MAX_CUSTOMERS) {
         printf("Error: invalid file size in '%s'\n", fileName);
         fclose(file);
         return;
     }
-
     // read the customers
     fread(customers, sizeof(customer), *quantity, file);
-
     fclose(file);
 }
 
 // function to write customers to a binary file
-void writeCustomers(char *fileName, customer customers[], size_t quantity) {
-    FILE *file;
-    file = fopen(fileName, "wb");
+void writeCustomers(char *fileName, const customer *customers, const size_t quantity) {
+    FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
         printf("Error opening file '%s'!\n", fileName);
         return;
     }
-
     // write the customers
     fwrite(customers, sizeof(customer), quantity, file);
-
     fclose(file);
 }
