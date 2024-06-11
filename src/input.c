@@ -26,9 +26,6 @@ int readInt(FILE *file, const int lowerLimit, const int upperLimit) {
         return limits;
 #endif
     } while (1);
-#ifdef TEST
-    return success;
-#endif
     return value;
 }
 
@@ -53,9 +50,6 @@ float readFloat(FILE *file, const float lowerLimit, const float upperLimit) {
         return (float)limits;
 #endif
     } while (1);
-#ifdef TEST
-    return (float)success;
-#endif
     return value;
 }
 
@@ -79,14 +73,14 @@ void readString(FILE *file, char *s, const int size, const char *info) {
     }
 }
 
-void readDate(date *date) {
+void readDate(FILE *file, date *date) {
     printf("Insert the year\n");
-    date->year = readInt(stdin, START_YEAR, INT_MAX);
+    date->year = readInt(file, START_YEAR, INT_MAX);
     printf("Insert the month\n");
-    date->month = readInt(stdin, 1, 12);
-    int numberOfDays = daysInMonth(date->month, date->year);
+    date->month = readInt(file, 1, 12);
+    const int numberOfDays = daysInMonth(date->month, date->year);
     printf("Month of %d days\n", numberOfDays);
-    date->day = readInt(stdin, 1, numberOfDays);
+    date->day = readInt(file, 1, numberOfDays);
 }
 
 int readOption(FILE *file) {

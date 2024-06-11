@@ -70,7 +70,7 @@ static void editContract(contract contracts[], int pos, size_t quantity) {
     bool isLegalDate;
     do {
         isLegalDate = true;
-        readDate(&contracts[pos].startDate);
+        readDate(stdin, &contracts[pos].startDate);
         for (int i = 0; i < quantity && isLegalDate != false; i++) {
             if (contracts[pos].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[quantity].startDate)) {
                 printf("The vehicle was unavailable for the intended date. It was under other contract\n");
@@ -99,7 +99,7 @@ static void deleteContract(contract c[], int pos, size_t *quantity, vehicle vehi
 static int searchByStartingDate(contract cont[], size_t quantity) {
     int i, position = -1;
     date date;
-    readDate(&date);
+    readDate(stdin, &date);
     for (i = 0; i <= quantity; i++)
         if (areDatesEqual(cont[i].startDate, date))
             position = i;
@@ -161,7 +161,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
         printf("Start date\n");
         do {
             isLegalDate = true;
-            readDate(&contracts[*quantityContracts].startDate);
+            readDate(stdin, &contracts[*quantityContracts].startDate);
             for (i = 0; i < *quantityContracts && isLegalDate != false; i++) {
                 if (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[*quantityContracts].startDate)) {
                     printf("The vehicle was unavailable for the intended date. It was under other contract\n");
@@ -201,7 +201,7 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
         printf("End date\n");
         do {
             isLegalDate = true;
-            readDate(&contracts[pos].endDate);
+            readDate(stdin, &contracts[pos].endDate);
             if (isDateBefore(contracts[pos].startDate, contracts[pos].endDate)) {
                 printf("End date cannot be less than start date\n");
                 printf("Start date: %d/%d/%d\n", contracts[pos].startDate.day, contracts[pos].startDate.month, contracts[pos].startDate.year);

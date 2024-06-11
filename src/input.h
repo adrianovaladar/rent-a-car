@@ -5,8 +5,6 @@
 #include <stdio.h>
 
 #ifdef TEST
-/// Success return code
-const int success = 0;
 /// Invalid type return code
 const int invalidType = -1;
 /// Limits exceeded return code
@@ -43,9 +41,10 @@ void readString(FILE *file, char *s, int size, const char *info);
 /**
  * @brief Reads a date.
  *
+ * @param file Pointer to the file to read from.
  * @param date Pointer to the date structure to be populated.
  */
-void readDate(date *date);
+void readDate(FILE *file, date *date);
 /**
  * @brief Reads an option from a file.
  *
