@@ -1,5 +1,5 @@
-#ifndef APPLICATIONTESTS_H
-#define APPLICATIONTESTS_H
+#ifndef INPUTTESTS_H
+#define INPUTTESTS_H
 #include <gtest/gtest.h>
 
 class InputTests : public ::testing::Test {
@@ -9,4 +9,4 @@ protected:
 };
 
 
-#endif //APPLICATIONTESTS_H
+#endif //INPUTTESTS_H
