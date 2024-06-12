@@ -105,25 +105,25 @@ TEST_F(DateTests, AreDatesEqualDifferentYear) {
     EXPECT_EQ(areDatesEqual(date1, date2), false);
 }
 
-TEST_F(DateTests, isDateBeforeDayBefore) {
+TEST_F(DateTests, IsDateBeforeDayBefore) {
     date1 = setDate(1, 1, 2024);
     date2 = setDate(2, 1, 2024);
     EXPECT_EQ(isDateBefore(date1, date2), true);
 }
 
-TEST_F(DateTests, isDateBeforeMonthBefore) {
+TEST_F(DateTests, IsDateBeforeMonthBefore) {
     date1 = setDate(1, 1, 2024);
     date2 = setDate(1, 2, 2024);
     EXPECT_EQ(isDateBefore(date1, date2), true);
 }
 
-TEST_F(DateTests, isDateBeforeYearBefore) {
+TEST_F(DateTests, IsDateBeforeYearBefore) {
     date1 = setDate(1, 1, 2023);
     date2 = setDate(1, 1, 2024);
     EXPECT_EQ(isDateBefore(date1, date2), true);
 }
 
-TEST_F(DateTests, isDateBeforeDayAfter) {
+TEST_F(DateTests, IsDateBeforeDayAfter) {
     date1 = setDate(2, 1, 2024);
     date2 = setDate(1, 1, 2024);
     EXPECT_EQ(isDateBefore(date1, date2), false);
