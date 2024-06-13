@@ -5,10 +5,14 @@ add_executable(AllTests main.cpp
         ../src/input.c
         ../src/date.h
         ../src/date.c
+        ../src/customer.h
+        ../src/customer.c
         InputTests.cpp
         InputTests.h
         DateTests.cpp
-        DateTests.h)
+        DateTests.h
+        CustomerTests.cpp
+        CustomerTests.h)
 target_compile_definitions(AllTests PRIVATE TEST=1)
 include(FetchContent)
 FetchContent_Declare(

@@ -5,6 +5,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef TEST
+const int invalidType = -1;
+const int limits = -2;
+#endif
+
 int readInt(FILE *file, const int lowerLimit, const int upperLimit) {
     int value;
     do {

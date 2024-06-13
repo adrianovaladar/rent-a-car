@@ -6,9 +6,9 @@
 
 #ifdef TEST
 /// Invalid type return code
-const int invalidType = -1;
+extern const int invalidType;
 /// Limits exceeded return code
-const int limits = -2;
+extern const int limits;
 #endif
 
 /**
