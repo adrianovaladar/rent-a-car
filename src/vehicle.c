@@ -8,18 +8,19 @@
 char *officeEnumToText(enum office o) {
     if (o == Unknown)
         return "Unknown\0";
-    else if (o == Porto)
+    if (o == Porto)
         return "Porto\0";
-    else if (o == Guarda)
+    if (o == Guarda)
         return "Guarda\0";
-    else if (o == Coimbra)
+    if (o == Coimbra)
         return "Coimbra\0";
-    else if (o == Braga)
+    if (o == Braga)
         return "Braga\0";
-    else if (o == Faro)
+    if (o == Faro)
         return "Faro\0";
-    else if (o == Lisbon)
+    if (o == Lisbon)
         return "Lisbon\0";
+    return "Invalid\0";
 }
 
 static void readVehicleData(vehicle *v) {
