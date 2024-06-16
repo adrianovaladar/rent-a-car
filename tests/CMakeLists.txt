@@ -12,7 +12,9 @@ add_executable(AllTests main.cpp
         DateTests.cpp
         DateTests.h
         CustomerTests.cpp
-        CustomerTests.h)
+        CustomerTests.h
+        Utils.cpp
+        Utils.h)
 target_compile_definitions(AllTests PRIVATE TEST=1)
 include(FetchContent)
 FetchContent_Declare(

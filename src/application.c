@@ -84,7 +84,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                insertCustomer(customers, &quantityCustomers);
+                insertCustomer(stdin, customers, &quantityCustomers);
                 end();
                 break;
             }

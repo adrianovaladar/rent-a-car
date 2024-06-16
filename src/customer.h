@@ -3,6 +3,7 @@
 
 #include <glob.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 typedef struct customer {
     int code;
@@ -14,7 +15,7 @@ typedef struct customer {
 
 } customer;
 
-void insertCustomer(customer *customers, size_t *quantity);
+void insertCustomer(FILE *file, customer *customers, size_t *quantity);
 void showCustomerByCodeAndShowOptions(customer *customers, size_t *quantity);
 void showAllCustomers(const customer *customers, size_t quantity);
 int searchCodeCustomer(const customer *customers, size_t quantity, int code);

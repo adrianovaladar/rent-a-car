@@ -15,21 +15,21 @@ int searchCodeCustomer(const customer *customers, const size_t quantity, const i
 }
 
 
-static void readCustomerData(customer *c) {
-    readString(stdin, c->name, 30, "Name (maximum 30 characters): ");
-    readString(stdin, c->address, 40, "Address (maximum 40 characters): ");
-    readString(stdin, c->driverLicense, 10, "Driver license (maximum 10 characters): ");
+static void readCustomerData(FILE *file, customer *c) {
+    readString(file, c->name, 30, "Name (maximum 30 characters): ");
+    readString(file, c->address, 40, "Address (maximum 40 characters): ");
+    readString(file, c->driverLicense, 10, "Driver license (maximum 10 characters): ");
 }
 
-static void setCodeNewCustomer(customer *customers, const size_t *quantity) {
-    customers[*quantity].code = 0;
-    for (size_t i = 0; i < *quantity; i++) {
-        if (customers[i].code == customers[*quantity].code)
-            customers[*quantity].code++;
+static void setCodeNewCustomer(customer *customers, const size_t *position) {
+    customers[*position].code = 0;
+    for (size_t i = 0; i < *position; i++) {
+        if (customers[i].code == customers[*position].code)
+            customers[*position].code++;
     }
 }
 
-void insertCustomer(customer *customers, size_t *quantity) {
+void insertCustomer(FILE *file, customer *customers, size_t *quantity) {
     if (*quantity == MAX_CUSTOMERS) {
         printf("We reached our full capacity of customers. Please come back later");
         return;
@@ -37,7 +37,7 @@ void insertCustomer(customer *customers, size_t *quantity) {
     printf("--- Customer data ---\n");
     setCodeNewCustomer(customers, quantity);
     printf("Code: %d\n", customers[*quantity].code);
-    readCustomerData(&customers[*quantity]);
+    readCustomerData(file, &customers[*quantity]);
     customers[*quantity].type = 0;
     (*quantity)++;
 }
@@ -48,7 +48,7 @@ static void editCustomer(customer *c) {
         return;
     }
     printf("--- Customer data ---\n");
-    readCustomerData(c);
+    readCustomerData(stdin, c);
 }
 
 static void deleteCustomer(customer *customers, const int position, size_t *quantity) {
