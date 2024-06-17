@@ -42,13 +42,13 @@ void insertCustomer(FILE *file, customer *customers, size_t *quantity) {
     (*quantity)++;
 }
 
-static void editCustomer(customer *c) {
+static void editCustomer(FILE *file, customer *c) {
     if (c->isUnderContract) {
         printf("The customer is under a contract at the moment, please come back later\n");
         return;
     }
     printf("--- Customer data ---\n");
-    readCustomerData(stdin, c);
+    readCustomerData(file, c);
 }
 
 static void deleteCustomer(customer *customers, const int position, size_t *quantity) {
@@ -70,22 +70,22 @@ static void showCustomer(customer c) {
     printf("Driver license: %s\n", c.driverLicense);
 }
 
-void showCustomerByCodeAndShowOptions(customer customers[], size_t *quantity) {
+void showCustomerByCodeAndShowOptions(FILE *file, customer customers[], size_t *quantity) {
     if (*quantity == 0) {
         printf("There are no registered customers\n");
         return;
     }
-    const int n = readInt(stdin, 0, MAX_CUSTOMERS - 1);
+    const int n = readInt(file, 0, MAX_CUSTOMERS - 1);
     const int codeFound = searchCodeCustomer(customers, *quantity, n);
     if (codeFound >= 0) {
         showCustomer(customers[codeFound]);
         printf("Edit(e) Delete(d) (Press any other key plus enter to leave this menu): ");
         unsigned char op;
         do {
-            op = getchar();
+            op = fgetc(file);
         } while (op == '\n');
         if (op == 'E' || op == 'e') {
-            editCustomer(&customers[codeFound]);
+            editCustomer(file, &customers[codeFound]);
         } else if (op == 'D' || op == 'd') {
             deleteCustomer(customers, codeFound, quantity);
             printf("Customer deleted successfully\n");

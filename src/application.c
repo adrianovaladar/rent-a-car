@@ -94,7 +94,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                showCustomerByCodeAndShowOptions(customers, &quantityCustomers);
+                showCustomerByCodeAndShowOptions(stdin, customers, &quantityCustomers);
                 end();
                 break;
             }

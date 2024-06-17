@@ -22,3 +22,20 @@ TEST_F(CustomerTests, InsertCustomerValid) {
     EXPECT_EQ(quantity, MAX_CUSTOMERS);
     EXPECT_EQ(customers.at(customers.size() - 1).code, MAX_CUSTOMERS - 1);
 }
+
+TEST_F(CustomerTests, EditCustomerValid) {
+    FILE *file = Utils::createInputFile("0\nename\naddress\nlicense");
+    size_t quantity{customers.size()};
+    showCustomerByCodeAndShowOptions(file, customers.data(), &quantity);
+    const std::string expected {"name"};
+    EXPECT_EQ(customers.at(0).name, expected);
+}
+
+TEST_F(CustomerTests, EditCustomerInvalid) {
+    FILE *file = Utils::createInputFile("0\nename\naddress\nlicense");
+    size_t quantity{customers.size()};
+    customers.at(0).isUnderContract = true;
+    showCustomerByCodeAndShowOptions(file, customers.data(), &quantity);
+    const std::string expected {"name"};
+    EXPECT_NE(customers.at(0).name, expected);
+}
