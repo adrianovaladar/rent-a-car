@@ -56,10 +56,11 @@ static void deleteCustomer(customer *customers, const int position, size_t *quan
         printf("The customer is under a contract at the moment, please come back later\n");
         return;
     }
-    for (int i = position; i <= *quantity; i++) {
+    for (int i = position; i <= *quantity - 1; i++) {
         customers[i] = customers[i + 1];
     }
     (*quantity)--;
+    printf("Customer deleted successfully\n");
 }
 
 static void showCustomer(customer c) {
@@ -70,7 +71,7 @@ static void showCustomer(customer c) {
     printf("Driver license: %s\n", c.driverLicense);
 }
 
-void showCustomerByCodeAndShowOptions(FILE *file, customer customers[], size_t *quantity) {
+void showCustomerByCodeAndShowOptions(FILE *file, customer *customers, size_t *quantity) {
     if (*quantity == 0) {
         printf("There are no registered customers\n");
         return;
@@ -88,7 +89,6 @@ void showCustomerByCodeAndShowOptions(FILE *file, customer customers[], size_t *
             editCustomer(file, &customers[codeFound]);
         } else if (op == 'D' || op == 'd') {
             deleteCustomer(customers, codeFound, quantity);
-            printf("Customer deleted successfully\n");
         }
     } else {
         printf("No customer found with code %d\n", n);
