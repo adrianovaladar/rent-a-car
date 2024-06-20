@@ -1,5 +1,6 @@
 #include "CustomerTests.h"
 #include "Utils.h"
+#include <fstream>
 
 TEST_F(CustomerTests, SearchCodeCustomerExistingCode) {
     EXPECT_EQ(searchCodeCustomer(customers.data(), customers.size(), 0), 0);
@@ -59,4 +60,26 @@ TEST_F(CustomerTests, DeleteCustomerValid) {
     const std::string expected {"name"};
     EXPECT_NE(customers.at(0).name, expected);
     EXPECT_NE(quantity, customers.size());
+}
+
+TEST_F(CustomerTests, WriteSingleCustomer) {
+    char fileName[20] = "test_file";
+    writeCustomers(fileName, customers.data(), 1);
+    std::ifstream file(fileName, std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << fileName << std::endl;
+    }
+    const std::streamsize size = file.tellg();
+    ASSERT_EQ(size, sizeof(customer));
+}
+
+TEST_F(CustomerTests, WriteMaximumCustomers) {
+    char fileName[20] = "test_file";
+    writeCustomers(fileName, customers.data(), customers.size());
+    std::ifstream file(fileName, std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << fileName << std::endl;
+    }
+    const std::streamsize size = file.tellg();
+    ASSERT_EQ(size, MAX_CUSTOMERS * sizeof(customer));
 }
