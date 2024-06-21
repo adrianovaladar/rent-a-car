@@ -19,7 +19,7 @@ void insertCustomer(FILE *file, customer *customers, size_t *quantity);
 void showCustomerByCodeAndShowOptions(FILE *file, customer *customers, size_t *quantity);
 void showAllCustomers(const customer *customers, size_t quantity);
 int searchCodeCustomer(const customer *customers, size_t quantity, int code);
-void readCustomers(char *fileName, customer *customers, size_t *quantity);
-void writeCustomers(char *fileName, const customer *customers, size_t quantity);
+void readCustomers(const char *fileName, customer *customers, size_t *quantity);
+void writeCustomers(const char *fileName, const customer *customers, size_t quantity);
 
 #endif//RENT_A_CAR_CUSTOMER_H

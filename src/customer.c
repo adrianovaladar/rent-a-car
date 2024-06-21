@@ -107,7 +107,7 @@ void showAllCustomers(const customer *customers, const size_t quantity) {
     }
 }
 
-void readCustomers(char *fileName, customer *customers, size_t *quantity) {
+void readCustomers(const char *fileName, customer *customers, size_t *quantity) {
     FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
         printf("Error opening file '%s'!\n", fileName);
@@ -130,7 +130,7 @@ void readCustomers(char *fileName, customer *customers, size_t *quantity) {
 }
 
 // function to write customers to a binary file
-void writeCustomers(char *fileName, const customer *customers, const size_t quantity) {
+void writeCustomers(const char *fileName, const customer *customers, const size_t quantity) {
     FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
         printf("Error opening file '%s'!\n", fileName);

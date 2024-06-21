@@ -63,8 +63,7 @@ TEST_F(CustomerTests, DeleteCustomerValid) {
 }
 
 TEST_F(CustomerTests, WriteSingleCustomer) {
-    char fileName[20] = "test_file";
-    writeCustomers(fileName, customers.data(), 1);
+    writeCustomers(fileName.c_str(), customers.data(), 1);
     std::ifstream file(fileName, std::ios::binary | std::ios::ate);
     if (!file.is_open()) {
         std::cerr << "Unable to open file: " << fileName << std::endl;
@@ -74,12 +73,33 @@ TEST_F(CustomerTests, WriteSingleCustomer) {
 }
 
 TEST_F(CustomerTests, WriteMaximumCustomers) {
-    char fileName[20] = "test_file";
-    writeCustomers(fileName, customers.data(), customers.size());
+    writeCustomers(fileName.c_str(), customers.data(), customers.size());
     std::ifstream file(fileName, std::ios::binary | std::ios::ate);
     if (!file.is_open()) {
         std::cerr << "Unable to open file: " << fileName << std::endl;
     }
     const std::streamsize size = file.tellg();
     ASSERT_EQ(size, MAX_CUSTOMERS * sizeof(customer));
+}
+
+TEST_F(CustomerTests, ReadSingleCustomer) {
+    constexpr int expected {50};
+    customers.at(0).code = expected;
+    writeCustomers(fileName.c_str(), customers.data(), 1);
+    customers.at(0).code = 0;
+    size_t quantity {};
+    readCustomers(fileName.c_str(), customers.data(), &quantity);
+    EXPECT_EQ(customers.at(0).code, expected);
+    EXPECT_EQ(quantity, 1);
+}
+
+TEST_F(CustomerTests, ReadMaximumCustomers) {
+    constexpr int expected {50};
+    customers.at(0).code = expected;
+    writeCustomers(fileName.c_str(), customers.data(), customers.size());
+    customers.at(0).code = 0;
+    size_t quantity {};
+    readCustomers(fileName.c_str(), customers.data(), &quantity);
+    EXPECT_EQ(customers.at(0).code, expected);
+    EXPECT_EQ(quantity, customers.size());
 }
