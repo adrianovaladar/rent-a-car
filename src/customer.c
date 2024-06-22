@@ -38,7 +38,7 @@ void insertCustomer(FILE *file, customer *customers, size_t *quantity) {
     setCodeNewCustomer(customers, quantity);
     printf("Code: %d\n", customers[*quantity].code);
     readCustomerData(file, &customers[*quantity]);
-    customers[*quantity].type = 0;
+    customers[*quantity].isRisky = 0;
     (*quantity)++;
 }
 
@@ -67,7 +67,7 @@ static void showCustomer(customer c) {
     printf("Code: %d\n", c.code);
     printf("Name: %s\n", c.name);
     printf("Address: %s\n", c.address);
-    printf("Type: %s\n", c.type == 0 ? "Regular" : "Risky");
+    printf("Type: %s\n", c.isRisky == 0 ? "Regular" : "Risky");
     printf("Driver license: %s\n", c.driverLicense);
 }
 

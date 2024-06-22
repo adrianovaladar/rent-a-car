@@ -135,7 +135,7 @@ void startContract(contract contracts[], customer customers[], vehicle vehicles[
                 printf("Customer not found, try another code\n");
             }
         } while (positionCustomer < 0);
-        if (customers[positionCustomer].type == 1) {
+        if (customers[positionCustomer].isRisky == 1) {
             printf("This is a risky client so we cannot proceed with the contract\n");
             return;
         }
@@ -189,7 +189,7 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
         } while (value != 'y' && value != 'Y' && value != 'n' && value != 'N');
         positionCustomer = searchCodeCustomer(customers, quantityCustomers, contracts[pos].codeCustomer);
         if (value == 'n' || value == 'N') {
-            customers[positionCustomer].type = 1;
+            customers[positionCustomer].isRisky = 1;
         }
         customers[positionCustomer].isUnderContract = false;
         positionVehicle = searchCodeVehicle(vehicles, quantityVehicles, contracts[pos].codeVehicle);
