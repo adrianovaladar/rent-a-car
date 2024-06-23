@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-char *officeEnumToText(enum office o) {
+char *officeEnumToText(const enum office o) {
     if (o == Unknown)
         return "Unknown\0";
     if (o == Porto)
@@ -35,17 +35,17 @@ static void readVehicleData(vehicle *v) {
     v->location = readInt(stdin, 0, 5);
 }
 
-int searchCodeVehicle(vehicle vehicles[], size_t quantity, int code) {
-    int i, position = -1;
+int searchCodeVehicle(const vehicle *vehicles, const size_t quantity, const int code) {
+    int position = -1;
 
-    for (i = 0; i <= quantity && position == -1; i++)
+    for (int i = 0; i <= quantity && position == -1; i++)
         if (vehicles[i].code == code)
             position = i;
 
     return position;
 }
 
-static void setCodeNewVehicle(vehicle vehicles[], const size_t *quantity) {
+static void setCodeNewVehicle(vehicle *vehicles, const size_t *quantity) {
     vehicles[*quantity].code = 0;
     for (size_t i = 0; i < *quantity; i++) {
         if (vehicles[i].code == vehicles[*quantity].code)
@@ -53,7 +53,7 @@ static void setCodeNewVehicle(vehicle vehicles[], const size_t *quantity) {
     }
 }
 
-void insertVehicle(vehicle vehicles[], size_t *quantity) {
+void insertVehicle(vehicle *vehicles, size_t *quantity) {
     if (*quantity == MAX_VEHICLES) {
         printf("The stand is full, please como back later\n");
         return;
@@ -74,18 +74,18 @@ static void editVehicle(vehicle *v) {
     readVehicleData(v);
 }
 
-static void deleteVehicle(vehicle vehicles[], int pos, size_t *qtd) {
-    if (vehicles[pos].isUnderContract) {
+static void deleteVehicle(vehicle *vehicles, const int position, size_t *qtd) {
+    if (vehicles[position].isUnderContract) {
         printf("The vehicle is under a contract at the moment, please come back later\n");
         return;
     }
-    for (int i = pos; i <= *qtd; i++) {
+    for (int i = position; i <= *qtd; i++) {
         vehicles[i] = vehicles[i + 1];
     }
     (*qtd)--;
 }
 
-static void showVehicle(vehicle v) {
+static void showVehicle(const vehicle v) {
     printf("Code: %d\n", v.code);
     printf("Brand: %s\n", v.brand);
     printf("Model: %s\n", v.model);
@@ -94,15 +94,13 @@ static void showVehicle(vehicle v) {
     printf("Status: %s\n", v.isUnderContract ? "Unavailable" : "Available");
 }
 
-void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t *quantity) {
-    int n, codeFound;
-
+void showVehicleByCodeAndShowOptions(vehicle *vehicles, size_t *quantity) {
     if (*quantity == 0) {
         printf("There are no registered vehicles\n");
         return;
     }
-    n = readInt(stdin, 0, MAX_VEHICLES - 1);
-    codeFound = searchCodeVehicle(vehicles, *quantity, n);
+    const int n = readInt(stdin, 0, MAX_VEHICLES - 1);
+    const int codeFound = searchCodeVehicle(vehicles, *quantity, n);
     if (codeFound >= 0) {
         showVehicle(vehicles[codeFound]);
         printf("Edit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
@@ -121,32 +119,30 @@ void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t *quantity) {
     }
 }
 
-void showAllVehicles(vehicle vehicles[], size_t quantity) {
-    int i;
+void showAllVehicles(const vehicle *vehicles, const size_t quantity) {
     if (quantity == 0) {
         printf("There are no registered vehicles\n");
         return;
     }
     printf("--- Vehicle data ---\n\n");
-    for (i = 0; i < quantity; i++) {
+    for (int i = 0; i < quantity; i++) {
         showVehicle(vehicles[i]);
         printf("\n");
     }
 }
 
-void showVehiclesLocation(vehicle vehicles[], size_t quantity) {
+void showVehiclesLocation(const vehicle *vehicles, const size_t quantity) {
     if (quantity == 0) {
         printf("There are no registered vehicles\n");
         return;
     }
-    int i, j;
     printf("              |                             OFFICES                          |\n");
-    printf("VEHICLES      |Braga   |Coimbra |Guarda  |Faro    |Lisbon  |Porto   |Unknown |\n");
+    printf("VEHICLES      |%s   |%s |%s  |%s    |%s  |%s   |%s |\n", officeEnumToText(Braga), officeEnumToText(Coimbra), officeEnumToText(Guarda), officeEnumToText(Faro), officeEnumToText(Lisbon), officeEnumToText(Porto), officeEnumToText(Unknown));
     printf("--------------|--------|--------|--------|--------|--------|--------|--------|\n");
-    for (i = 0; i < quantity; i++) {
+    for (int i = 0; i < quantity; i++) {
         printf("%-5d", vehicles[i].code);
         printf("         |");
-        for (j = 0; j < MAX_OFFICES; j++) {
+        for (int j = 0; j < MAX_OFFICES; j++) {
             char text[10] = "\0";
             strcat(text, "    \0");
             text[4] = j == vehicles[i].location ? 'x' : ' ';
@@ -157,9 +153,8 @@ void showVehiclesLocation(vehicle vehicles[], size_t quantity) {
     }
 }
 
-void readVehicles(char *fileName, vehicle vehicles[], size_t *quantity) {
-    FILE *file;
-    file = fopen(fileName, "rb");
+void readVehicles(const char *fileName, vehicle *vehicles, size_t *quantity) {
+    FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
         printf("Error opening file '%s'!\n", fileName);
         return;
@@ -172,8 +167,8 @@ void readVehicles(char *fileName, vehicle vehicles[], size_t *quantity) {
     // set the file position back to the beginning
     rewind(file);
 
-    // check that the number of vehicles is not negative or bigger than expected
-    if (*quantity < 0 || *quantity > MAX_VEHICLES) {
+    // check that the number of vehicles is not bigger than expected
+    if (*quantity > MAX_VEHICLES) {
         printf("Error: invalid file size in '%s'\n", fileName);
         fclose(file);
         return;
@@ -186,9 +181,8 @@ void readVehicles(char *fileName, vehicle vehicles[], size_t *quantity) {
 }
 
 // function to write vehicles to a binary file
-void writeVehicles(char *fileName, vehicle vehicles[], size_t quantity) {
-    FILE *file;
-    file = fopen(fileName, "wb");
+void writeVehicles(const char *fileName, const vehicle *vehicles, const size_t quantity) {
+    FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
         printf("Error opening file '%s'!\n", fileName);
         return;
