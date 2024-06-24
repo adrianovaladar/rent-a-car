@@ -7,6 +7,8 @@ add_executable(AllTests main.cpp
         ../src/date.c
         ../src/customer.h
         ../src/customer.c
+        ../src/vehicle.h
+        ../src/vehicle.c
         InputTests.cpp
         InputTests.h
         DateTests.cpp
@@ -14,7 +16,9 @@ add_executable(AllTests main.cpp
         CustomerTests.cpp
         CustomerTests.h
         Utils.cpp
-        Utils.h)
+        Utils.h
+        VehicleTests.cpp
+        VehicleTests.h)
 target_compile_definitions(AllTests PRIVATE TEST=1)
 include(FetchContent)
 FetchContent_Declare(
