@@ -1,4 +1,5 @@
 #include "VehicleTests.h"
+#include "Utils.h"
 
 TEST(VehicleTest, OfficeEnumToText) {
     EXPECT_EQ(officeEnumToText(Braga), std::string("Braga"));
@@ -16,4 +17,18 @@ TEST_F(VehicleTests, SearchCodeVehicleExistingCode) {
 
 TEST_F(VehicleTests, SearchCodeVehicleUnexistingCode) {
     EXPECT_EQ(searchCodeVehicle(vehicles.data(), vehicles.size(), vehicles.size()), -1);
+}
+
+TEST_F(VehicleTests, InsertVehicleMaxVehiclesReached) {
+    size_t quantity {vehicles.size()};
+    insertVehicle(nullptr, vehicles.data(), &quantity);
+    EXPECT_EQ(quantity, MAX_VEHICLES);
+}
+
+TEST_F(VehicleTests, InsertVehicleValid) {
+    size_t quantity {vehicles.size() - 1};
+    FILE *file = Utils::createInputFile("Tesla\nModel S\nTest\n0\n1\n");
+    insertVehicle(file, vehicles.data(), &quantity);
+    EXPECT_EQ(quantity, MAX_VEHICLES);
+    EXPECT_EQ(vehicles.at(vehicles.size() - 1).code, MAX_VEHICLES - 1);
 }

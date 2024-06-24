@@ -23,16 +23,16 @@ char *officeEnumToText(const enum office o) {
     return "Invalid\0";
 }
 
-static void readVehicleData(vehicle *v) {
-    readString(stdin, v->brand, 11, "Brand (maximum 10 characters): ");
-    readString(stdin, v->model, 11, "Model (maximum 10 characters): ");
-    readString(stdin, v->registrationPlate, 9, "Registration plate (maximum 8 characters): ");
+static void readVehicleData(FILE *file, vehicle *v) {
+    readString(file, v->brand, 11, "Brand (maximum 10 characters): ");
+    readString(file, v->model, 11, "Model (maximum 10 characters): ");
+    readString(file, v->registrationPlate, 9, "Registration plate (maximum 8 characters): ");
     v->isUnderContract = false;
     printf("Kms\n");
-    v->km = readFloat(stdin, 0, INFINITY);
+    v->km = readFloat(file, 0, INFINITY);
     printf("Office\n");
     printf("%s %d %s %d %s %d %s %d %s %d %s %d\n", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
-    v->location = readInt(stdin, 0, 5);
+    v->location = readInt(file, 0, 5);
 }
 
 int searchCodeVehicle(const vehicle *vehicles, const size_t quantity, const int code) {
@@ -53,7 +53,7 @@ static void setCodeNewVehicle(vehicle *vehicles, const size_t *quantity) {
     }
 }
 
-void insertVehicle(vehicle *vehicles, size_t *quantity) {
+void insertVehicle(FILE *file, vehicle *vehicles, size_t *quantity) {
     if (*quantity == MAX_VEHICLES) {
         printf("The stand is full, please como back later\n");
         return;
@@ -61,7 +61,7 @@ void insertVehicle(vehicle *vehicles, size_t *quantity) {
     printf("--- Car data ---\n");
     setCodeNewVehicle(vehicles, quantity);
     printf("Code: %d\n", vehicles[*quantity].code);
-    readVehicleData(&vehicles[*quantity]);
+    readVehicleData(file, &vehicles[*quantity]);
     (*quantity)++;
 }
 
@@ -71,7 +71,7 @@ static void editVehicle(vehicle *v) {
         return;
     }
     printf("--- Vehicle data ---\n");
-    readVehicleData(v);
+    readVehicleData(stdin, v);
 }
 
 static void deleteVehicle(vehicle *vehicles, const int position, size_t *qtd) {

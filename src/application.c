@@ -114,7 +114,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                insertVehicle(vehicles, &quantityVehicles);
+                insertVehicle(stdin, vehicles, &quantityVehicles);
                 end();
                 break;
             }

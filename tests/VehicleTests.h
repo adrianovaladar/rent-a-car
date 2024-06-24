@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 extern "C" {
 #include "../src/vehicle.h"
+#include "../src/constants.h"
 }
 
 class VehicleTests : public ::testing::Test {

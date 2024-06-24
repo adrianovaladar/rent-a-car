@@ -1,9 +1,9 @@
 #ifndef RENT_A_CAR_VEHICLE_H
 #define RENT_A_CAR_VEHICLE_H
 
-#include "constants.h"
 #include <glob.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 enum office { Braga = 0,
               Coimbra = 1,
@@ -23,13 +23,13 @@ typedef struct vehicle {
     bool isUnderContract;
 } vehicle;
 
-void insertVehicle(vehicle vehicles[], size_t *quantity);
-void showAllVehicles(const vehicle *vehicles, const size_t quantity);
-void showVehicleByCodeAndShowOptions(vehicle vehicles[], size_t *quantity);
-int searchCodeVehicle(const vehicle *vehicles, const size_t quantity, const int code);
-void showVehiclesLocation(const vehicle *vehicles, const size_t quantity);
-char *officeEnumToText(const enum office o);
-void readVehicles(const char *fileName, vehicle vehicles[], size_t *quantity);
-void writeVehicles(const char *fileName, const vehicle *vehicles, const size_t quantity);
+void insertVehicle(FILE *file, vehicle *vehicles, size_t *quantity);
+void showAllVehicles(const vehicle *vehicles, size_t quantity);
+void showVehicleByCodeAndShowOptions(vehicle *vehicles, size_t *quantity);
+int searchCodeVehicle(const vehicle *vehicles, size_t quantity, int code);
+void showVehiclesLocation(const vehicle *vehicles, size_t quantity);
+char *officeEnumToText(enum office o);
+void readVehicles(const char *fileName, vehicle *vehicles, size_t *quantity);
+void writeVehicles(const char *fileName, const vehicle *vehicles, size_t quantity);
 
 #endif//RENT_A_CAR_VEHICLE_H

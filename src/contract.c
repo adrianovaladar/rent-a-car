@@ -1,6 +1,7 @@
 #include "contract.h"
 #include "input.h"
 #include "vehicle.h"
+#include "constants.h"
 #include <math.h>
 #include <stdio.h>
 
