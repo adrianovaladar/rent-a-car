@@ -124,7 +124,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                showVehicleByCodeAndShowOptions(vehicles, &quantityVehicles);
+                manageVehicleByCode(stdin, vehicles, &quantityVehicles);
                 end();
                 break;
             }

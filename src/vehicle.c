@@ -65,7 +65,7 @@ void insertVehicle(FILE *file, vehicle *vehicles, size_t *quantity) {
     (*quantity)++;
 }
 
-static void editVehicle(vehicle *v) {
+static void editVehicle(FILE *file, vehicle *v) {
     if (v->isUnderContract) {
         printf("The vehicle is under a contract at the moment, please come back later\n");
         return;
@@ -94,22 +94,22 @@ static void showVehicle(const vehicle v) {
     printf("Status: %s\n", v.isUnderContract ? "Unavailable" : "Available");
 }
 
-void showVehicleByCodeAndShowOptions(vehicle *vehicles, size_t *quantity) {
+void manageVehicleByCode(FILE *file, vehicle *vehicles, size_t *quantity) {
     if (*quantity == 0) {
         printf("There are no registered vehicles\n");
         return;
     }
-    const int n = readInt(stdin, 0, MAX_VEHICLES - 1);
+    const int n = readInt(file, 0, MAX_VEHICLES - 1);
     const int codeFound = searchCodeVehicle(vehicles, *quantity, n);
     if (codeFound >= 0) {
         showVehicle(vehicles[codeFound]);
         printf("Edit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
         unsigned char op;
         do {
-            op = getchar();
+            op = fgetc(file);
         } while (op == '\n');
         if (op == 'E' || op == 'e') {
-            editVehicle(&vehicles[codeFound]);
+            editVehicle(file, &vehicles[codeFound]);
         } else if (op == 'D' || op == 'd') {
             deleteVehicle(vehicles, codeFound, quantity);
             printf("Vehicle deleted successfully\n");

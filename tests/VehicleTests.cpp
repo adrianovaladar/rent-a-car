@@ -32,3 +32,20 @@ TEST_F(VehicleTests, InsertVehicleValid) {
     EXPECT_EQ(quantity, MAX_VEHICLES);
     EXPECT_EQ(vehicles.at(vehicles.size() - 1).code, MAX_VEHICLES - 1);
 }
+
+TEST_F(VehicleTests, EditVehicleValid) {
+    FILE *file = Utils::createInputFile("0\neTesla\nModel S\nTest\n0\n1\n");
+    size_t quantity{vehicles.size()};
+    manageVehicleByCode(file, vehicles.data(), &quantity);
+    const std::string expected {"Tesla"};
+    EXPECT_NE(vehicles.at(0).brand, expected);
+}
+
+TEST_F(VehicleTests, EditVehicleInvalid) {
+    FILE *file = Utils::createInputFile("0\neTesla\nModel S\nTest\n0\n1\n");
+    size_t quantity{vehicles.size()};
+    vehicles.at(0).isUnderContract = true;
+    manageVehicleByCode(file, vehicles.data(), &quantity);
+    const std::string expected {"Tesla"};
+    EXPECT_NE(vehicles.at(0).brand, expected);
+}

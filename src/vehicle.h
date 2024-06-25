@@ -25,7 +25,7 @@ typedef struct vehicle {
 
 void insertVehicle(FILE *file, vehicle *vehicles, size_t *quantity);
 void showAllVehicles(const vehicle *vehicles, size_t quantity);
-void showVehicleByCodeAndShowOptions(vehicle *vehicles, size_t *quantity);
+void manageVehicleByCode(FILE *file, vehicle *vehicles, size_t *quantity);
 int searchCodeVehicle(const vehicle *vehicles, size_t quantity, int code);
 void showVehiclesLocation(const vehicle *vehicles, size_t quantity);
 char *officeEnumToText(enum office o);
