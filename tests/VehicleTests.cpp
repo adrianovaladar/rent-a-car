@@ -38,7 +38,7 @@ TEST_F(VehicleTests, EditVehicleValid) {
     size_t quantity{vehicles.size()};
     manageVehicleByCode(file, vehicles.data(), &quantity);
     const std::string expected {"Tesla"};
-    EXPECT_NE(vehicles.at(0).brand, expected);
+    EXPECT_EQ(vehicles.at(0).brand, expected);
 }
 
 TEST_F(VehicleTests, EditVehicleInvalid) {
@@ -48,4 +48,25 @@ TEST_F(VehicleTests, EditVehicleInvalid) {
     manageVehicleByCode(file, vehicles.data(), &quantity);
     const std::string expected {"Tesla"};
     EXPECT_NE(vehicles.at(0).brand, expected);
+}
+
+TEST_F(VehicleTests, DeleteVehicleUnderContract) {
+    FILE *file = Utils::createInputFile("0\nd");
+    size_t quantity{vehicles.size()};
+    strcpy(vehicles.at(0).brand, "Tesla");
+    vehicles.at(0).isUnderContract = true;
+    manageVehicleByCode(file, vehicles.data(), &quantity);
+    const std::string expected {"Tesla"};
+    EXPECT_EQ(vehicles.at(0).brand, expected);
+    EXPECT_EQ(quantity, vehicles.size());
+}
+
+TEST_F(VehicleTests, DeleteVehicleValid) {
+    FILE *file = Utils::createInputFile("0\nd");
+    size_t quantity{vehicles.size()};
+    strcpy(vehicles.at(0).brand, "name");
+    manageVehicleByCode(file, vehicles.data(), &quantity);
+    const std::string expected {"name"};
+    EXPECT_NE(vehicles.at(0).brand, expected);
+    EXPECT_NE(quantity, vehicles.size());
 }

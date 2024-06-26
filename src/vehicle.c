@@ -71,7 +71,7 @@ static void editVehicle(FILE *file, vehicle *v) {
         return;
     }
     printf("--- Vehicle data ---\n");
-    readVehicleData(stdin, v);
+    readVehicleData(file, v);
 }
 
 static void deleteVehicle(vehicle *vehicles, const int position, size_t *qtd) {
@@ -79,7 +79,7 @@ static void deleteVehicle(vehicle *vehicles, const int position, size_t *qtd) {
         printf("The vehicle is under a contract at the moment, please come back later\n");
         return;
     }
-    for (int i = position; i <= *qtd; i++) {
+    for (int i = position; i < *qtd; i++) {
         vehicles[i] = vehicles[i + 1];
     }
     (*qtd)--;
