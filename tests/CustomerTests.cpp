@@ -27,7 +27,7 @@ TEST_F(CustomerTests, InsertCustomerValid) {
 TEST_F(CustomerTests, EditCustomerValid) {
     FILE *file = Utils::createInputFile("0\nename\naddress\nlicense");
     size_t quantity{customers.size()};
-    showCustomerByCodeAndShowOptions(file, customers.data(), &quantity);
+    manageCustomerByCode(file, customers.data(), &quantity);
     const std::string expected {"name"};
     EXPECT_EQ(customers.at(0).name, expected);
 }
@@ -36,7 +36,7 @@ TEST_F(CustomerTests, EditCustomerInvalid) {
     FILE *file = Utils::createInputFile("0\nename\naddress\nlicense");
     size_t quantity{customers.size()};
     customers.at(0).isUnderContract = true;
-    showCustomerByCodeAndShowOptions(file, customers.data(), &quantity);
+    manageCustomerByCode(file, customers.data(), &quantity);
     const std::string expected {"name"};
     EXPECT_NE(customers.at(0).name, expected);
 }
@@ -46,7 +46,7 @@ TEST_F(CustomerTests, DeleteCustomerUnderContract) {
     size_t quantity{customers.size()};
     strcpy(customers.at(0).name, "name");
     customers.at(0).isUnderContract = true;
-    showCustomerByCodeAndShowOptions(file, customers.data(), &quantity);
+    manageCustomerByCode(file, customers.data(), &quantity);
     const std::string expected {"name"};
     EXPECT_EQ(customers.at(0).name, expected);
     EXPECT_EQ(quantity, customers.size());
@@ -56,7 +56,7 @@ TEST_F(CustomerTests, DeleteCustomerValid) {
     FILE *file = Utils::createInputFile("0\nd");
     size_t quantity{customers.size()};
     strcpy(customers.at(0).name, "name");
-    showCustomerByCodeAndShowOptions(file, customers.data(), &quantity);
+    manageCustomerByCode(file, customers.data(), &quantity);
     const std::string expected {"name"};
     EXPECT_NE(customers.at(0).name, expected);
     EXPECT_NE(quantity, customers.size());

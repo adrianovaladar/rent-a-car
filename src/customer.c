@@ -71,7 +71,7 @@ static void showCustomer(customer c) {
     printf("Driver license: %s\n", c.driverLicense);
 }
 
-void showCustomerByCodeAndShowOptions(FILE *file, customer *customers, size_t *quantity) {
+void manageCustomerByCode(FILE *file, customer *customers, size_t *quantity) {
     if (*quantity == 0) {
         printf("There are no registered customers\n");
         return;

@@ -32,7 +32,7 @@ void insertCustomer(FILE *file, customer *customers, size_t *quantity);
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void showCustomerByCodeAndShowOptions(FILE *file, customer *customers, size_t *quantity);
+void manageCustomerByCode(FILE *file, customer *customers, size_t *quantity);
 /**
  * @brief Displays all customers.
  *
