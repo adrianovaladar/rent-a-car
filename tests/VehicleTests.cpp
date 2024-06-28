@@ -1,5 +1,6 @@
 #include "VehicleTests.h"
 #include "Utils.h"
+#include <fstream>
 
 TEST(VehicleTest, OfficeEnumToText) {
     EXPECT_EQ(officeEnumToText(Braga), std::string("Braga"));
@@ -69,4 +70,24 @@ TEST_F(VehicleTests, DeleteVehicleValid) {
     const std::string expected {"name"};
     EXPECT_NE(vehicles.at(0).brand, expected);
     EXPECT_NE(quantity, vehicles.size());
+}
+
+TEST_F(VehicleTests, WriteSingleVehicle) {
+    writeVehicles(fileName.c_str(), vehicles.data(), 1);
+    std::ifstream file(fileName, std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << fileName << std::endl;
+    }
+    const std::streamsize size = file.tellg();
+    ASSERT_EQ(size, sizeof(vehicle));
+}
+
+TEST_F(VehicleTests, WriteMaximumVehicles) {
+    writeVehicles(fileName.c_str(), vehicles.data(), vehicles.size());
+    std::ifstream file(fileName, std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << fileName << std::endl;
+    }
+    const std::streamsize size = file.tellg();
+    ASSERT_EQ(size, MAX_VEHICLES * sizeof(vehicle));
 }
