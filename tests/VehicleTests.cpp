@@ -91,3 +91,25 @@ TEST_F(VehicleTests, WriteMaximumVehicles) {
     const std::streamsize size = file.tellg();
     ASSERT_EQ(size, MAX_VEHICLES * sizeof(vehicle));
 }
+
+TEST_F(VehicleTests, ReadSingleVehicle) {
+    constexpr int expected {50};
+    vehicles.at(0).code = expected;
+    writeVehicles(fileName.c_str(), vehicles.data(), 1);
+    vehicles.at(0).code = 0;
+    size_t quantity {};
+    readVehicles(fileName.c_str(), vehicles.data(), &quantity);
+    EXPECT_EQ(vehicles.at(0).code, expected);
+    EXPECT_EQ(quantity, 1);
+}
+
+TEST_F(VehicleTests, ReadMaximumVehicles) {
+    constexpr int expected {50};
+    vehicles.at(0).code = expected;
+    writeVehicles(fileName.c_str(), vehicles.data(), vehicles.size());
+    vehicles.at(0).code = 0;
+    size_t quantity {};
+    readVehicles(fileName.c_str(), vehicles.data(), &quantity);
+    EXPECT_EQ(vehicles.at(0).code, expected);
+    EXPECT_EQ(quantity, vehicles.size());
+}
