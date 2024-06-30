@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 /**
- * @brief Structure representing a date.
+ * @brief Structure representing a customer.
  */
 typedef struct customer {
     int code;/**< Code of the customer. Should be unique. */

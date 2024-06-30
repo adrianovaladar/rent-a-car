@@ -26,7 +26,7 @@ char *officeEnumToText(const enum office o) {
 static void readVehicleData(FILE *file, vehicle *v) {
     readString(file, v->brand, 11, "Brand (maximum 10 characters): ");
     readString(file, v->model, 11, "Model (maximum 10 characters): ");
-    readString(file, v->registrationPlate, 9, "Registration plate (maximum 8 characters): ");
+    readString(file, v->registrationPlate, 7, "Registration plate (maximum 6 characters): ");
     v->isUnderContract = false;
     printf("Kms\n");
     v->km = readFloat(file, 0, INFINITY);
