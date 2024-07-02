@@ -75,10 +75,11 @@ static void editContract(contract *contracts, const int pos, const size_t quanti
     do {
         isLegalDate = true;
         readDate(stdin, &contracts[pos].startDate);
-        for (int i = 0; i < quantity && isLegalDate != false; i++) {
+        for (int i = 0; i < quantity; i++) {
             if (contracts[pos].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[quantity].startDate)) {
                 printf("The vehicle was unavailable for the intended date. It was under other contract\n");
                 isLegalDate = false;
+                break;
             }
         }
     } while (!isLegalDate);
@@ -125,7 +126,9 @@ void startContract(contract *contracts, customer *customers, vehicle *vehicles, 
         printf("We reached our full capacity of contracts. Please come back later");
         return;
     }
-    int n, positionCustomer, positionVehicle;
+    int n;
+    int positionCustomer;
+    int positionVehicle;
     if (quantityVehicles == 0 || quantityCustomers == 0) {
         printf("There are no registered clients or vehicles so a contract cannot be started\n");
     }
@@ -164,10 +167,11 @@ void startContract(contract *contracts, customer *customers, vehicle *vehicles, 
     do {
         isLegalDate = true;
         readDate(stdin, &contracts[*quantityContracts].startDate);
-        for (int i = 0; i < *quantityContracts && isLegalDate != false; i++) {
+        for (int i = 0; i < *quantityContracts; i++) {
             if (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[*quantityContracts].startDate)) {
                 printf("The vehicle was unavailable for the intended date. It was under other contract\n");
                 isLegalDate = false;
+                break;
             }
         }
     } while (!isLegalDate);
@@ -207,13 +211,14 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
             printf("Start date: %d/%d/%d\n", contracts[pos].startDate.day, contracts[pos].startDate.month, contracts[pos].startDate.year);
             isLegalDate = false;
         }
-        for (int i = 0; i < quantityContracts && isLegalDate != false; i++) {
+        for (int i = 0; i < quantityContracts; i++) {
             if (i == pos) {
                 continue;
             }
             if (contracts[pos].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[pos].endDate)) {
                 printf("The vehicle was unavailable for the intended date. It was under other contract\n");
                 isLegalDate = false;
+                break;
             }
         }
     } while (!isLegalDate);
