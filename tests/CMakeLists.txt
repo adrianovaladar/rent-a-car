@@ -9,6 +9,8 @@ add_executable(AllTests main.cpp
         ../src/customer.c
         ../src/vehicle.h
         ../src/vehicle.c
+        ../src/contract.h
+        ../src/contract.c
         InputTests.cpp
         InputTests.h
         DateTests.cpp
@@ -18,7 +20,9 @@ add_executable(AllTests main.cpp
         Utils.cpp
         Utils.h
         VehicleTests.cpp
-        VehicleTests.h)
+        VehicleTests.h
+        ContractTests.cpp
+        ContractTests.h)
 target_compile_definitions(AllTests PRIVATE TEST=1)
 include(FetchContent)
 FetchContent_Declare(

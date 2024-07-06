@@ -18,7 +18,7 @@ typedef struct contract {
 } contract;
 
 void showContracts(const contract *contracts, size_t quantity);
-void startContract(contract *contracts, customer *customers, vehicle *vehicles, size_t quantityCustomers, size_t quantityVehicles, size_t *quantityContracts);
+void startContract(FILE *file, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, size_t quantityCustomers, size_t quantityVehicles);
 void showContractByVehicleCodeAndStartDateAndShowOptions(contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, size_t quantityVehicles, size_t quantityCustomers);
 void readContracts(char *fileName, contract *contracts, size_t *quantity);
 void writeContracts(char *fileName, const contract *contracts, size_t quantity);

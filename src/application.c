@@ -155,7 +155,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                startContract(contracts, customers, vehicles, quantityCustomers, quantityVehicles, &quantityContracts);
+                startContract(stdin, contracts, customers, vehicles, &quantityContracts, quantityCustomers, quantityVehicles);
                 end();
                 break;
             }
