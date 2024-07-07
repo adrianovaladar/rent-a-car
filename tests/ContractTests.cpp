@@ -38,9 +38,37 @@ TEST_F(ContractTests, StartContractVehicleUnderContract) {
 }
 
 TEST_F(ContractTests, StartContractValid) {
-    FILE *file = Utils::createInputFile("0\n0\n1.0\n2024/1/1/n");
+    FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
     size_t quantityContracts {};
     startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
     EXPECT_EQ(quantityContracts, 1);
     EXPECT_EQ(contracts[0].startDate.year, 2024);
+}
+
+TEST_F(ContractTests, ManageContractWithoutContracts) {
+    FILE *file = Utils::createInputFile("d");
+    size_t quantityContracts {};
+    manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
+    EXPECT_EQ(quantityContracts, 0);
+}
+
+TEST_F(ContractTests, DeleteContractOngoing) {
+    FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
+    size_t quantityContracts {};
+    startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
+    file = Utils::createInputFile("2024\n1\n1\n0d");
+    manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
+    EXPECT_EQ(quantityContracts, 1);
+}
+
+TEST_F(ContractTests, DeleteContractValid) {
+    FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
+    size_t quantityContracts {};
+    startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
+    contracts[quantityContracts - 1].endDate.day = 2;
+    contracts[quantityContracts - 1].endDate.month = 1;
+    contracts[quantityContracts - 1].endDate.year = 2024;
+    file = Utils::createInputFile("2024\n1\n1\n0d");
+    manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
+    EXPECT_EQ(quantityContracts, 0);
 }

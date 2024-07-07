@@ -165,7 +165,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                showContractByVehicleCodeAndStartDateAndShowOptions(contracts, vehicles, customers, &quantityContracts, quantityVehicles, quantityCustomers);
+                manageContractByVehicleCodeAndStartDate(stdin, contracts, vehicles, customers, &quantityContracts, quantityVehicles, quantityCustomers);
                 end();
                 break;
             }

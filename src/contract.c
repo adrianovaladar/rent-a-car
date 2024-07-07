@@ -89,7 +89,7 @@ static void deleteContract(contract *c, const int pos, size_t *quantity, vehicle
     if (c[pos].endDate.day == 0)
         printf("Not possible to delete this contract because it is still ongoing\n");
     else {
-        for (int i = pos; i <= *quantity; i++) {
+        for (int i = pos; i < *quantity; i++) {
             c[i] = c[i + 1];
         }
         const int customerPosition = searchCodeCustomer(customers, quantityCustomers, c[pos].codeCustomer);
@@ -97,25 +97,26 @@ static void deleteContract(contract *c, const int pos, size_t *quantity, vehicle
         const int vehiclePosition = searchCodeVehicle(vehicles, quantityVehicles, c[pos].codeVehicle);
         vehicles[vehiclePosition].isUnderContract = false;
         (*quantity)--;
+        printf("Contract deleted successfully\n");
     }
 }
 
-static int searchByStartingDate(const contract *c, const size_t quantity) {
+static int searchByStartingDate(FILE *file, const contract *c, const size_t quantity) {
     int position = -1;
     date date;
-    readDate(stdin, &date);
+    readDate(file, &date);
     for (int i = 0; i <= quantity; i++)
         if (areDatesEqual(c[i].startDate, date))
             position = i;
     return position;
 }
 
-static int searchContract(const contract *contracts, const size_t quantityContracts) {
+static int searchContract(FILE *file, const contract *contracts, const size_t quantityContracts) {
     int aux = -1;
     printf("Contract start date\n");
-    const int position = searchByStartingDate(contracts, quantityContracts);
+    const int position = searchByStartingDate(file, contracts, quantityContracts);
     printf("Vehicle code\n");
-    const int insertedCodeValue = readInt(stdin, 0, MAX_VEHICLES - 1);
+    const int insertedCodeValue = readInt(file, 0, MAX_VEHICLES - 1);
     if (insertedCodeValue == contracts[position].codeVehicle)
         aux = position;
     return aux;
@@ -230,18 +231,18 @@ static void endContract(contract contracts[], int pos, vehicle vehicles[], custo
     vehicles[positionVehicle].location = contracts[pos].endOffice;
 }
 
-void showContractByVehicleCodeAndStartDateAndShowOptions(contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, const size_t quantityVehicles, const size_t quantityCustomers) {
+void manageContractByVehicleCodeAndStartDate(FILE *file, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, const size_t quantityVehicles, const size_t quantityCustomers) {
     if (*quantityContracts == 0) {
         printf("There are no registered contracts\n");
         return;
     }
-    const int contractPosition = searchContract(contracts, *quantityContracts);
+    const int contractPosition = searchContract(file, contracts, *quantityContracts);
     if (contractPosition >= 0) {
         showContract(contracts[contractPosition]);
         printf("Edit(e) Delete(d) End (t) (Press any other key plus enter to leave this menu)\n");
         unsigned char op;
         do {
-            op = getchar();
+            op = fgetc(file);
         } while (op == '\n');
         if (op == 'T' || op == 't') {
             endContract(contracts, contractPosition, vehicles, customers, quantityCustomers, quantityVehicles, *quantityContracts);
@@ -249,7 +250,6 @@ void showContractByVehicleCodeAndStartDateAndShowOptions(contract *contracts, ve
             editContract(contracts, contractPosition, *quantityContracts);
         } else if (op == 'D' || op == 'd') {
             deleteContract(contracts, contractPosition, quantityContracts, vehicles, quantityVehicles, customers, quantityCustomers);
-            printf("Contract deleted successfully\n");
         }
     } else {
         printf("No contract found with data provided\n");
