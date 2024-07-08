@@ -1,7 +1,6 @@
 #ifndef RENT_A_CAR_CUSTOMER_H
 #define RENT_A_CAR_CUSTOMER_H
 
-#include <glob.h>
 #include <stdbool.h>
 #include <stdio.h>
 
