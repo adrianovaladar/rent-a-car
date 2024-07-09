@@ -8,7 +8,7 @@
 #include <string.h>
 
 static void showMenu() {
-#ifdef WINDOWS
+#ifdef _WIN32
         system("cls");
         system("title Rent-a-car");
 #else
@@ -59,7 +59,7 @@ void run() {
     contract contracts[MAX_CONTRACTS];
     // variables to read/write data
     char customersFile[14], vehiclesFile[13], contractsFile[14];
-#ifdef WINDOWS
+#ifdef _WIN32
     strcat(customersFile, "customers.bin\0");
     strcat(vehiclesFile, "vehicles.bin\0");
     strcat(contractsFile, "contracts.bin\0");
@@ -70,7 +70,7 @@ void run() {
 #endif
     readData(customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, &quantityCustomers, &quantityVehicles, &quantityContracts);
     do {
-#ifdef WINDOWS
+#ifdef _WIN32
         system("cls");
 #else
         system("clear");
@@ -79,7 +79,7 @@ void run() {
         option = readOption(stdin);
         switch (option) {
             case 1: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
@@ -89,7 +89,7 @@ void run() {
                 break;
             }
             case 2: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
@@ -99,7 +99,7 @@ void run() {
                 break;
             }
             case 3: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
@@ -109,7 +109,7 @@ void run() {
                 break;
             }
             case 11: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
@@ -119,7 +119,7 @@ void run() {
                 break;
             }
             case 12: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
@@ -129,7 +129,7 @@ void run() {
                 break;
             }
             case 13: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
@@ -140,7 +140,7 @@ void run() {
             }
 
             case 14: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
@@ -150,7 +150,7 @@ void run() {
                 break;
             }
             case 21: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
@@ -160,7 +160,7 @@ void run() {
                 break;
             }
             case 22: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
@@ -170,7 +170,7 @@ void run() {
                 break;
             }
             case 23: {
-#ifdef WINDOWS
+#ifdef _WIN32
                 system("cls");
 #else
                 system("clear");
