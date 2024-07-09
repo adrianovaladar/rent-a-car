@@ -64,17 +64,17 @@ void showContracts(const contract *contracts, const size_t quantity) {
     }
 }
 
-static void editContract(contract *contracts, const int pos, const size_t quantity) {
+static void editContract(FILE *file, contract *contracts, const int pos, const size_t quantity) {
     if (contracts[pos].endDate.year != 0) {
         printf("Not possible to edit this contract because it is already closed\n");
         return;
     }
     printf("Insert the price per day\n");
-    contracts[pos].priceDay = readFloat(stdin, 0.01f, 9999);
+    contracts[pos].priceDay = readFloat(file, 0.01f, 9999);
     bool isLegalDate;
     do {
         isLegalDate = true;
-        readDate(stdin, &contracts[pos].startDate);
+        readDate(file, &contracts[pos].startDate);
         for (int i = 0; i < quantity; i++) {
             if (contracts[pos].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[quantity].startDate)) {
                 printf("The vehicle was unavailable for the intended date. It was under other contract\n");
@@ -247,7 +247,7 @@ void manageContractByVehicleCodeAndStartDate(FILE *file, contract *contracts, ve
         if (op == 'T' || op == 't') {
             endContract(contracts, contractPosition, vehicles, customers, quantityCustomers, quantityVehicles, *quantityContracts);
         } else if (op == 'E' || op == 'e') {
-            editContract(contracts, contractPosition, *quantityContracts);
+            editContract(file, contracts, contractPosition, *quantityContracts);
         } else if (op == 'D' || op == 'd') {
             deleteContract(contracts, contractPosition, quantityContracts, vehicles, quantityVehicles, customers, quantityCustomers);
         }

@@ -72,3 +72,36 @@ TEST_F(ContractTests, DeleteContractValid) {
     manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
     EXPECT_EQ(quantityContracts, 0);
 }
+
+TEST_F(ContractTests, EditContractClosed) {
+    FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
+    size_t quantityContracts {};
+    startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
+    date expectedDate;
+    expectedDate.day = contracts.at(quantityContracts - 1).startDate.day;
+    expectedDate.month = contracts.at(quantityContracts - 1).startDate.month;
+    expectedDate.year = contracts.at(quantityContracts - 1).startDate.year;
+    const float expectedPrice = contracts.at(quantityContracts - 1).price;
+    contracts.at(quantityContracts - 1).endDate.day = 2;
+    contracts.at(quantityContracts - 1).endDate.month = 1;
+    contracts.at(quantityContracts - 1).endDate.year = 2024;
+    file = Utils::createInputFile("2024\n1\n1\n0e");
+    manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
+    EXPECT_EQ(areDatesEqual(expectedDate, contracts.at(quantityContracts - 1).startDate), true);
+    EXPECT_EQ(expectedPrice, contracts.at(quantityContracts - 1).price);
+}
+
+TEST_F(ContractTests, EditContractValid) {
+    FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
+    size_t quantityContracts {};
+    startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
+    date unexpectedDate;
+    unexpectedDate.day = contracts.at(quantityContracts - 1).startDate.day;
+    unexpectedDate.month = contracts.at(quantityContracts - 1).startDate.month;
+    unexpectedDate.year = contracts.at(quantityContracts - 1).startDate.year;
+    const float unexpectedPrice = contracts.at(quantityContracts - 1).priceDay;
+    file = Utils::createInputFile("2024\n1\n1\n0e2.0\n2025\n1\n1\n");
+    manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
+    EXPECT_NE(areDatesEqual(unexpectedDate, contracts.at(quantityContracts - 1).startDate), true);
+    EXPECT_NE(unexpectedPrice, contracts.at(quantityContracts - 1).priceDay);
+}
