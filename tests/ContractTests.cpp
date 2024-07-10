@@ -105,3 +105,15 @@ TEST_F(ContractTests, EditContractValid) {
     EXPECT_NE(areDatesEqual(unexpectedDate, contracts.at(quantityContracts - 1).startDate), true);
     EXPECT_NE(unexpectedPrice, contracts.at(quantityContracts - 1).priceDay);
 }
+
+TEST_F(ContractTests, EndContractAlreadyClosed) {
+    FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
+    size_t quantityContracts{};
+    startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
+    contracts.at(quantityContracts - 1).endDate.day = 2;
+    contracts.at(quantityContracts - 1).endDate.month = 1;
+    contracts.at(quantityContracts - 1).endDate.year = 2024;
+    file = Utils::createInputFile("2024\n1\n1\n0ty\n20\n3\n2\n2025");
+    manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
+    EXPECT_EQ(areDatesEqual(contracts.at(quantityContracts - 1).endDate, {2, 1, 2024}), true);
+}
