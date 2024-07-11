@@ -7,7 +7,7 @@ extern "C" {
 #include "../src/constants.h"
 }
 
-    class ContractTests : public ::testing::Test {
+class ContractTests : public ::testing::Test {
 protected:
     std::array<contract, MAX_CONTRACTS> contracts {};
     std::array<customer, MAX_CUSTOMERS> customers {};

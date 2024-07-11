@@ -113,7 +113,31 @@ TEST_F(ContractTests, EndContractAlreadyClosed) {
     contracts.at(quantityContracts - 1).endDate.day = 2;
     contracts.at(quantityContracts - 1).endDate.month = 1;
     contracts.at(quantityContracts - 1).endDate.year = 2024;
-    file = Utils::createInputFile("2024\n1\n1\n0ty\n20\n3\n2\n2025");
+    file = Utils::createInputFile("2024\n1\n1\n0ty\n20\n2025\n2\n3");
     manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
     EXPECT_EQ(areDatesEqual(contracts.at(quantityContracts - 1).endDate, {2, 1, 2024}), true);
+}
+
+TEST_F(ContractTests, EndContractRiskyClient) {
+    FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
+    size_t quantityContracts{};
+    startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
+    file = Utils::createInputFile("2024\n1\n1\n0tn\n20\n2025\n2\n3");
+    manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
+    EXPECT_EQ(areDatesEqual(contracts.at(quantityContracts - 1).endDate, {3, 2, 2025}), true);
+    EXPECT_EQ(customers.at(0).isRisky, true);
+    const float expectedPrice{static_cast<float>(diffInDays(contracts.at(quantityContracts - 1).startDate, contracts.at(quantityContracts - 1).endDate) + 1) * contracts.at(quantityContracts - 1).priceDay};
+    EXPECT_EQ(expectedPrice, contracts.at(quantityContracts - 1).price);
+}
+
+TEST_F(ContractTests, EndContractRegularClient) {
+    FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
+    size_t quantityContracts{};
+    startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
+    file = Utils::createInputFile("2024\n1\n1\n0ty\n20\n2025\n2\n3");
+    manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
+    EXPECT_EQ(areDatesEqual(contracts.at(quantityContracts - 1).endDate, {3, 2, 2025}), true);
+    EXPECT_EQ(customers.at(0).isRisky, false);
+    const float expectedPrice{static_cast<float>(diffInDays(contracts.at(quantityContracts - 1).startDate, contracts.at(quantityContracts - 1).endDate) + 1) * contracts.at(quantityContracts - 1).priceDay};
+    EXPECT_EQ(expectedPrice, contracts.at(quantityContracts - 1).price);
 }

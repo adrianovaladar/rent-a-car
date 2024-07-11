@@ -208,7 +208,7 @@ static void endContract(FILE *file, contract *contracts, const int pos, vehicle 
     do {
         isLegalDate = true;
         readDate(file, &contracts[pos].endDate);
-        if (isDateBefore(contracts[pos].startDate, contracts[pos].endDate)) {
+        if (isDateBefore(contracts[pos].endDate, contracts[pos].startDate)) {
             printf("End date cannot be less than start date\n");
             printf("Start date: %d/%d/%d\n", contracts[pos].startDate.day, contracts[pos].startDate.month, contracts[pos].startDate.year);
             isLegalDate = false;
