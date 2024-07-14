@@ -56,7 +56,7 @@ TEST_F(ContractTests, DeleteContractOngoing) {
     FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
     size_t quantityContracts {};
     startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
-    file = Utils::createInputFile("2024\n1\n1\n0d");
+    file = Utils::createInputFile("0\n2024\n1\n1\nd");
     manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
     EXPECT_EQ(quantityContracts, 1);
 }
@@ -68,7 +68,7 @@ TEST_F(ContractTests, DeleteContractValid) {
     contracts[quantityContracts - 1].endDate.day = 2;
     contracts[quantityContracts - 1].endDate.month = 1;
     contracts[quantityContracts - 1].endDate.year = 2024;
-    file = Utils::createInputFile("2024\n1\n1\n0d");
+    file = Utils::createInputFile("0\n2024\n1\n1\nd");
     manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
     EXPECT_EQ(quantityContracts, 0);
 }
@@ -85,7 +85,7 @@ TEST_F(ContractTests, EditContractClosed) {
     contracts.at(quantityContracts - 1).endDate.day = 2;
     contracts.at(quantityContracts - 1).endDate.month = 1;
     contracts.at(quantityContracts - 1).endDate.year = 2024;
-    file = Utils::createInputFile("2024\n1\n1\n0e");
+    file = Utils::createInputFile("0\n2024\n1\n1\ne");
     manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
     EXPECT_EQ(areDatesEqual(expectedDate, contracts.at(quantityContracts - 1).startDate), true);
     EXPECT_EQ(expectedPrice, contracts.at(quantityContracts - 1).price);
@@ -100,7 +100,7 @@ TEST_F(ContractTests, EditContractValid) {
     unexpectedDate.month = contracts.at(quantityContracts - 1).startDate.month;
     unexpectedDate.year = contracts.at(quantityContracts - 1).startDate.year;
     const float unexpectedPrice = contracts.at(quantityContracts - 1).priceDay;
-    file = Utils::createInputFile("2024\n1\n1\n0e2.0\n2025\n1\n1\n");
+    file = Utils::createInputFile("0\n2024\n1\n1\ne2.0\n2025\n1\n1\n");
     manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
     EXPECT_NE(areDatesEqual(unexpectedDate, contracts.at(quantityContracts - 1).startDate), true);
     EXPECT_NE(unexpectedPrice, contracts.at(quantityContracts - 1).priceDay);
@@ -113,7 +113,7 @@ TEST_F(ContractTests, EndContractAlreadyClosed) {
     contracts.at(quantityContracts - 1).endDate.day = 2;
     contracts.at(quantityContracts - 1).endDate.month = 1;
     contracts.at(quantityContracts - 1).endDate.year = 2024;
-    file = Utils::createInputFile("2024\n1\n1\n0ty\n20\n2025\n2\n3");
+    file = Utils::createInputFile("0\n2024\n1\n1\nty\n20\n2025\n2\n3");
     manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
     EXPECT_EQ(areDatesEqual(contracts.at(quantityContracts - 1).endDate, {2, 1, 2024}), true);
 }
@@ -122,7 +122,7 @@ TEST_F(ContractTests, EndContractRiskyClient) {
     FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
     size_t quantityContracts{};
     startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
-    file = Utils::createInputFile("2024\n1\n1\n0tn\n20\n2025\n2\n3");
+    file = Utils::createInputFile("0\n2024\n1\n1\ntn\n20\n2025\n2\n3");
     manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
     EXPECT_EQ(areDatesEqual(contracts.at(quantityContracts - 1).endDate, {3, 2, 2025}), true);
     EXPECT_EQ(customers.at(0).isRisky, true);
@@ -134,7 +134,7 @@ TEST_F(ContractTests, EndContractRegularClient) {
     FILE *file = Utils::createInputFile("0\n0\n1.0\n2024\n1\n1/n");
     size_t quantityContracts{};
     startContract(file, contracts.data(), customers.data(), vehicles.data(), &quantityContracts, customers.size(), vehicles.size());
-    file = Utils::createInputFile("2024\n1\n1\n0ty\n20\n2025\n2\n3");
+    file = Utils::createInputFile("0\n2024\n1\n1\nty\n20\n2025\n2\n3");
     manageContractByVehicleCodeAndStartDate(file, contracts.data(), vehicles.data(), customers.data(), &quantityContracts, vehicles.size(), customers.size());
     EXPECT_EQ(areDatesEqual(contracts.at(quantityContracts - 1).endDate, {3, 2, 2025}), true);
     EXPECT_EQ(customers.at(0).isRisky, false);

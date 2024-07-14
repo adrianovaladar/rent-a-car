@@ -101,25 +101,24 @@ static void deleteContract(contract *c, const int pos, size_t *quantity, vehicle
     }
 }
 
-static int searchByStartingDate(FILE *file, const contract *c, const size_t quantity) {
+static int searchByStartingDate(FILE *file, const contract *c, const size_t quantity, const int codeVehicle) {
     int position = -1;
     date date;
     readDate(file, &date);
-    for (int i = 0; i <= quantity; i++)
-        if (areDatesEqual(c[i].startDate, date))
+    for (int i = 0; i <= quantity; i++) {
+        if (areDatesEqual(c[i].startDate, date) && codeVehicle == c[i].codeVehicle) {
             position = i;
+            break;
+        }
+    }
     return position;
 }
 
 static int searchContract(FILE *file, const contract *contracts, const size_t quantityContracts) {
-    int aux = -1;
-    printf("Contract start date\n");
-    const int position = searchByStartingDate(file, contracts, quantityContracts);
     printf("Vehicle code\n");
-    const int insertedCodeValue = readInt(file, 0, MAX_VEHICLES - 1);
-    if (insertedCodeValue == contracts[position].codeVehicle)
-        aux = position;
-    return aux;
+    const int vehicleCode = readInt(file, 0, MAX_VEHICLES - 1);
+    printf("Contract start date\n");
+    return searchByStartingDate(file, contracts, quantityContracts, vehicleCode);
 }
 
 void startContract(FILE *file, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, const size_t quantityCustomers, const size_t quantityVehicles) {
