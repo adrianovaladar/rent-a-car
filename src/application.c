@@ -32,33 +32,41 @@ static void showMenu() {
         printf("0 - Exit\n");
 }
 
-static void readData(char *customersFile, char *vehiclesFile, char *contractsFile, customer customers[], vehicle vehicles[], contract contracts[], size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
+static void readData(const char *customersFile, const char *vehiclesFile, char *contractsFile, customer *customers, vehicle *vehicles, contract *contracts, size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
     readCustomers(customersFile, customers, quantityCustomers);
     readVehicles(vehiclesFile, vehicles, quantityVehicles);
     readContracts(contractsFile, contracts, quantityContracts);
 }
 
-static void writeData(char *customersFile, char *vehiclesFile, char *contractsFile, customer customers[], vehicle vehicles[], contract contracts[], size_t quantityCustomers, size_t quantityVehicles, size_t quantityContracts) {
+static void writeData(const char *customersFile, const char *vehiclesFile, char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
     writeCustomers(customersFile, customers, quantityCustomers);
     writeVehicles(vehiclesFile, vehicles, quantityVehicles);
     writeContracts(contractsFile, contracts, quantityContracts);
 }
 
 static void end() {
-    if (getchar() == '\n') {}
+    if (getchar() == '\n') {
+        // ignore if a new line is detected
+    }
     printf("-----------------------\n");
     printf("Press enter to continue\n");
-    while (getchar() != '\n') {}
+    while (getchar() != '\n') {
+        // wait for a new line
+    }
 }
 
 void run() {
-    size_t quantityCustomers = 0, quantityVehicles = 0, quantityContracts = 0;
+    size_t quantityCustomers = 0;
+    size_t quantityVehicles = 0;
+    size_t quantityContracts = 0;
     customer customers[MAX_CUSTOMERS];
     int option;
     vehicle vehicles[MAX_VEHICLES];
     contract contracts[MAX_CONTRACTS];
     // variables to read/write data
-    char customersFile[14], vehiclesFile[13], contractsFile[14];
+    char customersFile[14];
+    char vehiclesFile[13];
+    char contractsFile[14];
 #ifdef _WIN32
     strcat(customersFile, "customers.bin\0");
     strcat(vehiclesFile, "vehicles.bin\0");
