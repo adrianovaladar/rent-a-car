@@ -18,16 +18,16 @@ static void showMenu() {
         printf("----------------------- MENU ----------------------\n\n");
         printf("------------------ Customer Area ------------------\n");
         printf("1 - Add customer\n");
-        printf("2 - Show/Modify/Delete a customer\n");
+        printf("2 - Manage a customer\n");
         printf("3 - Show data of all customers\n\n");
         printf("------------------ Vehicle Area -------------------\n");
         printf("11- Add vehicle\n");
-        printf("12- Show/Modify/Delete a vehicle\n");
+        printf("12- Manage a vehicle\n");
         printf("13- Show data of all vehicles\n");
         printf("14- Show location of all vehicles\n\n");
         printf("------------------ Contract area ------------------\n");
         printf("21- Rent vehicle\n");
-        printf("22- Show/Modify/Delete a contract or Return vehicle\n");
+        printf("22- Manage a contract\n");
         printf("23- Show data of all contracts\n\n");
         printf("0 - Exit\n");
 }
