@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.26)
 project(rent_a_car)
 
 set(CMAKE_C_STANDARD 17)
+add_compile_options(--coverage)
+add_link_options(--coverage)
 
 add_executable(rent_a_car
         src/main.c
