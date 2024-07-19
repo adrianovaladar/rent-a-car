@@ -16,9 +16,9 @@ int searchCodeCustomer(const customer *customers, const size_t quantity, const i
 
 
 static void readCustomerData(FILE *file, customer *c) {
-    readString(file, c->name, 30, "Name (maximum 30 characters): ");
-    readString(file, c->address, 40, "Address (maximum 40 characters): ");
-    readString(file, c->driverLicense, 10, "Driver license (maximum 10 characters): ");
+    readString(file, stdout, c->name, 30, "Name (maximum 30 characters): ");
+    readString(file, stdout, c->address, 40, "Address (maximum 40 characters): ");
+    readString(file, stdout, c->driverLicense, 10, "Driver license (maximum 10 characters): ");
 }
 
 static void setCodeNewCustomer(customer *customers, const size_t *position) {
@@ -76,7 +76,7 @@ void manageCustomerByCode(FILE *file, customer *customers, size_t *quantity) {
         printf("There are no registered customers\n");
         return;
     }
-    const int n = readInt(file, 0, MAX_CUSTOMERS - 1);
+    const int n = readInt(file, stdout, 0, MAX_CUSTOMERS - 1);
     const int codeFound = searchCodeCustomer(customers, *quantity, n);
     if (codeFound >= 0) {
         showCustomer(customers[codeFound]);

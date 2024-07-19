@@ -84,7 +84,7 @@ void run() {
         system("clear");
 #endif
         showMenu();
-        option = readOption(stdin);
+        option = readOption(stdin, stdout);
         switch (option) {
             case 1: {
 #ifdef _WIN32

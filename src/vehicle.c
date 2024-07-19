@@ -24,15 +24,15 @@ char *officeEnumToText(const enum office o) {
 }
 
 static void readVehicleData(FILE *file, vehicle *v) {
-    readString(file, v->brand, 11, "Brand (maximum 10 characters): ");
-    readString(file, v->model, 11, "Model (maximum 10 characters): ");
-    readString(file, v->registrationPlate, 7, "Registration plate (maximum 6 characters): ");
+    readString(file, stdout, v->brand, 11, "Brand (maximum 10 characters): ");
+    readString(file, stdout, v->model, 11, "Model (maximum 10 characters): ");
+    readString(file, stdout, v->registrationPlate, 7, "Registration plate (maximum 6 characters): ");
     v->isUnderContract = false;
     printf("Kms\n");
-    v->km = readFloat(file, 0, INFINITY);
+    v->km = readFloat(file, stdout, 0, INFINITY);
     printf("Office\n");
     printf("%s %d %s %d %s %d %s %d %s %d %s %d\n", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
-    v->location = readInt(file, 0, 5);
+    v->location = readInt(file, stdout, 0, 5);
 }
 
 int searchCodeVehicle(const vehicle *vehicles, const size_t quantity, const int code) {
@@ -99,7 +99,7 @@ void manageVehicleByCode(FILE *file, vehicle *vehicles, size_t *quantity) {
         printf("There are no registered vehicles\n");
         return;
     }
-    const int n = readInt(file, 0, MAX_VEHICLES - 1);
+    const int n = readInt(file, stdout, 0, MAX_VEHICLES - 1);
     const int codeFound = searchCodeVehicle(vehicles, *quantity, n);
     if (codeFound >= 0) {
         showVehicle(vehicles[codeFound]);

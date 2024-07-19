@@ -4,8 +4,21 @@
 
 class InputTests : public ::testing::Test {
 protected:
-    FILE* file{};
+    FILE* inputFile{};
+    FILE* outputFile{};
     int value{};
+    void SetUp() override {
+        inputFile = tmpfile();
+#ifdef _WIN32
+        outputFile = fopen("NUL", "w");
+#else
+        outputFile = fopen("/dev/null", "w");
+#endif
+    }
+    void TearDown() override {
+        fclose(inputFile);
+        fclose(outputFile);
+    }
 };
 
 

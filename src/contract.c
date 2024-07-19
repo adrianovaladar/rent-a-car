@@ -70,11 +70,11 @@ static void editContract(FILE *file, contract *contracts, const int pos, const s
         return;
     }
     printf("Insert the price per day\n");
-    contracts[pos].priceDay = readFloat(file, 0.01f, 9999);
+    contracts[pos].priceDay = readFloat(file, stdout, 0.01f, 9999);
     bool isLegalDate;
     do {
         isLegalDate = true;
-        readDate(file, &contracts[pos].startDate);
+        readDate(file, stdout, &contracts[pos].startDate);
         for (int i = 0; i < quantity; i++) {
             if (contracts[pos].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[quantity].startDate)) {
                 printf("The vehicle was unavailable for the intended date. It was under other contract\n");
@@ -104,7 +104,7 @@ static void deleteContract(contract *c, const int pos, size_t *quantity, vehicle
 static int searchByStartingDate(FILE *file, const contract *c, const size_t quantity, const int codeVehicle) {
     int position = -1;
     date date;
-    readDate(file, &date);
+    readDate(file, stdout, &date);
     for (int i = 0; i <= quantity; i++) {
         if (areDatesEqual(c[i].startDate, date) && codeVehicle == c[i].codeVehicle) {
             position = i;
@@ -116,7 +116,7 @@ static int searchByStartingDate(FILE *file, const contract *c, const size_t quan
 
 static int searchContract(FILE *file, const contract *contracts, const size_t quantityContracts) {
     printf("Vehicle code\n");
-    const int vehicleCode = readInt(file, 0, MAX_VEHICLES - 1);
+    const int vehicleCode = readInt(file, stdout, 0, MAX_VEHICLES - 1);
     printf("Contract start date\n");
     return searchByStartingDate(file, contracts, quantityContracts, vehicleCode);
 }
@@ -135,7 +135,7 @@ void startContract(FILE *file, contract *contracts, customer *customers, vehicle
     int positionVehicle;
     do {
         printf("Customer code\n");
-        n = readInt(file, 0, MAX_CUSTOMERS - 1);
+        n = readInt(file, stdout, 0, MAX_CUSTOMERS - 1);
         positionCustomer = searchCodeCustomer(customers, quantityCustomers, n);
         if (positionCustomer < 0) {
             printf("Customer not found, try another code\n");
@@ -147,7 +147,7 @@ void startContract(FILE *file, contract *contracts, customer *customers, vehicle
     }
     do {
         printf("Vehicle code\n");
-        n = readInt(file, 0, MAX_VEHICLES - 1);
+        n = readInt(file, stdout, 0, MAX_VEHICLES - 1);
         positionVehicle = searchCodeVehicle(vehicles, quantityVehicles, n);
         if (positionVehicle < 0) {
             printf("Vehicle not found, try another code\n");
@@ -162,12 +162,12 @@ void startContract(FILE *file, contract *contracts, customer *customers, vehicle
     vehicles[positionVehicle].isUnderContract = true;
     contracts[*quantityContracts].codeVehicle = vehicles[positionVehicle].code;
     printf("Price per day\n");
-    contracts[*quantityContracts].priceDay = readFloat(file, 0.01f, 9999.0f);
+    contracts[*quantityContracts].priceDay = readFloat(file, stdout, 0.01f, 9999.0f);
     bool isLegalDate;
     printf("Start date\n");
     do {
         isLegalDate = true;
-        readDate(file, &contracts[*quantityContracts].startDate);
+        readDate(file, stdout, &contracts[*quantityContracts].startDate);
         for (int i = 0; i < *quantityContracts; i++) {
             if (contracts[*quantityContracts].codeVehicle == contracts[i].codeVehicle && isDateWithinRange(contracts[i].startDate, contracts[i].endDate, contracts[*quantityContracts].startDate)) {
                 printf("The vehicle was unavailable for the intended date. It was under other contract\n");
@@ -200,13 +200,13 @@ static void endContract(FILE *file, contract *contracts, const int pos, vehicle 
     const int positionVehicle = searchCodeVehicle(vehicles, quantityVehicles, contracts[pos].codeVehicle);
     vehicles[positionVehicle].isUnderContract = false;
     printf("Quantity of km\n");
-    contracts[pos].quantityKm = readFloat(file, vehicles[positionVehicle].km, INFINITY);
+    contracts[pos].quantityKm = readFloat(file, stdout, vehicles[positionVehicle].km, INFINITY);
     vehicles[positionVehicle].km += contracts[pos].quantityKm;
     bool isLegalDate = true;
     printf("End date\n");
     do {
         isLegalDate = true;
-        readDate(file, &contracts[pos].endDate);
+        readDate(file, stdout, &contracts[pos].endDate);
         if (isDateBefore(contracts[pos].endDate, contracts[pos].startDate)) {
             printf("End date cannot be less than start date\n");
             printf("Start date: %d/%d/%d\n", contracts[pos].startDate.day, contracts[pos].startDate.month, contracts[pos].startDate.year);
@@ -226,7 +226,7 @@ static void endContract(FILE *file, contract *contracts, const int pos, vehicle 
     contracts[pos].price = (float) (diffInDays(contracts[pos].startDate, contracts[pos].endDate) + 1) * contracts[pos].priceDay;
     printf("Office where the vehicle is:\n");
     printf("%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
-    contracts[pos].endOffice = readInt(file, 0, 5);
+    contracts[pos].endOffice = readInt(file, stdout, 0, 5);
     vehicles[positionVehicle].location = contracts[pos].endOffice;
 }
 
