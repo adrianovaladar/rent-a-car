@@ -33,13 +33,13 @@ static void showMenu() {
 }
 
 static void readData(const char *customersFile, const char *vehiclesFile, char *contractsFile, customer *customers, vehicle *vehicles, contract *contracts, size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
-    readCustomers(customersFile, customers, quantityCustomers);
+    readCustomers(stdout, customersFile, customers, quantityCustomers);
     readVehicles(vehiclesFile, vehicles, quantityVehicles);
     readContracts(contractsFile, contracts, quantityContracts);
 }
 
 static void writeData(const char *customersFile, const char *vehiclesFile, char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
-    writeCustomers(customersFile, customers, quantityCustomers);
+    writeCustomers(stdout, customersFile, customers, quantityCustomers);
     writeVehicles(vehiclesFile, vehicles, quantityVehicles);
     writeContracts(contractsFile, contracts, quantityContracts);
 }
@@ -92,7 +92,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                insertCustomer(stdin, customers, &quantityCustomers);
+                insertCustomer(stdin, stdout, customers, &quantityCustomers);
                 end();
                 break;
             }
@@ -102,7 +102,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                manageCustomerByCode(stdin, customers, &quantityCustomers);
+                manageCustomerByCode(stdin, stdout, customers, &quantityCustomers);
                 end();
                 break;
             }
@@ -112,7 +112,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                showAllCustomers(customers, quantityCustomers);
+                showAllCustomers(stdout, customers, quantityCustomers);
                 end();
                 break;
             }

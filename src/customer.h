@@ -19,26 +19,29 @@ typedef struct customer {
 /**
  * @brief Inserts a new customer.
  *
- * @param file Pointer to the file to read from.
+ * @param inputFile Pointer to the file to read from.
+ * @param outputFile Pointer to the file to write output.
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void insertCustomer(FILE *file, customer *customers, size_t *quantity);
+void insertCustomer(FILE *inputFile, FILE *outputFile, customer *customers, size_t *quantity);
 /**
  * @brief Displays a customer by their code and shows options for further actions.
  *
- * @param file Pointer to the file to read from.
+ * @param inputFile Pointer to the file to read from.
+ * @param outputFile Pointer to the file to write output.
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void manageCustomerByCode(FILE *file, customer *customers, size_t *quantity);
+void manageCustomerByCode(FILE *inputFile, FILE *outputFile, customer *customers, size_t *quantity);
 /**
  * @brief Displays all customers.
  *
+ * @param outputFile Pointer to the file to write output.
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void showAllCustomers(const customer *customers, size_t quantity);
+void showAllCustomers(FILE *outputFile, const customer *customers, size_t quantity);
 /**
  * @brief Searches for a customer by their code.
  *
@@ -51,18 +54,20 @@ int searchCodeCustomer(const customer *customers, size_t quantity, int code);
 /**
  * @brief Reads customers from a file.
  *
+ * @param outputFile Pointer to the file to write output.
  * @param fileName Name of the file to read customers from.
  * @param customers Array to store the customers.
  * @param quantity Number of customers.
  */
-void readCustomers(const char *fileName, customer *customers, size_t *quantity);
+void readCustomers(FILE *outputFile, const char *fileName, customer *customers, size_t *quantity);
 /**
  * @brief Writes customers to a file.
  *
+ * @param outputFile Pointer to the file to write output.
  * @param fileName Name of the file to write customers to.
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void writeCustomers(const char *fileName, const customer *customers, size_t quantity);
+void writeCustomers(FILE *outputFile, const char *fileName, const customer *customers, size_t quantity);
 
 #endif//RENT_A_CAR_CUSTOMER_H

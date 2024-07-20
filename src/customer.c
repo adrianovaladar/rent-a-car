@@ -15,10 +15,10 @@ int searchCodeCustomer(const customer *customers, const size_t quantity, const i
 }
 
 
-static void readCustomerData(FILE *file, customer *c) {
-    readString(file, stdout, c->name, 30, "Name (maximum 30 characters): ");
-    readString(file, stdout, c->address, 40, "Address (maximum 40 characters): ");
-    readString(file, stdout, c->driverLicense, 10, "Driver license (maximum 10 characters): ");
+static void readCustomerData(FILE *inputFile, FILE *outputFile, customer *c) {
+    readString(inputFile, outputFile, c->name, 30, "Name (maximum 30 characters): ");
+    readString(inputFile, outputFile, c->address, 40, "Address (maximum 40 characters): ");
+    readString(inputFile, outputFile, c->driverLicense, 10, "Driver license (maximum 10 characters): ");
 }
 
 static void setCodeNewCustomer(customer *customers, const size_t *position) {
@@ -29,88 +29,88 @@ static void setCodeNewCustomer(customer *customers, const size_t *position) {
     }
 }
 
-void insertCustomer(FILE *file, customer *customers, size_t *quantity) {
+void insertCustomer(FILE *inputFile, FILE *outputFile, customer *customers, size_t *quantity) {
     if (*quantity == MAX_CUSTOMERS) {
-        printf("We reached our full capacity of customers. Please come back later");
+        fprintf(outputFile, "We reached our full capacity of customers. Please come back later");
         return;
     }
-    printf("--- Customer data ---\n");
+    fprintf(outputFile, "--- Customer data ---\n");
     setCodeNewCustomer(customers, quantity);
-    printf("Code: %d\n", customers[*quantity].code);
-    readCustomerData(file, &customers[*quantity]);
+    fprintf(outputFile, "Code: %d\n", customers[*quantity].code);
+    readCustomerData(inputFile, outputFile, &customers[*quantity]);
     customers[*quantity].isRisky = 0;
     (*quantity)++;
 }
 
-static void editCustomer(FILE *file, customer *c) {
+static void editCustomer(FILE *inputFile, FILE *outputFile, customer *c) {
     if (c->isUnderContract) {
-        printf("The customer is under a contract at the moment, please come back later\n");
+        fprintf(outputFile, "The customer is under a contract at the moment, please come back later\n");
         return;
     }
-    printf("--- Customer data ---\n");
-    readCustomerData(file, c);
+    fprintf(outputFile, "--- Customer data ---\n");
+    readCustomerData(inputFile, outputFile, c);
 }
 
-static void deleteCustomer(customer *customers, const int position, size_t *quantity) {
+static void deleteCustomer(FILE *outputFile, customer *customers, const int position, size_t *quantity) {
     if (customers[position].isUnderContract) {
-        printf("The customer is under a contract at the moment, please come back later\n");
+        fprintf(outputFile, "The customer is under a contract at the moment, please come back later\n");
         return;
     }
     for (int i = position; i <= *quantity - 1; i++) {
         customers[i] = customers[i + 1];
     }
     (*quantity)--;
-    printf("Customer deleted successfully\n");
+    fprintf(outputFile, "Customer deleted successfully\n");
 }
 
-static void showCustomer(customer c) {
-    printf("Code: %d\n", c.code);
-    printf("Name: %s\n", c.name);
-    printf("Address: %s\n", c.address);
-    printf("Type: %s\n", c.isRisky == 0 ? "Regular" : "Risky");
-    printf("Driver license: %s\n", c.driverLicense);
+static void showCustomer(FILE *outputFile, customer c) {
+    fprintf(outputFile, "Code: %d\n", c.code);
+    fprintf(outputFile, "Name: %s\n", c.name);
+    fprintf(outputFile, "Address: %s\n", c.address);
+    fprintf(outputFile, "Type: %s\n", c.isRisky == 0 ? "Regular" : "Risky");
+    fprintf(outputFile, "Driver license: %s\n", c.driverLicense);
 }
 
-void manageCustomerByCode(FILE *file, customer *customers, size_t *quantity) {
+void manageCustomerByCode(FILE *inputFile, FILE *outputFile, customer *customers, size_t *quantity) {
     if (*quantity == 0) {
-        printf("There are no registered customers\n");
+        fprintf(outputFile, "There are no registered customers\n");
         return;
     }
-    const int n = readInt(file, stdout, 0, MAX_CUSTOMERS - 1);
+    const int n = readInt(inputFile, outputFile, 0, MAX_CUSTOMERS - 1);
     const int codeFound = searchCodeCustomer(customers, *quantity, n);
     if (codeFound >= 0) {
-        showCustomer(customers[codeFound]);
-        printf("Edit(e) Delete(d) (Press any other key plus enter to leave this menu): ");
+        showCustomer(outputFile, customers[codeFound]);
+        fprintf(outputFile, "Edit(e) Delete(d) (Press any other key plus enter to leave this menu): ");
         unsigned char op;
         do {
-            op = fgetc(file);
+            op = fgetc(inputFile);
         } while (op == '\n');
         if (op == 'E' || op == 'e') {
-            editCustomer(file, &customers[codeFound]);
+            editCustomer(inputFile, outputFile, &customers[codeFound]);
         } else if (op == 'D' || op == 'd') {
-            deleteCustomer(customers, codeFound, quantity);
+            deleteCustomer(outputFile, customers, codeFound, quantity);
         }
     } else {
-        printf("No customer found with code %d\n", n);
+        fprintf(outputFile, "No customer found with code %d\n", n);
     }
 }
 
-void showAllCustomers(const customer *customers, const size_t quantity) {
+void showAllCustomers(FILE *outputFile, const customer *customers, const size_t quantity) {
     if (quantity == 0) {
-        printf("There are no registered customers\n");
+        fprintf(outputFile, "There are no registered customers\n");
         return;
     }
-    printf("--- Customer data ---\n\n");
+    fprintf(outputFile, "--- Customer data ---\n\n");
     for (int i = 0; i < quantity; i++) {
-        showCustomer(customers[i]);
-        printf("\n");
+        showCustomer(outputFile, customers[i]);
+        fprintf(outputFile, "\n");
     }
 }
 
-void readCustomers(const char *fileName, customer *customers, size_t *quantity) {
+void readCustomers(FILE *outputFile, const char *fileName, customer *customers, size_t *quantity) {
     FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
-        printf("Error opening file '%s'!\n", fileName);
+        fprintf(outputFile, "Error opening file '%s'!\n", fileName);
         return;
     }
     // calculate the number of customers
@@ -120,7 +120,7 @@ void readCustomers(const char *fileName, customer *customers, size_t *quantity) 
     rewind(file);
     // check if the number of customers is bigger than expected
     if (*quantity > MAX_CUSTOMERS) {
-        printf("Error: invalid file size in '%s'\n", fileName);
+        fprintf(outputFile, "Error: invalid file size in '%s'\n", fileName);
         fclose(file);
         return;
     }
@@ -130,10 +130,10 @@ void readCustomers(const char *fileName, customer *customers, size_t *quantity) 
 }
 
 // function to write customers to a binary file
-void writeCustomers(const char *fileName, const customer *customers, const size_t quantity) {
+void writeCustomers(FILE *outputFile, const char *fileName, const customer *customers, const size_t quantity) {
     FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
-        printf("Error opening file '%s'!\n", fileName);
+        fprintf(outputFile, "Error opening file '%s'!\n", fileName);
         return;
     }
     // write the customers
