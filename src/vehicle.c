@@ -23,16 +23,16 @@ char *officeEnumToText(const enum office o) {
     return "Invalid\0";
 }
 
-static void readVehicleData(FILE *file, vehicle *v) {
-    readString(file, stdout, v->brand, 11, "Brand (maximum 10 characters): ");
-    readString(file, stdout, v->model, 11, "Model (maximum 10 characters): ");
-    readString(file, stdout, v->registrationPlate, 7, "Registration plate (maximum 6 characters): ");
+static void readVehicleData(FILE *inputFile, FILE *outputFile, vehicle *v) {
+    readString(inputFile, outputFile, v->brand, 11, "Brand (maximum 10 characters): ");
+    readString(inputFile, outputFile, v->model, 11, "Model (maximum 10 characters): ");
+    readString(inputFile, outputFile, v->registrationPlate, 7, "Registration plate (maximum 6 characters): ");
     v->isUnderContract = false;
-    printf("Kms\n");
-    v->km = readFloat(file, stdout, 0, INFINITY);
-    printf("Office\n");
-    printf("%s %d %s %d %s %d %s %d %s %d %s %d\n", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
-    v->location = readInt(file, stdout, 0, 5);
+    fprintf(outputFile, "Kms\n");
+    v->km = readFloat(inputFile, outputFile, 0, INFINITY);
+    fprintf(outputFile, "Office\n");
+    fprintf(outputFile, "%s %d %s %d %s %d %s %d %s %d %s %d\n", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
+    v->location = readInt(inputFile, outputFile, 0, 5);
 }
 
 int searchCodeVehicle(const vehicle *vehicles, const size_t quantity, const int code) {
@@ -53,30 +53,30 @@ static void setCodeNewVehicle(vehicle *vehicles, const size_t *quantity) {
     }
 }
 
-void insertVehicle(FILE *file, vehicle *vehicles, size_t *quantity) {
+void insertVehicle(FILE *inputFile, FILE *outputFile, vehicle *vehicles, size_t *quantity) {
     if (*quantity == MAX_VEHICLES) {
-        printf("The stand is full, please como back later\n");
+        fprintf(outputFile, "The stand is full, please como back later\n");
         return;
     }
-    printf("--- Car data ---\n");
+    fprintf(outputFile, "--- Car data ---\n");
     setCodeNewVehicle(vehicles, quantity);
-    printf("Code: %d\n", vehicles[*quantity].code);
-    readVehicleData(file, &vehicles[*quantity]);
+    fprintf(outputFile, "Code: %d\n", vehicles[*quantity].code);
+    readVehicleData(inputFile, outputFile,&vehicles[*quantity]);
     (*quantity)++;
 }
 
-static void editVehicle(FILE *file, vehicle *v) {
+static void editVehicle(FILE *inputFile, FILE *outputFile, vehicle *v) {
     if (v->isUnderContract) {
-        printf("The vehicle is under a contract at the moment, please come back later\n");
+        fprintf(outputFile, "The vehicle is under a contract at the moment, please come back later\n");
         return;
     }
-    printf("--- Vehicle data ---\n");
-    readVehicleData(file, v);
+    fprintf(outputFile, "--- Vehicle data ---\n");
+    readVehicleData(inputFile, outputFile,v);
 }
 
-static void deleteVehicle(vehicle *vehicles, const int position, size_t *qtd) {
+static void deleteVehicle(FILE *outputFile, vehicle *vehicles, const int position, size_t *qtd) {
     if (vehicles[position].isUnderContract) {
-        printf("The vehicle is under a contract at the moment, please come back later\n");
+        fprintf(outputFile, "The vehicle is under a contract at the moment, please come back later\n");
         return;
     }
     for (int i = position; i < *qtd; i++) {
@@ -85,78 +85,78 @@ static void deleteVehicle(vehicle *vehicles, const int position, size_t *qtd) {
     (*qtd)--;
 }
 
-static void showVehicle(const vehicle v) {
-    printf("Code: %d\n", v.code);
-    printf("Brand: %s\n", v.brand);
-    printf("Model: %s\n", v.model);
-    printf("Registration plate: %s\n", v.registrationPlate);
-    printf("Kms: %.2f\n", v.km);
-    printf("Status: %s\n", v.isUnderContract ? "Unavailable" : "Available");
+static void showVehicle(FILE *outputFile, const vehicle v) {
+    fprintf(outputFile, "Code: %d\n", v.code);
+    fprintf(outputFile, "Brand: %s\n", v.brand);
+    fprintf(outputFile, "Model: %s\n", v.model);
+    fprintf(outputFile, "Registration plate: %s\n", v.registrationPlate);
+    fprintf(outputFile, "Kms: %.2f\n", v.km);
+    fprintf(outputFile, "Status: %s\n", v.isUnderContract ? "Unavailable" : "Available");
 }
 
-void manageVehicleByCode(FILE *file, vehicle *vehicles, size_t *quantity) {
+void manageVehicleByCode(FILE *inputFile, FILE *outputFile, vehicle *vehicles, size_t *quantity) {
     if (*quantity == 0) {
-        printf("There are no registered vehicles\n");
+        fprintf(outputFile, "There are no registered vehicles\n");
         return;
     }
-    const int n = readInt(file, stdout, 0, MAX_VEHICLES - 1);
+    const int n = readInt(inputFile, outputFile, 0, MAX_VEHICLES - 1);
     const int codeFound = searchCodeVehicle(vehicles, *quantity, n);
     if (codeFound >= 0) {
-        showVehicle(vehicles[codeFound]);
-        printf("Edit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
+        showVehicle(outputFile, vehicles[codeFound]);
+        fprintf(outputFile, "Edit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
         unsigned char op;
         do {
-            op = fgetc(file);
+            op = fgetc(inputFile);
         } while (op == '\n');
         if (op == 'E' || op == 'e') {
-            editVehicle(file, &vehicles[codeFound]);
+            editVehicle(inputFile, outputFile, &vehicles[codeFound]);
         } else if (op == 'D' || op == 'd') {
-            deleteVehicle(vehicles, codeFound, quantity);
-            printf("Vehicle deleted successfully\n");
+            deleteVehicle(outputFile, vehicles, codeFound, quantity);
+            fprintf(outputFile, "Vehicle deleted successfully\n");
         }
     } else {
-        printf("No vehicle found with code %d\n", n);
+        fprintf(outputFile, "No vehicle found with code %d\n", n);
     }
 }
 
-void showAllVehicles(const vehicle *vehicles, const size_t quantity) {
+void showAllVehicles(FILE *outputFile, const vehicle *vehicles, const size_t quantity) {
     if (quantity == 0) {
-        printf("There are no registered vehicles\n");
+        fprintf(outputFile, "There are no registered vehicles\n");
         return;
     }
-    printf("--- Vehicle data ---\n\n");
+    fprintf(outputFile, "--- Vehicle data ---\n\n");
     for (int i = 0; i < quantity; i++) {
-        showVehicle(vehicles[i]);
-        printf("\n");
+        showVehicle(outputFile, vehicles[i]);
+        fprintf(outputFile, "\n");
     }
 }
 
-void showVehiclesLocation(const vehicle *vehicles, const size_t quantity) {
+void showVehiclesLocation(FILE *outputFile, const vehicle *vehicles, const size_t quantity) {
     if (quantity == 0) {
-        printf("There are no registered vehicles\n");
+        fprintf(outputFile, "There are no registered vehicles\n");
         return;
     }
-    printf("              |                             OFFICES                          |\n");
-    printf("VEHICLES      |%s   |%s |%s  |%s    |%s  |%s   |%s |\n", officeEnumToText(Braga), officeEnumToText(Coimbra), officeEnumToText(Guarda), officeEnumToText(Faro), officeEnumToText(Lisbon), officeEnumToText(Porto), officeEnumToText(Unknown));
-    printf("--------------|--------|--------|--------|--------|--------|--------|--------|\n");
+    fprintf(outputFile, "              |                             OFFICES                          |\n");
+    fprintf(outputFile, "VEHICLES      |%s   |%s |%s  |%s    |%s  |%s   |%s |\n", officeEnumToText(Braga), officeEnumToText(Coimbra), officeEnumToText(Guarda), officeEnumToText(Faro), officeEnumToText(Lisbon), officeEnumToText(Porto), officeEnumToText(Unknown));
+    fprintf(outputFile, "--------------|--------|--------|--------|--------|--------|--------|--------|\n");
     for (int i = 0; i < quantity; i++) {
-        printf("%-5d", vehicles[i].code);
-        printf("         |");
+        fprintf(outputFile, "%-5d", vehicles[i].code);
+        fprintf(outputFile, "         |");
         for (int j = 0; j < MAX_OFFICES; j++) {
             char text[10] = "\0";
             strcat(text, "    \0");
             text[4] = j == vehicles[i].location ? 'x' : ' ';
             strcat(text, "   |\0");
-            printf("%s", text);
+            fprintf(outputFile, "%s", text);
         }
-        printf("\n");
+        fprintf(outputFile, "\n");
     }
 }
 
-void readVehicles(const char *fileName, vehicle *vehicles, size_t *quantity) {
+void readVehicles(FILE *outputFile, const char *fileName, vehicle *vehicles, size_t *quantity) {
     FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
-        printf("Error opening file '%s'!\n", fileName);
+        fprintf(outputFile, "Error opening file '%s'!\n", fileName);
         return;
     }
 
@@ -169,7 +169,7 @@ void readVehicles(const char *fileName, vehicle *vehicles, size_t *quantity) {
 
     // check that the number of vehicles is not bigger than expected
     if (*quantity > MAX_VEHICLES) {
-        printf("Error: invalid file size in '%s'\n", fileName);
+        fprintf(outputFile, "Error: invalid file size in '%s'\n", fileName);
         fclose(file);
         return;
     }
@@ -181,10 +181,10 @@ void readVehicles(const char *fileName, vehicle *vehicles, size_t *quantity) {
 }
 
 // function to write vehicles to a binary file
-void writeVehicles(const char *fileName, const vehicle *vehicles, const size_t quantity) {
+void writeVehicles(FILE *outputFile, const char *fileName, const vehicle *vehicles, const size_t quantity) {
     FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
-        printf("Error opening file '%s'!\n", fileName);
+        fprintf(outputFile, "Error opening file '%s'!\n", fileName);
         return;
     }
 

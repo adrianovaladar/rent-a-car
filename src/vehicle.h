@@ -33,26 +33,29 @@ typedef struct vehicle {
 /**
  * @brief Inserts a new vehicle.
  *
- * @param file Pointer to the file to read from.
+ * @param inputFile Pointer to the file to read from.
+ * @param outputFile Pointer to the file to write output.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void insertVehicle(FILE *file, vehicle *vehicles, size_t *quantity);
+void insertVehicle(FILE *inputFile, FILE *outputFile, vehicle *vehicles, size_t *quantity);
 /**
  * @brief Displays all vehicles.
  *
+ * @param outputFile Pointer to the file to write output.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void showAllVehicles(const vehicle *vehicles, size_t quantity);
+void showAllVehicles(FILE *outputFile, const vehicle *vehicles, size_t quantity);
 /**
  * @brief Displays a vehicle by their code and shows options for further actions.
  *
- * @param file Pointer to the file to read from.
+ * @param inputFile Pointer to the file to read from.
+ * @param outputFile Pointer to the file to write output.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void manageVehicleByCode(FILE *file, vehicle *vehicles, size_t *quantity);
+void manageVehicleByCode(FILE *inputFile, FILE *outputFile, vehicle *vehicles, size_t *quantity);
 /**
  * @brief Searches for a vehicle by their code.
  *
@@ -65,10 +68,11 @@ int searchCodeVehicle(const vehicle *vehicles, size_t quantity, int code);
 /**
  * @brief Shows the vehicle location.
  *
+ * @param outputFile Pointer to the file to write output.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void showVehiclesLocation(const vehicle *vehicles, size_t quantity);
+void showVehiclesLocation(FILE *outputFile, const vehicle *vehicles, size_t quantity);
 /**
  * @brief Converts an office enumeration value to its corresponding text representation.
  *
@@ -78,18 +82,20 @@ char *officeEnumToText(enum office o);
 /**
  * @brief Reads vehicles from a file.
  *
+ * @param outputFile Pointer to the file to write output.
  * @param fileName Name of the file to read vehicles from.
  * @param vehicles Array to store the vehicles.
  * @param quantity Number of vehicles.
  */
-void readVehicles(const char *fileName, vehicle *vehicles, size_t *quantity);
+void readVehicles(FILE *outputFile, const char *fileName, vehicle *vehicles, size_t *quantity);
 /**
  * @brief Writes vehicles to a file.
  *
+ * @param outputFile Pointer to the file to write output.
  * @param fileName Name of the file to write vehicles to.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void writeVehicles(const char *fileName, const vehicle *vehicles, size_t quantity);
+void writeVehicles(FILE *outputFile, const char *fileName, const vehicle *vehicles, size_t quantity);
 
 #endif//RENT_A_CAR_VEHICLE_H

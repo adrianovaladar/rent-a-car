@@ -34,13 +34,13 @@ static void showMenu() {
 
 static void readData(const char *customersFile, const char *vehiclesFile, char *contractsFile, customer *customers, vehicle *vehicles, contract *contracts, size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
     readCustomers(stdout, customersFile, customers, quantityCustomers);
-    readVehicles(vehiclesFile, vehicles, quantityVehicles);
+    readVehicles(stdout, vehiclesFile, vehicles, quantityVehicles);
     readContracts(contractsFile, contracts, quantityContracts);
 }
 
 static void writeData(const char *customersFile, const char *vehiclesFile, char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
     writeCustomers(stdout, customersFile, customers, quantityCustomers);
-    writeVehicles(vehiclesFile, vehicles, quantityVehicles);
+    writeVehicles(stdout, vehiclesFile, vehicles, quantityVehicles);
     writeContracts(contractsFile, contracts, quantityContracts);
 }
 
@@ -122,7 +122,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                insertVehicle(stdin, vehicles, &quantityVehicles);
+                insertVehicle(stdin, stdout, vehicles, &quantityVehicles);
                 end();
                 break;
             }
@@ -132,7 +132,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                manageVehicleByCode(stdin, vehicles, &quantityVehicles);
+                manageVehicleByCode(stdin, stdout, vehicles, &quantityVehicles);
                 end();
                 break;
             }
@@ -142,7 +142,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                showAllVehicles(vehicles, quantityVehicles);
+                showAllVehicles(stdout, vehicles, quantityVehicles);
                 end();
                 break;
             }
@@ -153,7 +153,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                showVehiclesLocation(vehicles, quantityVehicles);
+                showVehiclesLocation(stdout, vehicles, quantityVehicles);
                 end();
                 break;
             }
