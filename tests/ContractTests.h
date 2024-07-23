@@ -13,6 +13,8 @@ protected:
     std::array<customer, MAX_CUSTOMERS> customers {};
     std::array<vehicle, MAX_VEHICLES> vehicles {};
     std::string fileName {"test_file"};
+    FILE* inputFile{};
+    FILE* outputFile{};
     void SetUp() override {
         for(int i {}; i < MAX_CUSTOMERS; i++) {
             customers[i].code = i;
@@ -20,9 +22,17 @@ protected:
         for(int i {}; i < MAX_VEHICLES; i++) {
             vehicles[i].code = i;
         }
+        inputFile = tmpfile();
+#ifdef _WIN32
+        outputFile = fopen("NUL", "w");
+#else
+        outputFile = fopen("/dev/null", "w");
+#endif
     }
     void TearDown() override {
         remove(fileName.c_str());
+        fclose(inputFile);
+        fclose(outputFile);
     }
 };
 

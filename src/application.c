@@ -35,13 +35,13 @@ static void showMenu() {
 static void readData(const char *customersFile, const char *vehiclesFile, char *contractsFile, customer *customers, vehicle *vehicles, contract *contracts, size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
     readCustomers(stdout, customersFile, customers, quantityCustomers);
     readVehicles(stdout, vehiclesFile, vehicles, quantityVehicles);
-    readContracts(contractsFile, contracts, quantityContracts);
+    readContracts(stdout, contractsFile, contracts, quantityContracts);
 }
 
 static void writeData(const char *customersFile, const char *vehiclesFile, char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
     writeCustomers(stdout, customersFile, customers, quantityCustomers);
     writeVehicles(stdout, vehiclesFile, vehicles, quantityVehicles);
-    writeContracts(contractsFile, contracts, quantityContracts);
+    writeContracts(stdout, contractsFile, contracts, quantityContracts);
 }
 
 static void end() {
@@ -163,7 +163,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                startContract(stdin, contracts, customers, vehicles, &quantityContracts, quantityCustomers, quantityVehicles);
+                startContract(stdin, stdout, contracts, customers, vehicles, &quantityContracts, quantityCustomers, quantityVehicles);
                 end();
                 break;
             }
@@ -173,7 +173,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                manageContractByVehicleCodeAndStartDate(stdin, contracts, vehicles, customers, &quantityContracts, quantityVehicles, quantityCustomers);
+                manageContractByVehicleCodeAndStartDate(stdin, stdout, contracts, vehicles, customers, &quantityContracts, quantityVehicles, quantityCustomers);
                 end();
                 break;
             }
@@ -183,7 +183,7 @@ void run() {
 #else
                 system("clear");
 #endif
-                showContracts(contracts, quantityContracts);
+                showContracts(stdout, contracts, quantityContracts);
                 end();
                 break;
             }
