@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-char *officeEnumToText(const enum office o) {
+char *officeEnumToText(const office o) {
     if (o == Unknown)
         return "Unknown\0";
     if (o == Porto)

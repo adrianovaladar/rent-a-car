@@ -7,7 +7,7 @@
 /**
  * @brief enum representing the offce locations.
  */
-enum office {
+typedef enum office {
     Braga = 0,    /**< Office located in Braga. */
     Coimbra = 1,  /**< Office located in Coimbra. */
     Guarda = 2,   /**< Office located in Guarda. */
@@ -15,7 +15,7 @@ enum office {
     Lisbon = 4,   /**< Office located in Lisbon. */
     Porto = 5,    /**< Office located in Porto. */
     Unknown = 6   /**< Office location is unknown. */
-};
+} office;
 
 /**
  * @brief Structure representing a vehicle.
