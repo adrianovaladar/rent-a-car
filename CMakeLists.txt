@@ -20,6 +20,8 @@ add_executable(rent_a_car
         src/customer.h
         src/application.h
         src/application.c
+        src/logger.h
+        src/logger.c
 )
 
 # Add tests
