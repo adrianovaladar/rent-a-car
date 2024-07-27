@@ -6,13 +6,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+    #define CLEAR_CONSOLE() system("cls")
+#else
+    #define CLEAR_CONSOLE() system("clear")
+#endif
 
 static void showMenu() {
+    CLEAR_CONSOLE();
 #ifdef _WIN32
-        system("cls");
         system("title Rent-a-car");
 #else
-        system("clear");
         printf("Rent-a-car\n");
 #endif
         printf("----------------------- MENU ----------------------\n\n");
@@ -78,111 +82,67 @@ void run() {
 #endif
     readData(customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, &quantityCustomers, &quantityVehicles, &quantityContracts);
     do {
-#ifdef _WIN32
-        system("cls");
-#else
-        system("clear");
-#endif
+        CLEAR_CONSOLE();
         showMenu();
         option = readOption(stdin, stdout);
         switch (option) {
             case 1: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 insertCustomer(stdin, stdout, customers, &quantityCustomers);
                 end();
                 break;
             }
             case 2: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 manageCustomerByCode(stdin, stdout, customers, &quantityCustomers);
                 end();
                 break;
             }
             case 3: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 showAllCustomers(stdout, customers, quantityCustomers);
                 end();
                 break;
             }
             case 11: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 insertVehicle(stdin, stdout, vehicles, &quantityVehicles);
                 end();
                 break;
             }
             case 12: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 manageVehicleByCode(stdin, stdout, vehicles, &quantityVehicles);
                 end();
                 break;
             }
             case 13: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 showAllVehicles(stdout, vehicles, quantityVehicles);
                 end();
                 break;
             }
 
             case 14: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 showVehiclesLocation(stdout, vehicles, quantityVehicles);
                 end();
                 break;
             }
             case 21: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 startContract(stdin, stdout, contracts, customers, vehicles, &quantityContracts, quantityCustomers, quantityVehicles);
                 end();
                 break;
             }
             case 22: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 manageContractByVehicleCodeAndStartDate(stdin, stdout, contracts, vehicles, customers, &quantityContracts, quantityVehicles, quantityCustomers);
                 end();
                 break;
             }
             case 23: {
-#ifdef _WIN32
-                system("cls");
-#else
-                system("clear");
-#endif
+                CLEAR_CONSOLE();
                 showContracts(stdout, contracts, quantityContracts);
                 end();
                 break;
