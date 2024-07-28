@@ -42,9 +42,11 @@ static void initializeLogger(logger *logger) {
 
 logger *getLoggerInstance() {
     static logger *instance = NULL;
-    instance = (logger *) malloc(sizeof(logger));
-    if (instance != NULL) {
-        initializeLogger(instance);
+    if (instance == NULL) {
+        instance = (logger *) malloc(sizeof(logger));
+        if (instance != NULL) {
+            initializeLogger(instance);
+        }
     }
     return instance;
 }
