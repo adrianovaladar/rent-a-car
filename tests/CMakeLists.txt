@@ -11,6 +11,8 @@ add_executable(AllTests main.cpp
         ../src/vehicle.c
         ../src/contract.h
         ../src/contract.c
+        ../src/logger.h
+        ../src/logger.c
         InputTests.cpp
         InputTests.h
         DateTests.cpp

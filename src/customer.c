@@ -1,9 +1,11 @@
 #include "customer.h"
 #include "constants.h"
 #include "input.h"
+#include "logger.h"
 #include <stdio.h>
+#include <stdlib.h>
 
-int searchCodeCustomer(const customer *customers, const size_t quantity, const int code) {
+int searchCodeCustomer(logger *logger, const customer *customers, const size_t quantity, const int code) {
     int position = -1;
     int i = 0;
     while (i <= quantity && position == -1) {
@@ -29,9 +31,10 @@ static void setCodeNewCustomer(customer *customers, const size_t *position) {
     }
 }
 
-void insertCustomer(FILE *inputFile, FILE *outputFile, customer *customers, size_t *quantity) {
+void insertCustomer(FILE *inputFile, FILE *outputFile, logger *logger, customer *customers, size_t *quantity) {
     if (*quantity == MAX_CUSTOMERS) {
         fprintf(outputFile, "We reached our full capacity of customers. Please come back later");
+        logMessage(logger, "Failed to insert customer: maximum capacity reached", Error, __FILE__, __FUNCTION__, __LINE__);
         return;
     }
     fprintf(outputFile, "--- Customer data ---\n");
@@ -39,6 +42,10 @@ void insertCustomer(FILE *inputFile, FILE *outputFile, customer *customers, size
     fprintf(outputFile, "Code: %d\n", customers[*quantity].code);
     readCustomerData(inputFile, outputFile, &customers[*quantity]);
     customers[*quantity].isRisky = 0;
+    char *message = malloc(500 * sizeof(char));
+    snprintf(message, 500, "Customer added: code '%d' name '%s' adress '%s' driverLicense '%s'", customers[*quantity].code, customers[*quantity].name, customers[*quantity].address, customers[*quantity].driverLicense);
+    logMessage(logger, message, Info, __FILE__, __FUNCTION__, __LINE__);
+    free(message);
     (*quantity)++;
 }
 
@@ -71,13 +78,13 @@ static void showCustomer(FILE *outputFile, customer c) {
     fprintf(outputFile, "Driver license: %s\n", c.driverLicense);
 }
 
-void manageCustomerByCode(FILE *inputFile, FILE *outputFile, customer *customers, size_t *quantity) {
+void manageCustomerByCode(FILE *inputFile, FILE *outputFile, logger *logger, customer *customers, size_t *quantity) {
     if (*quantity == 0) {
         fprintf(outputFile, "There are no registered customers\n");
         return;
     }
     const int n = readInt(inputFile, outputFile, 0, MAX_CUSTOMERS - 1);
-    const int codeFound = searchCodeCustomer(customers, *quantity, n);
+    const int codeFound = searchCodeCustomer(logger, customers, *quantity, n);
     if (codeFound >= 0) {
         showCustomer(outputFile, customers[codeFound]);
         fprintf(outputFile, "Edit(e) Delete(d) (Press any other key plus enter to leave this menu): ");
@@ -107,7 +114,7 @@ void showAllCustomers(FILE *outputFile, const customer *customers, const size_t 
     }
 }
 
-void readCustomers(FILE *outputFile, const char *fileName, customer *customers, size_t *quantity) {
+void readCustomers(FILE *outputFile, logger *logger, const char *fileName, customer *customers, size_t *quantity) {
     FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);
@@ -130,7 +137,7 @@ void readCustomers(FILE *outputFile, const char *fileName, customer *customers, 
 }
 
 // function to write customers to a binary file
-void writeCustomers(FILE *outputFile, const char *fileName, const customer *customers, const size_t quantity) {
+void writeCustomers(FILE *outputFile, logger *logger, const char *fileName, const customer *customers, const size_t quantity) {
     FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);

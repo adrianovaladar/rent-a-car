@@ -34,6 +34,7 @@ void showContracts(FILE *outputFile, const contract *contracts, size_t quantity)
  *
  * @param inputFile Pointer to the file to read from.
  * @param outputFile Pointer to the file to write output.
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param contracts Array of contracts.
  * @param customers Array of customers.
  * @param vehicles Array of vehicles.
@@ -41,13 +42,14 @@ void showContracts(FILE *outputFile, const contract *contracts, size_t quantity)
  * @param quantityCustomers Number of customers in the array.
  * @param quantityVehicles Number of vehicles in the array.
  */
-void startContract(FILE *inputFile, FILE *outputFile, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, size_t quantityCustomers, size_t quantityVehicles);
+void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, size_t quantityCustomers, size_t quantityVehicles);
 
 /**
  * @brief Manages an existing contract by vehicle code and start date.
  *
  * @param inputFile Pointer to the file to read from.
  * @param outputFile Pointer to the file to write output.
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param contracts Array of contracts.
  * @param vehicles Array of vehicles.
  * @param customers Array of customers.
@@ -55,7 +57,7 @@ void startContract(FILE *inputFile, FILE *outputFile, contract *contracts, custo
  * @param quantityVehicles Number of vehicles in the array.
  * @param quantityCustomers Number of customers in the array.
  */
-void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, size_t quantityVehicles, size_t quantityCustomers);
+void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, size_t quantityVehicles, size_t quantityCustomers);
 
 /**
  * @brief Reads the contracts from a file.

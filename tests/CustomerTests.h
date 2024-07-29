@@ -5,6 +5,7 @@
 extern "C" {
 #include "../src/customer.h"
 #include "../src/constants.h"
+#include "../src/logger.h"
 }
 
 class CustomerTests : public ::testing::Test {
@@ -13,6 +14,7 @@ protected:
     std::string fileName {"test_file"};
     FILE* inputFile{};
     FILE* outputFile{};
+    logger *l{};
     void SetUp() override {
         for(int i {}; i < MAX_CUSTOMERS; i++) {
             customers[i].code = i;
@@ -23,6 +25,7 @@ protected:
 #else
         outputFile = fopen("/dev/null", "w");
 #endif
+        l = getLoggerInstance();
     }
     void TearDown() override {
         remove(fileName.c_str());

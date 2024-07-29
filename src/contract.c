@@ -85,14 +85,14 @@ static void editContract(FILE *inputFile, FILE *outputFile, contract *contracts,
     } while (!isLegalDate);
 }
 
-static void deleteContract(FILE *outputFile, contract *c, const int pos, size_t *quantity, vehicle *vehicles, const size_t quantityVehicles, customer *customers, const size_t quantityCustomers) {
+static void deleteContract(FILE *outputFile, logger *logger, contract *c, const int pos, size_t *quantity, vehicle *vehicles, const size_t quantityVehicles, customer *customers, const size_t quantityCustomers) {
     if (c[pos].endDate.day == 0)
         fprintf(outputFile, "Not possible to delete this contract because it is still ongoing\n");
     else {
         for (int i = pos; i < *quantity; i++) {
             c[i] = c[i + 1];
         }
-        const int customerPosition = searchCodeCustomer(customers, quantityCustomers, c[pos].codeCustomer);
+        const int customerPosition = searchCodeCustomer(logger, customers, quantityCustomers, c[pos].codeCustomer);
         customers[customerPosition].isUnderContract = false;
         const int vehiclePosition = searchCodeVehicle(vehicles, quantityVehicles, c[pos].codeVehicle);
         vehicles[vehiclePosition].isUnderContract = false;
@@ -121,7 +121,7 @@ static int searchContract(FILE *inputFile, FILE *outputFile, const contract *con
     return searchByStartingDate(inputFile, outputFile, contracts, quantityContracts, vehicleCode);
 }
 
-void startContract(FILE *inputFile, FILE *outputFile, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, const size_t quantityCustomers, const size_t quantityVehicles) {
+void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, const size_t quantityCustomers, const size_t quantityVehicles) {
     if (*quantityContracts == MAX_CONTRACTS) {
         fprintf(outputFile, "We reached our full capacity of contracts. Please come back later");
         return;
@@ -136,7 +136,7 @@ void startContract(FILE *inputFile, FILE *outputFile, contract *contracts, custo
     do {
         fprintf(outputFile, "Customer code\n");
         n = readInt(inputFile, outputFile, 0, MAX_CUSTOMERS - 1);
-        positionCustomer = searchCodeCustomer(customers, quantityCustomers, n);
+        positionCustomer = searchCodeCustomer(logger, customers, quantityCustomers, n);
         if (positionCustomer < 0) {
             fprintf(outputFile, "Customer not found, try another code\n");
         }
@@ -182,7 +182,7 @@ void startContract(FILE *inputFile, FILE *outputFile, contract *contracts, custo
     (*quantityContracts)++;
 }
 
-static void endContract(FILE *inputFile, FILE *outputFile, contract *contracts, const int pos, vehicle *vehicles, customer *customers, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
+static void endContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, const int pos, vehicle *vehicles, customer *customers, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
     if (contracts[pos].endDate.day != 0) {
         fprintf(outputFile, "Not possible to end this contract because it is already closed\n");
         return;
@@ -192,7 +192,7 @@ static void endContract(FILE *inputFile, FILE *outputFile, contract *contracts, 
     do {
         fscanf(inputFile, "%c", &value);
     } while (value != 'y' && value != 'Y' && value != 'n' && value != 'N');
-    const int positionCustomer = searchCodeCustomer(customers, quantityCustomers, contracts[pos].codeCustomer);
+    const int positionCustomer = searchCodeCustomer(logger, customers, quantityCustomers, contracts[pos].codeCustomer);
     if (value == 'n' || value == 'N') {
         customers[positionCustomer].isRisky = true;
     }
@@ -230,7 +230,7 @@ static void endContract(FILE *inputFile, FILE *outputFile, contract *contracts, 
     vehicles[positionVehicle].location = contracts[pos].endOffice;
 }
 
-void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, const size_t quantityVehicles, const size_t quantityCustomers) {
+void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, const size_t quantityVehicles, const size_t quantityCustomers) {
     if (*quantityContracts == 0) {
         fprintf(outputFile, "There are no registered contracts\n");
         return;
@@ -244,11 +244,11 @@ void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, 
             op = fgetc(inputFile);
         } while (op == '\n');
         if (op == 'T' || op == 't') {
-            endContract(inputFile, outputFile, contracts, contractPosition, vehicles, customers, quantityCustomers, quantityVehicles, *quantityContracts);
+            endContract(inputFile, outputFile, logger, contracts, contractPosition, vehicles, customers, quantityCustomers, quantityVehicles, *quantityContracts);
         } else if (op == 'E' || op == 'e') {
             editContract(inputFile, outputFile, contracts, contractPosition, *quantityContracts);
         } else if (op == 'D' || op == 'd') {
-            deleteContract(outputFile, contracts, contractPosition, quantityContracts, vehicles, quantityVehicles, customers, quantityCustomers);
+            deleteContract(outputFile, logger, contracts, contractPosition, quantityContracts, vehicles, quantityVehicles, customers, quantityCustomers);
         }
     } else {
         fprintf(outputFile, "No contract found with data provided\n");

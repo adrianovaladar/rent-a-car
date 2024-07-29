@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include "logger.h"
 
 /**
  * @brief Structure representing a customer.
@@ -21,19 +22,21 @@ typedef struct customer {
  *
  * @param inputFile Pointer to the file to read from.
  * @param outputFile Pointer to the file to write output.
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void insertCustomer(FILE *inputFile, FILE *outputFile, customer *customers, size_t *quantity);
+void insertCustomer(FILE *inputFile, FILE *outputFile, logger *logger, customer *customers, size_t *quantity);
 /**
  * @brief Displays a customer by their code and shows options for further actions.
  *
  * @param inputFile Pointer to the file to read from.
  * @param outputFile Pointer to the file to write output.
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void manageCustomerByCode(FILE *inputFile, FILE *outputFile, customer *customers, size_t *quantity);
+void manageCustomerByCode(FILE *inputFile, FILE *outputFile, logger *logger, customer *customers, size_t *quantity);
 /**
  * @brief Displays all customers.
  *
@@ -45,29 +48,32 @@ void showAllCustomers(FILE *outputFile, const customer *customers, size_t quanti
 /**
  * @brief Searches for a customer by their code.
  *
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param customers Array of customers.
  * @param quantity Number of customers.
  * @param code Code of the customer to search for.
  * @return Index of the customer if found, -1 otherwise.
  */
-int searchCodeCustomer(const customer *customers, size_t quantity, int code);
+int searchCodeCustomer(logger *logger, const customer *customers, size_t quantity, int code);
 /**
  * @brief Reads customers from a file.
  *
  * @param outputFile Pointer to the file to write output.
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param fileName Name of the file to read customers from.
  * @param customers Array to store the customers.
  * @param quantity Number of customers.
  */
-void readCustomers(FILE *outputFile, const char *fileName, customer *customers, size_t *quantity);
+void readCustomers(FILE *outputFile, logger *logger, const char *fileName, customer *customers, size_t *quantity);
 /**
  * @brief Writes customers to a file.
  *
  * @param outputFile Pointer to the file to write output.
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param fileName Name of the file to write customers to.
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void writeCustomers(FILE *outputFile, const char *fileName, const customer *customers, size_t quantity);
+void writeCustomers(FILE *outputFile, logger *logger, const char *fileName, const customer *customers, size_t quantity);
 
 #endif//RENT_A_CAR_CUSTOMER_H

@@ -36,14 +36,14 @@ static void showMenu() {
         printf("0 - Exit\n");
 }
 
-static void readData(const char *customersFile, const char *vehiclesFile, char *contractsFile, customer *customers, vehicle *vehicles, contract *contracts, size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
-    readCustomers(stdout, customersFile, customers, quantityCustomers);
+static void readData(logger *logger, const char *customersFile, const char *vehiclesFile, char *contractsFile, customer *customers, vehicle *vehicles, contract *contracts, size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
+    readCustomers(stdout, logger, customersFile, customers, quantityCustomers);
     readVehicles(stdout, vehiclesFile, vehicles, quantityVehicles);
     readContracts(stdout, contractsFile, contracts, quantityContracts);
 }
 
-static void writeData(const char *customersFile, const char *vehiclesFile, char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
-    writeCustomers(stdout, customersFile, customers, quantityCustomers);
+static void writeData(logger *logger, const char *customersFile, const char *vehiclesFile, char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
+    writeCustomers(stdout, logger, customersFile, customers, quantityCustomers);
     writeVehicles(stdout, vehiclesFile, vehicles, quantityVehicles);
     writeContracts(stdout, contractsFile, contracts, quantityContracts);
 }
@@ -71,6 +71,7 @@ void run() {
     char customersFile[14];
     char vehiclesFile[13];
     char contractsFile[14];
+    logger *logger = getLoggerInstance();
 #ifdef _WIN32
     strcat(customersFile, "customers.bin\0");
     strcat(vehiclesFile, "vehicles.bin\0");
@@ -80,7 +81,7 @@ void run() {
     strcat(vehiclesFile, "vehicles\0");
     strcat(contractsFile, "contracts\0");
 #endif
-    readData(customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, &quantityCustomers, &quantityVehicles, &quantityContracts);
+    readData(logger, customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, &quantityCustomers, &quantityVehicles, &quantityContracts);
     do {
         CLEAR_CONSOLE();
         showMenu();
@@ -88,13 +89,13 @@ void run() {
         switch (option) {
             case 1: {
                 CLEAR_CONSOLE();
-                insertCustomer(stdin, stdout, customers, &quantityCustomers);
+                insertCustomer(stdin, stdout, logger, customers, &quantityCustomers);
                 end();
                 break;
             }
             case 2: {
                 CLEAR_CONSOLE();
-                manageCustomerByCode(stdin, stdout, customers, &quantityCustomers);
+                manageCustomerByCode(stdin, stdout, logger, customers, &quantityCustomers);
                 end();
                 break;
             }
@@ -131,13 +132,13 @@ void run() {
             }
             case 21: {
                 CLEAR_CONSOLE();
-                startContract(stdin, stdout, contracts, customers, vehicles, &quantityContracts, quantityCustomers, quantityVehicles);
+                startContract(stdin, stdout, logger, contracts, customers, vehicles, &quantityContracts, quantityCustomers, quantityVehicles);
                 end();
                 break;
             }
             case 22: {
                 CLEAR_CONSOLE();
-                manageContractByVehicleCodeAndStartDate(stdin, stdout, contracts, vehicles, customers, &quantityContracts, quantityVehicles, quantityCustomers);
+                manageContractByVehicleCodeAndStartDate(stdin, stdout, logger, contracts, vehicles, customers, &quantityContracts, quantityVehicles, quantityCustomers);
                 end();
                 break;
             }
@@ -152,5 +153,5 @@ void run() {
             }
         }
     } while (option != 0);
-    writeData(customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, quantityCustomers, quantityVehicles, quantityContracts);
+    writeData(logger, customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, quantityCustomers, quantityVehicles, quantityContracts);
 }
