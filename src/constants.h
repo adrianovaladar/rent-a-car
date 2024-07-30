@@ -7,5 +7,6 @@
 #define MAX_CONTRACTS 1000
 #define START_YEAR 2020
 #define EPSILON 1e-6
+#define LENGTH_LOG 500
 
 #endif//RENT_A_CAR_CONSTANTS_H
