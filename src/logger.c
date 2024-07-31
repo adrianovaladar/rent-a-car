@@ -1,7 +1,10 @@
 #include "logger.h"
+#include "constants.h"
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #ifdef _WIN32
 #include <direct.h>
@@ -61,11 +64,37 @@ char *logLevelToText(const logLevel l) {
     return "Invalid\0";
 }
 
-void logMessage(const logger *logger, const char *text, const logLevel level, const char *file, const char *function, const int line) {
+static void logMessage(const logger *logger, const char *text, const logLevel level, const char *file, const char *function, const int line) {
     if (!logger->initialized)
         return;
     const char *levelString = (level == Info) ? "Info" : (level == Warning) ? "Warning"
                                                                             : "Error";
-    fprintf(logger->file, "[%s] %s | %s:%s:%d | %s\n", levelString, getFormattedDate(), file, function, line, text);
+    const char *fileNameUnix = strrchr(file, '/');
+    const char *fileNameWindows = strrchr(file, '\\');
+    const char *fileName = NULL;
+    if (fileNameUnix && fileNameWindows) {
+        fileName = (fileNameUnix > fileNameWindows) ? fileNameUnix : fileNameWindows;
+    } else if (fileNameUnix) {
+        fileName = fileNameUnix;
+    } else if (fileNameWindows) {
+        fileName = fileNameWindows;
+    } else {
+        fileName = file;
+    }
+    fprintf(logger->file, "[%s] %s | %s:%s:%d | %s\n", levelString, getFormattedDate(), fileName, function, line, text);
     fflush(logger->file);
+}
+
+void logFormattedMessage(const logger *logger, const logLevel level, const char *file, const char *function, const int line, const char *format, ...) {
+    char *message = malloc(LENGTH_LOG * sizeof(char));
+    if (message == NULL) {
+        fprintf(stderr, "Memory allocation failed for logging message\n");
+        return;
+    }
+    va_list args;
+    va_start(args, format);
+    vsnprintf(message, LENGTH_LOG, format, args);
+    va_end(args);
+    logMessage(logger, message, level, file, function, line);
+    free(message);
 }
