@@ -94,7 +94,7 @@ static void deleteContract(FILE *outputFile, logger *logger, contract *c, const 
         }
         const int customerPosition = searchCodeCustomer(logger, customers, quantityCustomers, c[pos].codeCustomer);
         customers[customerPosition].isUnderContract = false;
-        const int vehiclePosition = searchCodeVehicle(vehicles, quantityVehicles, c[pos].codeVehicle);
+        const int vehiclePosition = searchCodeVehicle(logger, vehicles, quantityVehicles, c[pos].codeVehicle);
         vehicles[vehiclePosition].isUnderContract = false;
         (*quantity)--;
         fprintf(outputFile, "Contract deleted successfully\n");
@@ -148,7 +148,7 @@ void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *
     do {
         fprintf(outputFile, "Vehicle code\n");
         n = readInt(inputFile, outputFile, 0, MAX_VEHICLES - 1);
-        positionVehicle = searchCodeVehicle(vehicles, quantityVehicles, n);
+        positionVehicle = searchCodeVehicle(logger, vehicles, quantityVehicles, n);
         if (positionVehicle < 0) {
             fprintf(outputFile, "Vehicle not found, try another code\n");
         }
@@ -197,7 +197,7 @@ static void endContract(FILE *inputFile, FILE *outputFile, logger *logger, contr
         customers[positionCustomer].isRisky = true;
     }
     customers[positionCustomer].isUnderContract = false;
-    const int positionVehicle = searchCodeVehicle(vehicles, quantityVehicles, contracts[pos].codeVehicle);
+    const int positionVehicle = searchCodeVehicle(logger, vehicles, quantityVehicles, contracts[pos].codeVehicle);
     vehicles[positionVehicle].isUnderContract = false;
     fprintf(outputFile, "Quantity of km\n");
     contracts[pos].quantityKm = readFloat(inputFile, outputFile, vehicles[positionVehicle].km, INFINITY);

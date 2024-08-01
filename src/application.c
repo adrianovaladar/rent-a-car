@@ -38,13 +38,13 @@ static void showMenu() {
 
 static void readData(logger *logger, const char *customersFile, const char *vehiclesFile, char *contractsFile, customer *customers, vehicle *vehicles, contract *contracts, size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
     readCustomers(stdout, logger, customersFile, customers, quantityCustomers);
-    readVehicles(stdout, vehiclesFile, vehicles, quantityVehicles);
+    readVehicles(stdout, logger, vehiclesFile, vehicles, quantityVehicles);
     readContracts(stdout, contractsFile, contracts, quantityContracts);
 }
 
 static void writeData(logger *logger, const char *customersFile, const char *vehiclesFile, char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
     writeCustomers(stdout, logger, customersFile, customers, quantityCustomers);
-    writeVehicles(stdout, vehiclesFile, vehicles, quantityVehicles);
+    writeVehicles(stdout, logger, vehiclesFile, vehicles, quantityVehicles);
     writeContracts(stdout, contractsFile, contracts, quantityContracts);
 }
 
@@ -107,13 +107,13 @@ void run() {
             }
             case 11: {
                 CLEAR_CONSOLE();
-                insertVehicle(stdin, stdout, vehicles, &quantityVehicles);
+                insertVehicle(stdin, stdout, logger, vehicles, &quantityVehicles);
                 end();
                 break;
             }
             case 12: {
                 CLEAR_CONSOLE();
-                manageVehicleByCode(stdin, stdout, vehicles, &quantityVehicles);
+                manageVehicleByCode(stdin, stdout, logger, vehicles, &quantityVehicles);
                 end();
                 break;
             }

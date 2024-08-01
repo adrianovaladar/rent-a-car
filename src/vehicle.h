@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include "logger.h"
 
 /**
  * @brief enum representing the offce locations.
@@ -35,10 +36,11 @@ typedef struct vehicle {
  *
  * @param inputFile Pointer to the file to read from.
  * @param outputFile Pointer to the file to write output.
+ * @param logger
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void insertVehicle(FILE *inputFile, FILE *outputFile, vehicle *vehicles, size_t *quantity);
+void insertVehicle(FILE *inputFile, FILE *outputFile, logger *logger, vehicle *vehicles, size_t *quantity);
 /**
  * @brief Displays all vehicles.
  *
@@ -52,19 +54,21 @@ void showAllVehicles(FILE *outputFile, const vehicle *vehicles, size_t quantity)
  *
  * @param inputFile Pointer to the file to read from.
  * @param outputFile Pointer to the file to write output.
+ * @param logger
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void manageVehicleByCode(FILE *inputFile, FILE *outputFile, vehicle *vehicles, size_t *quantity);
+void manageVehicleByCode(FILE *inputFile, FILE *outputFile, logger *logger, vehicle *vehicles, size_t *quantity);
 /**
  * @brief Searches for a vehicle by their code.
  *
+ * @param logger
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  * @param code Code of the vehicle to search for.
  * @return Index of the vehicle if found, -1 otherwise.
  */
-int searchCodeVehicle(const vehicle *vehicles, size_t quantity, int code);
+int searchCodeVehicle(logger *logger, const vehicle *vehicles, size_t quantity, int code);
 /**
  * @brief Shows the vehicle location.
  *
@@ -83,19 +87,21 @@ char *officeEnumToText(enum office o);
  * @brief Reads vehicles from a file.
  *
  * @param outputFile Pointer to the file to write output.
+ * @param logger
  * @param fileName Name of the file to read vehicles from.
  * @param vehicles Array to store the vehicles.
  * @param quantity Number of vehicles.
  */
-void readVehicles(FILE *outputFile, const char *fileName, vehicle *vehicles, size_t *quantity);
+void readVehicles(FILE *outputFile, logger *logger, const char *fileName, vehicle *vehicles, size_t *quantity);
 /**
  * @brief Writes vehicles to a file.
  *
  * @param outputFile Pointer to the file to write output.
+ * @param logger
  * @param fileName Name of the file to write vehicles to.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void writeVehicles(FILE *outputFile, const char *fileName, const vehicle *vehicles, size_t quantity);
+void writeVehicles(FILE *outputFile, logger *logger, const char *fileName, const vehicle *vehicles, size_t quantity);
 
 #endif//RENT_A_CAR_VEHICLE_H
