@@ -1,6 +1,7 @@
 #include "date.h"
 #include "constants.h"
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 bool isLeapYear(const int year) {
@@ -67,4 +68,10 @@ bool isDateBefore(const date d1, const date d2) {
 
 bool isDateAfter(const date d1, const date d2) {
     return d1.year > d2.year || (d1.year == d2.year && d1.month > d2.month) || (d1.year == d2.year && d1.month == d2.month && d1.day > d2.day);
+}
+
+char* getFormattedDate(const date d) {
+    static char formattedDate[11];
+    snprintf(formattedDate, 11, "%02d/%02d/%04d", d.day, d.month, d.year);
+    return formattedDate;
 }

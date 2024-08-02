@@ -79,5 +79,16 @@ bool isDateBefore(date d1, date d2);
  * @return `true` if d1 is after d2, `false` otherwise.
  */
 bool isDateAfter(date d1, date d2);
+/**
+ * @brief Formats a date as a string in the format "DD/MM/YYYY".
+ *
+ * This function uses a static buffer to store the formatted date string.
+ * Note that this function is not thread-safe because it uses a static buffer.
+ *
+ * @param d The date to format.
+ * @return A pointer to a static buffer containing the formatted date.
+ *         The buffer will be overwritten by subsequent calls to this function.
+ */
+char* getFormattedDate(date d);
 
 #endif//RENT_A_CAR_DATE_H

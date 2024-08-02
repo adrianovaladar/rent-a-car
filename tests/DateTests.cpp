@@ -152,3 +152,9 @@ TEST_F(DateTests, IsDateAfterDayBefore) {
     date2 = setDate(2, 1, 2024);
     EXPECT_EQ(isDateAfter(date1, date2), false);
 }
+
+TEST_F(DateTests, CheckFormattedDate) {
+    date1 = setDate(1, 1, 2024);
+    const std::string expected {"01/01/2024"};
+    EXPECT_EQ(getFormattedDate(date1), expected);
+}
