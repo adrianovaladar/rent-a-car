@@ -36,7 +36,7 @@ typedef struct vehicle {
  *
  * @param inputFile Pointer to the file to read from.
  * @param outputFile Pointer to the file to write output.
- * @param logger
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
@@ -54,7 +54,7 @@ void showAllVehicles(FILE *outputFile, const vehicle *vehicles, size_t quantity)
  *
  * @param inputFile Pointer to the file to read from.
  * @param outputFile Pointer to the file to write output.
- * @param logger
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
@@ -62,7 +62,7 @@ void manageVehicleByCode(FILE *inputFile, FILE *outputFile, logger *logger, vehi
 /**
  * @brief Searches for a vehicle by their code.
  *
- * @param logger
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  * @param code Code of the vehicle to search for.
@@ -87,7 +87,7 @@ char *officeEnumToText(enum office o);
  * @brief Reads vehicles from a file.
  *
  * @param outputFile Pointer to the file to write output.
- * @param logger
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param fileName Name of the file to read vehicles from.
  * @param vehicles Array to store the vehicles.
  * @param quantity Number of vehicles.
@@ -97,7 +97,7 @@ void readVehicles(FILE *outputFile, logger *logger, const char *fileName, vehicl
  * @brief Writes vehicles to a file.
  *
  * @param outputFile Pointer to the file to write output.
- * @param logger
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param fileName Name of the file to write vehicles to.
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
