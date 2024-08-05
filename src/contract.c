@@ -64,9 +64,10 @@ void showContracts(FILE *outputFile, const contract *contracts, const size_t qua
     }
 }
 
-static void editContract(FILE *inputFile, FILE *outputFile, contract *contracts, const int pos, const size_t quantity) {
+static void editContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, const int pos, const size_t quantity) {
     if (contracts[pos].endDate.year != 0) {
         fprintf(outputFile, "Not possible to edit this contract because it is already closed\n");
+        logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to edit contract for vehicle code %d and start date %s", contracts[pos].codeVehicle, getFormattedDate(contracts[pos].startDate));
         return;
     }
     fprintf(outputFile, "Insert the price per day\n");
@@ -83,22 +84,27 @@ static void editContract(FILE *inputFile, FILE *outputFile, contract *contracts,
             }
         }
     } while (!isLegalDate);
+    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract edited: price per day '%d' start date '%s'", contracts[pos].priceDay, getFormattedDate(contracts[pos].startDate));
 }
 
 static void deleteContract(FILE *outputFile, logger *logger, contract *c, const int pos, size_t *quantity, vehicle *vehicles, const size_t quantityVehicles, customer *customers, const size_t quantityCustomers) {
-    if (c[pos].endDate.day == 0)
+    if (c[pos].endDate.day == 0) {
         fprintf(outputFile, "Not possible to delete this contract because it is still ongoing\n");
-    else {
-        for (int i = pos; i < *quantity; i++) {
-            c[i] = c[i + 1];
-        }
-        const int customerPosition = searchCodeCustomer(logger, customers, quantityCustomers, c[pos].codeCustomer);
-        customers[customerPosition].isUnderContract = false;
-        const int vehiclePosition = searchCodeVehicle(logger, vehicles, quantityVehicles, c[pos].codeVehicle);
-        vehicles[vehiclePosition].isUnderContract = false;
-        (*quantity)--;
-        fprintf(outputFile, "Contract deleted successfully\n");
+        logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to edit contract for vehicle code %d and start date %s", c->codeVehicle, getFormattedDate(c->startDate));
+        return;
     }
+    const int code = c->codeVehicle;
+    char *date = getFormattedDate(c->startDate);
+    for (int i = pos; i < *quantity; i++) {
+        c[i] = c[i + 1];
+    }
+    const int customerPosition = searchCodeCustomer(logger, customers, quantityCustomers, c[pos].codeCustomer);
+    customers[customerPosition].isUnderContract = false;
+    const int vehiclePosition = searchCodeVehicle(logger, vehicles, quantityVehicles, c[pos].codeVehicle);
+    vehicles[vehiclePosition].isUnderContract = false;
+    (*quantity)--;
+    fprintf(outputFile, "Contract deleted successfully\n");
+    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract with vehicle code %d and start date %s deleted successfully", code, date);
 }
 
 static int searchByStartingDate(FILE *inputFile, FILE *outputFile, const contract *c, const size_t quantity, const int codeVehicle) {
@@ -246,7 +252,7 @@ void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, 
         if (op == 'T' || op == 't') {
             endContract(inputFile, outputFile, logger, contracts, contractPosition, vehicles, customers, quantityCustomers, quantityVehicles, *quantityContracts);
         } else if (op == 'E' || op == 'e') {
-            editContract(inputFile, outputFile, contracts, contractPosition, *quantityContracts);
+            editContract(inputFile, outputFile, logger, contracts, contractPosition, *quantityContracts);
         } else if (op == 'D' || op == 'd') {
             deleteContract(outputFile, logger, contracts, contractPosition, quantityContracts, vehicles, quantityVehicles, customers, quantityCustomers);
         }
