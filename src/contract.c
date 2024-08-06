@@ -107,7 +107,7 @@ static void deleteContract(FILE *outputFile, logger *logger, contract *c, const 
     logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract with vehicle code %d and start date %s deleted successfully", code, date);
 }
 
-static int searchByStartingDate(FILE *inputFile, FILE *outputFile, const contract *c, const size_t quantity, const int codeVehicle) {
+static int searchByStartingDate(FILE *inputFile, FILE *outputFile, logger *logger, const contract *c, const size_t quantity, const int codeVehicle) {
     int position = -1;
     date date;
     readDate(inputFile, outputFile, &date);
@@ -117,23 +117,30 @@ static int searchByStartingDate(FILE *inputFile, FILE *outputFile, const contrac
             break;
         }
     }
+    if (position == -1) {
+        logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract with vehicle code %d and start date %s not found", c->codeVehicle, getFormattedDate(c->startDate));
+    } else {
+        logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract with vehicle code %d and start date %s found", c->codeVehicle, getFormattedDate(c->startDate));
+    }
     return position;
 }
 
-static int searchContract(FILE *inputFile, FILE *outputFile, const contract *contracts, const size_t quantityContracts) {
+static int searchContract(FILE *inputFile, FILE *outputFile, logger *logger, const contract *contracts, const size_t quantityContracts) {
     fprintf(outputFile, "Vehicle code\n");
     const int vehicleCode = readInt(inputFile, outputFile, 0, MAX_VEHICLES - 1);
     fprintf(outputFile, "Contract start date\n");
-    return searchByStartingDate(inputFile, outputFile, contracts, quantityContracts, vehicleCode);
+    return searchByStartingDate(inputFile, outputFile, logger, contracts, quantityContracts, vehicleCode);
 }
 
 void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, const size_t quantityCustomers, const size_t quantityVehicles) {
     if (*quantityContracts == MAX_CONTRACTS) {
         fprintf(outputFile, "We reached our full capacity of contracts. Please come back later");
+        logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to insert contract: maximum capacity reached", Warning, __FILE__, __FUNCTION__, __LINE__);
         return;
     }
     if (quantityVehicles == 0 || quantityCustomers == 0) {
         fprintf(outputFile, "There are no registered clients or vehicles so a contract cannot be started\n");
+        logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to insert contract: no registered clients or vehicles", Warning, __FILE__, __FUNCTION__, __LINE__);
         return;
     }
     int n;
@@ -149,6 +156,7 @@ void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *
     } while (positionCustomer < 0);
     if (customers[positionCustomer].isRisky == 1) {
         fprintf(outputFile, "This is a risky client so we cannot proceed with the contract\n");
+        logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to insert contract: customer with code %d is risky", customers[positionCustomer]);
         return;
     }
     do {
@@ -161,6 +169,7 @@ void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *
     } while (positionVehicle < 0);
     if (vehicles[positionVehicle].isUnderContract == true) {
         fprintf(outputFile, "The vehicle is unavailable, not possible to proceed\n");
+        logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to insert contract: vehicle with code %d is unavailable", vehicles[positionVehicle]);
         return;
     }
     customers[positionCustomer].isUnderContract = true;
@@ -185,6 +194,7 @@ void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *
     fprintf(outputFile, "Information: This vehicle is in %s, this will be considered for the start office of the contract\n", officeEnumToText(vehicles[positionVehicle].location));
     contracts[*quantityContracts].startOffice = vehicles[positionVehicle].location;
     vehicles[positionVehicle].location = Unknown;
+    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract added: customer code %d vehicle code '%d' start date '%s' price per day '%d'", contracts[*quantityContracts].codeCustomer, contracts[*quantityContracts].codeVehicle, getFormattedDate(contracts[*quantityContracts].startDate), contracts[*quantityContracts].priceDay);
     (*quantityContracts)++;
 }
 
@@ -241,7 +251,7 @@ void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, 
         fprintf(outputFile, "There are no registered contracts\n");
         return;
     }
-    const int contractPosition = searchContract(inputFile, outputFile, contracts, *quantityContracts);
+    const int contractPosition = searchContract(inputFile, outputFile, logger, contracts, *quantityContracts);
     if (contractPosition >= 0) {
         showContract(outputFile, contracts[contractPosition]);
         fprintf(outputFile, "Edit(e) Delete(d) End (t) (Press any other key plus enter to leave this menu)\n");
