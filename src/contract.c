@@ -201,6 +201,7 @@ void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *
 static void endContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, const int pos, vehicle *vehicles, customer *customers, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
     if (contracts[pos].endDate.day != 0) {
         fprintf(outputFile, "Not possible to end this contract because it is already closed\n");
+        logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to end contract: already closed", Warning, __FILE__, __FUNCTION__, __LINE__);
         return;
     }
     char value;
@@ -244,6 +245,7 @@ static void endContract(FILE *inputFile, FILE *outputFile, logger *logger, contr
     fprintf(outputFile, "%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
     contracts[pos].endOffice = readInt(inputFile, outputFile, 0, 5);
     vehicles[positionVehicle].location = contracts[pos].endOffice;
+    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract ended: customer code %d vehicle code '%d' start date '%s' end date '%s' price per day '%f' final price %f", contracts[quantityContracts].codeCustomer, contracts[quantityContracts].codeVehicle, getFormattedDate(contracts[quantityContracts].startDate), getFormattedDate(contracts[quantityContracts].endDate), contracts[quantityContracts].priceDay, contracts[quantityContracts].price);
 }
 
 void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, const size_t quantityVehicles, const size_t quantityCustomers) {
@@ -271,10 +273,11 @@ void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, 
     }
 }
 
-void readContracts(FILE *outputFile, char *fileName, contract *contracts, size_t *quantity) {
+void readContracts(FILE *outputFile, logger *logger, char *fileName, contract *contracts, size_t *quantity) {
     FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);
+        logFormattedMessage(logger, Error, __FILE__, __FUNCTION__, __LINE__, "Cannot open file '%s'", fileName);
         return;
     }
 
@@ -288,26 +291,28 @@ void readContracts(FILE *outputFile, char *fileName, contract *contracts, size_t
     // check that the number of contracts is not bigger than expected
     if (*quantity > MAX_CONTRACTS) {
         fprintf(outputFile, "Error: invalid file size in '%s'\n", fileName);
+        logFormattedMessage(logger, Error, __FILE__, __FUNCTION__, __LINE__, "Invalid file size in '%s'", fileName);
         fclose(file);
         return;
     }
 
     // read the contracts
     fread(contracts, sizeof(contract), *quantity, file);
-
     fclose(file);
+    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Successfully read %zu contracts from file '%s'", *quantity, fileName);
 }
 
 // function to write contracts to a binary file
-void writeContracts(FILE *outputFile, char *fileName, const contract *contracts, const size_t quantity) {
+void writeContracts(FILE *outputFile, logger *logger, char *fileName, const contract *contracts, const size_t quantity) {
     FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);
+        logFormattedMessage(logger, Error, __FILE__, __FUNCTION__, __LINE__, "Cannot open file '%s'", fileName);
         return;
     }
 
     // write the contracts
     fwrite(contracts, sizeof(contract), quantity, file);
-
     fclose(file);
+    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Successfully wrote %zu contracts to file '%s'", quantity, fileName);
 }

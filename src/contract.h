@@ -63,20 +63,22 @@ void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, 
  * @brief Reads the contracts from a file.
  *
  * @param outputFile Pointer to the file to write output.
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param fileName Name of the file to read contracts from.
  * @param contracts Array to store the read contracts.
  * @param quantity Pointer to store the number of contracts read.
  */
-void readContracts(FILE *outputFile, char *fileName, contract *contracts, size_t *quantity);
+void readContracts(FILE *outputFile, logger *logger, char *fileName, contract *contracts, size_t *quantity);
 
 /**
  * @brief Writes the contracts to a file.
  *
  * @param outputFile Pointer to the file to write output.
+ * @param logger Pointer to the logger instance used for logging messages.
  * @param fileName Name of the file to write contracts to.
  * @param contracts Array of contracts to be written.
  * @param quantity Number of contracts in the array.
  */
-void writeContracts(FILE *outputFile, char *fileName, const contract *contracts, size_t quantity);
+void writeContracts(FILE *outputFile, logger *logger, char *fileName, const contract *contracts, size_t quantity);
 
 #endif//RENT_A_CAR_CONTRACT_H
