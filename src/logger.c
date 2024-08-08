@@ -81,6 +81,9 @@ static void logMessage(const logger *logger, const char *text, const logLevel le
     } else {
         fileName = file;
     }
+    if (fileName && (*fileName == '/' || *fileName == '\\')) {
+        fileName++;
+    }
     fprintf(logger->file, "[%s] %s | %s:%s:%d | %s\n", levelString, getFormattedDate(), fileName, function, line, text);
     fflush(logger->file);
 }
