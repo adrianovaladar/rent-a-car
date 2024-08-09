@@ -59,7 +59,7 @@ static void editCustomer(FILE *inputFile, FILE *outputFile, logger *logger, cust
     }
     fprintf(outputFile, "--- Customer data ---\n");
     readCustomerData(inputFile, outputFile, c);
-    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Customer edited: code '%d' name '%s' adress '%s' driverLicense '%s'", c->code, c->name, c->address, c->driverLicense);
+    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Customer edited: code '%d' name '%s' address '%s' driverLicense '%s'", c->code, c->name, c->address, c->driverLicense);
 }
 
 static void deleteCustomer(FILE *outputFile, logger *logger, customer *customers, const int position, size_t *quantity) {
