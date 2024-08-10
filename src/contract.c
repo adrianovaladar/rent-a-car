@@ -273,7 +273,7 @@ void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, 
     }
 }
 
-void readContracts(FILE *outputFile, logger *logger, char *fileName, contract *contracts, size_t *quantity) {
+void readContracts(FILE *outputFile, logger *logger, const char *fileName, contract *contracts, size_t *quantity) {
     FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);
@@ -303,7 +303,7 @@ void readContracts(FILE *outputFile, logger *logger, char *fileName, contract *c
 }
 
 // function to write contracts to a binary file
-void writeContracts(FILE *outputFile, logger *logger, char *fileName, const contract *contracts, const size_t quantity) {
+void writeContracts(FILE *outputFile, logger *logger, const char *fileName, const contract *contracts, const size_t quantity) {
     FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);

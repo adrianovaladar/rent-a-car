@@ -1,5 +1,6 @@
 #include "ContractTests.h"
 #include "Utils.h"
+#include <fstream>
 
 TEST_F(ContractTests, StartContractWithoutCustomers) {
     size_t quantityContracts {};
@@ -140,4 +141,47 @@ TEST_F(ContractTests, EndContractRegularClient) {
     EXPECT_EQ(customers.at(0).isRisky, false);
     const float expectedPrice{static_cast<float>(diffInDays(contracts.at(quantityContracts - 1).startDate, contracts.at(quantityContracts - 1).endDate) + 1) * contracts.at(quantityContracts - 1).priceDay};
     EXPECT_EQ(expectedPrice, contracts.at(quantityContracts - 1).price);
+}
+
+
+TEST_F(ContractTests, WriteSingleContract) {
+    writeContracts(outputFile, l, fileName.c_str(), contracts.data(), 1);
+    std::ifstream file(fileName, std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << fileName << std::endl;
+    }
+    const std::streamsize size = file.tellg();
+    ASSERT_EQ(size, sizeof(contract));
+}
+
+TEST_F(ContractTests, WriteMaximumContracts) {
+    writeContracts(outputFile, l, fileName.c_str(), contracts.data(), contracts.size());
+    std::ifstream file(fileName, std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << fileName << std::endl;
+    }
+    const std::streamsize size = file.tellg();
+    ASSERT_EQ(size, MAX_CONTRACTS * sizeof(contract));
+}
+
+TEST_F(ContractTests, ReadSingleContract) {
+    constexpr int expected {50};
+    contracts.at(0).codeVehicle = expected;
+    writeContracts(outputFile, l, fileName.c_str(), contracts.data(), 1);
+    contracts.at(0).codeVehicle = 0;
+    size_t quantity {};
+    readContracts(outputFile, l, fileName.c_str(), contracts.data(), &quantity);
+    EXPECT_EQ(contracts.at(0).codeVehicle, expected);
+    EXPECT_EQ(quantity, 1);
+}
+
+TEST_F(ContractTests, ReadMaximumContracts) {
+    constexpr int expected {50};
+    contracts.at(0).codeVehicle = expected;
+    writeContracts(outputFile, l, fileName.c_str(), contracts.data(), contracts.size());
+    contracts.at(0).codeVehicle = 0;
+    size_t quantity {};
+    readContracts(outputFile, l, fileName.c_str(), contracts.data(), &quantity);
+    EXPECT_EQ( contracts.at(0).codeVehicle, expected);
+    EXPECT_EQ(quantity, contracts.size());
 }
