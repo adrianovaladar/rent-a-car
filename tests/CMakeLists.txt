@@ -24,7 +24,9 @@ add_executable(AllTests main.cpp
         VehicleTests.cpp
         VehicleTests.h
         ContractTests.cpp
-        ContractTests.h)
+        ContractTests.h
+        LoggerTests.cpp
+        LoggerTests.h)
 target_compile_definitions(AllTests PRIVATE TEST=1)
 include(FetchContent)
 FetchContent_Declare(
