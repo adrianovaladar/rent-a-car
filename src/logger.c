@@ -22,19 +22,22 @@ typedef struct logger {
     bool initialized; /**< Indicates whether the logger is initialized. */
 } logger;
 
-static char *getFormattedDate() {
-    static char buffer[20];
+static char* getFormattedDateAndTime(const bool includeTime) {
+    static char buffer[30];
     const time_t now = time(NULL);
     struct tm nowTm;
     localtime_r(&now, &nowTm);
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d", &nowTm);
+    if (includeTime) {
+        strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &nowTm);
+    } else {
+        strftime(buffer, sizeof(buffer), "%Y-%m-%d", &nowTm);
+    }
     return buffer;
 }
-
 static void initializeLogger(logger *logger) {
     MKDIR("logs");
     char fileName[256];
-    sprintf(fileName, "logs/log_%s.txt", getFormattedDate());
+    sprintf(fileName, "logs/log_%s.txt", getFormattedDateAndTime(false));
     logger->file = fopen(fileName, "a");
     if (logger->file == NULL) {
         logger->initialized = false;
@@ -84,7 +87,7 @@ static void logMessage(const logger *logger, const char *text, const logLevel le
     if (fileName && (*fileName == '/' || *fileName == '\\')) {
         fileName++;
     }
-    fprintf(logger->file, "[%s] %s | %s:%s:%d | %s\n", levelString, getFormattedDate(), fileName, function, line, text);
+    fprintf(logger->file, "[%s] %s | %s:%s:%d | %s\n", levelString, getFormattedDateAndTime(true), fileName, function, line, text);
     fflush(logger->file);
 }
 
