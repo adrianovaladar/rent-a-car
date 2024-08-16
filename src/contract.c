@@ -64,7 +64,7 @@ void showContracts(FILE *outputFile, const contract *contracts, const size_t qua
     }
 }
 
-static void editContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, const int pos, const size_t quantity) {
+static void editContract(FILE *inputFile, FILE *outputFile, const logger *logger, contract *contracts, const int pos, const size_t quantity) {
     if (contracts[pos].endDate.year != 0) {
         fprintf(outputFile, "Not possible to edit this contract because it is already closed\n");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to edit contract for vehicle code %d and start date %s", contracts[pos].codeVehicle, getFormattedDate(contracts[pos].startDate));
@@ -107,7 +107,7 @@ static void deleteContract(FILE *outputFile, logger *logger, contract *c, const 
     logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract with vehicle code %d and start date %s deleted successfully", code, date);
 }
 
-static int searchByStartingDate(FILE *inputFile, FILE *outputFile, logger *logger, const contract *c, const size_t quantity, const int codeVehicle) {
+static int searchByStartingDate(FILE *inputFile, FILE *outputFile, const logger *logger, const contract *c, const size_t quantity, const int codeVehicle) {
     int position = -1;
     date date;
     readDate(inputFile, outputFile, &date);
@@ -248,7 +248,7 @@ static void endContract(FILE *inputFile, FILE *outputFile, logger *logger, contr
     logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract ended: customer code %d vehicle code '%d' start date '%s' end date '%s' price per day '%f' final price %f", contracts[quantityContracts].codeCustomer, contracts[quantityContracts].codeVehicle, getFormattedDate(contracts[quantityContracts].startDate), getFormattedDate(contracts[quantityContracts].endDate), contracts[quantityContracts].priceDay, contracts[quantityContracts].price);
 }
 
-void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, const size_t quantityVehicles, const size_t quantityCustomers) {
+void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, const logger *logger, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, const size_t quantityVehicles, const size_t quantityCustomers) {
     if (*quantityContracts == 0) {
         fprintf(outputFile, "There are no registered contracts\n");
         return;
@@ -257,9 +257,13 @@ void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, 
     if (contractPosition >= 0) {
         showContract(outputFile, contracts[contractPosition]);
         fprintf(outputFile, "Edit(e) Delete(d) End (t) (Press any other key plus enter to leave this menu)\n");
-        unsigned char op;
+        unsigned char op = 0;
         do {
-            op = fgetc(inputFile);
+            const int result = fgetc(inputFile);
+            if (result == EOF) {
+                continue;
+            }
+            op = (unsigned char) result;
         } while (op == '\n');
         if (op == 'T' || op == 't') {
             endContract(inputFile, outputFile, logger, contracts, contractPosition, vehicles, customers, quantityCustomers, quantityVehicles, *quantityContracts);
@@ -273,7 +277,7 @@ void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, 
     }
 }
 
-void readContracts(FILE *outputFile, logger *logger, const char *fileName, contract *contracts, size_t *quantity) {
+void readContracts(FILE *outputFile, const logger *logger, const char *fileName, contract *contracts, size_t *quantity) {
     FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);
@@ -303,7 +307,7 @@ void readContracts(FILE *outputFile, logger *logger, const char *fileName, contr
 }
 
 // function to write contracts to a binary file
-void writeContracts(FILE *outputFile, logger *logger, const char *fileName, const contract *contracts, const size_t quantity) {
+void writeContracts(FILE *outputFile, const logger *logger, const char *fileName, const contract *contracts, const size_t quantity) {
     FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);

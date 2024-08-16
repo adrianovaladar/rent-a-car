@@ -57,7 +57,7 @@ void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *
  * @param quantityVehicles Number of vehicles in the array.
  * @param quantityCustomers Number of customers in the array.
  */
-void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, size_t quantityVehicles, size_t quantityCustomers);
+void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, const logger *logger, contract *contracts, vehicle *vehicles, customer *customers, size_t *quantityContracts, size_t quantityVehicles, size_t quantityCustomers);
 
 /**
  * @brief Reads the contracts from a file.
@@ -68,7 +68,7 @@ void manageContractByVehicleCodeAndStartDate(FILE *inputFile, FILE *outputFile, 
  * @param contracts Array to store the read contracts.
  * @param quantity Pointer to store the number of contracts read.
  */
-void readContracts(FILE *outputFile, logger *logger, const char *fileName, contract *contracts, size_t *quantity);
+void readContracts(FILE *outputFile, const logger *logger, const char *fileName, contract *contracts, size_t *quantity);
 
 /**
  * @brief Writes the contracts to a file.
@@ -79,6 +79,6 @@ void readContracts(FILE *outputFile, logger *logger, const char *fileName, contr
  * @param contracts Array of contracts to be written.
  * @param quantity Number of contracts in the array.
  */
-void writeContracts(FILE *outputFile, logger *logger, const char *fileName, const contract *contracts, size_t quantity);
+void writeContracts(FILE *outputFile, const logger *logger, const char *fileName, const contract *contracts, size_t quantity);
 
 #endif//RENT_A_CAR_CONTRACT_H
