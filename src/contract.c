@@ -87,7 +87,7 @@ static void editContract(FILE *inputFile, FILE *outputFile, const logger *logger
     logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract edited: price per day '%d' start date '%s'", contracts[pos].priceDay, getFormattedDate(contracts[pos].startDate));
 }
 
-static void deleteContract(FILE *outputFile, logger *logger, contract *c, const int pos, size_t *quantity, vehicle *vehicles, const size_t quantityVehicles, customer *customers, const size_t quantityCustomers) {
+static void deleteContract(FILE *outputFile, const logger *logger, contract *c, const int pos, size_t *quantity, vehicle *vehicles, const size_t quantityVehicles, customer *customers, const size_t quantityCustomers) {
     if (c[pos].endDate.day == 0) {
         fprintf(outputFile, "Not possible to delete this contract because it is still ongoing\n");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to edit contract for vehicle code %d and start date %s", c->codeVehicle, getFormattedDate(c->startDate));
@@ -125,7 +125,7 @@ static int searchByStartingDate(FILE *inputFile, FILE *outputFile, const logger 
     return position;
 }
 
-static int searchContract(FILE *inputFile, FILE *outputFile, logger *logger, const contract *contracts, const size_t quantityContracts) {
+static int searchContract(FILE *inputFile, FILE *outputFile, const logger *logger, const contract *contracts, const size_t quantityContracts) {
     fprintf(outputFile, "Vehicle code\n");
     const int vehicleCode = readInt(inputFile, outputFile, 0, MAX_VEHICLES - 1);
     fprintf(outputFile, "Contract start date\n");
@@ -198,7 +198,7 @@ void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *
     (*quantityContracts)++;
 }
 
-static void endContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, const int pos, vehicle *vehicles, customer *customers, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
+static void endContract(FILE *inputFile, FILE *outputFile, const logger *logger, contract *contracts, const int pos, vehicle *vehicles, customer *customers, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
     if (contracts[pos].endDate.day != 0) {
         fprintf(outputFile, "Not possible to end this contract because it is already closed\n");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to end contract: already closed", Warning, __FILE__, __FUNCTION__, __LINE__);
