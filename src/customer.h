@@ -26,7 +26,7 @@ typedef struct customer {
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void insertCustomer(FILE *inputFile, FILE *outputFile, logger *logger, customer *customers, size_t *quantity);
+void insertCustomer(FILE *inputFile, FILE *outputFile, const logger *logger, customer *customers, size_t *quantity);
 /**
  * @brief Displays a customer by their code and shows options for further actions.
  *
@@ -36,7 +36,7 @@ void insertCustomer(FILE *inputFile, FILE *outputFile, logger *logger, customer 
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void manageCustomerByCode(FILE *inputFile, FILE *outputFile, logger *logger, customer *customers, size_t *quantity);
+void manageCustomerByCode(FILE *inputFile, FILE *outputFile, const logger *logger, customer *customers, size_t *quantity);
 /**
  * @brief Displays all customers.
  *
@@ -54,7 +54,7 @@ void showAllCustomers(FILE *outputFile, const customer *customers, size_t quanti
  * @param code Code of the customer to search for.
  * @return Index of the customer if found, -1 otherwise.
  */
-int searchCodeCustomer(logger *logger, const customer *customers, size_t quantity, int code);
+int searchCodeCustomer(const logger *logger, const customer *customers, size_t quantity, int code);
 /**
  * @brief Reads customers from a file.
  *
@@ -64,7 +64,7 @@ int searchCodeCustomer(logger *logger, const customer *customers, size_t quantit
  * @param customers Array to store the customers.
  * @param quantity Number of customers.
  */
-void readCustomers(FILE *outputFile, logger *logger, const char *fileName, customer *customers, size_t *quantity);
+void readCustomers(FILE *outputFile, const logger *logger, const char *fileName, customer *customers, size_t *quantity);
 /**
  * @brief Writes customers to a file.
  *
@@ -74,6 +74,6 @@ void readCustomers(FILE *outputFile, logger *logger, const char *fileName, custo
  * @param customers Array of customers.
  * @param quantity Number of customers.
  */
-void writeCustomers(FILE *outputFile, logger *logger, const char *fileName, const customer *customers, size_t quantity);
+void writeCustomers(FILE *outputFile, const logger *logger, const char *fileName, const customer *customers, size_t quantity);
 
 #endif//RENT_A_CAR_CUSTOMER_H

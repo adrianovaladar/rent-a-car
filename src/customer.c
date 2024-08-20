@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int searchCodeCustomer(logger *logger, const customer *customers, const size_t quantity, const int code) {
+int searchCodeCustomer(const logger *logger, const customer *customers, const size_t quantity, const int code) {
     int position = -1;
     int i = 0;
     while (i <= quantity && position == -1) {
@@ -36,7 +36,7 @@ static void setCodeNewCustomer(customer *customers, const size_t *position) {
     }
 }
 
-void insertCustomer(FILE *inputFile, FILE *outputFile, logger *logger, customer *customers, size_t *quantity) {
+void insertCustomer(FILE *inputFile, FILE *outputFile, const logger *logger, customer *customers, size_t *quantity) {
     if (*quantity == MAX_CUSTOMERS) {
         fprintf(outputFile, "We reached our full capacity of customers. Please come back later");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to insert customer: maximum capacity reached");
@@ -51,7 +51,7 @@ void insertCustomer(FILE *inputFile, FILE *outputFile, logger *logger, customer 
     (*quantity)++;
 }
 
-static void editCustomer(FILE *inputFile, FILE *outputFile, logger *logger, customer *c) {
+static void editCustomer(FILE *inputFile, FILE *outputFile, const logger *logger, customer *c) {
     if (c->isUnderContract) {
         fprintf(outputFile, "The customer is under a contract at the moment, please come back later\n");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to edit customer with code %d: customer is under contract", c->code);
@@ -62,7 +62,7 @@ static void editCustomer(FILE *inputFile, FILE *outputFile, logger *logger, cust
     logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Customer edited: code '%d' name '%s' address '%s' driverLicense '%s'", c->code, c->name, c->address, c->driverLicense);
 }
 
-static void deleteCustomer(FILE *outputFile, logger *logger, customer *customers, const int position, size_t *quantity) {
+static void deleteCustomer(FILE *outputFile, const logger *logger, customer *customers, const int position, size_t *quantity) {
     if (customers[position].isUnderContract) {
         fprintf(outputFile, "The customer is under a contract at the moment, please come back later\n");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to delete customer with code %d: customer is under contract", customers[position].code);
@@ -84,7 +84,7 @@ static void showCustomer(FILE *outputFile, customer c) {
     fprintf(outputFile, "Driver license: %s\n", c.driverLicense);
 }
 
-void manageCustomerByCode(FILE *inputFile, FILE *outputFile, logger *logger, customer *customers, size_t *quantity) {
+void manageCustomerByCode(FILE *inputFile, FILE *outputFile, const logger *logger, customer *customers, size_t *quantity) {
     if (*quantity == 0) {
         fprintf(outputFile, "There are no registered customers\n");
         return;
@@ -94,9 +94,13 @@ void manageCustomerByCode(FILE *inputFile, FILE *outputFile, logger *logger, cus
     if (codeFound >= 0) {
         showCustomer(outputFile, customers[codeFound]);
         fprintf(outputFile, "Edit(e) Delete(d) (Press any other key plus enter to leave this menu): ");
-        unsigned char op;
+        unsigned char op = 0;
         do {
-            op = fgetc(inputFile);
+            const int result = fgetc(inputFile);
+            if (result == EOF) {
+                continue;
+            }
+            op = (unsigned char) result;
         } while (op == '\n');
         if (op == 'E' || op == 'e') {
             editCustomer(inputFile, outputFile, logger, &customers[codeFound]);
@@ -120,7 +124,7 @@ void showAllCustomers(FILE *outputFile, const customer *customers, const size_t 
     }
 }
 
-void readCustomers(FILE *outputFile, logger *logger, const char *fileName, customer *customers, size_t *quantity) {
+void readCustomers(FILE *outputFile, const logger *logger, const char *fileName, customer *customers, size_t *quantity) {
     FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);
@@ -145,8 +149,7 @@ void readCustomers(FILE *outputFile, logger *logger, const char *fileName, custo
     logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Successfully read %zu customers from file '%s'", *quantity, fileName);
 }
 
-// function to write customers to a binary file
-void writeCustomers(FILE *outputFile, logger *logger, const char *fileName, const customer *customers, const size_t quantity) {
+void writeCustomers(FILE *outputFile, const logger *logger, const char *fileName, const customer *customers, const size_t quantity) {
     FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);
