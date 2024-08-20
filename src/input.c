@@ -62,14 +62,16 @@ void readString(FILE *inputFile, FILE *outputFile, char *s, const int size, cons
     if (size <= 0)
         return;
     fprintf(outputFile, "%s", info);
-    while (1) {
-        if (fgets(s, size, inputFile) == NULL) {
+    bool isStringRead = false;
+    while (!isStringRead) {
+        if (fgets(s, size, inputFile) != NULL) {
+            s[strcspn(s, "\n")] = '\0';
+            if (strlen(s) > 0) {
+                isStringRead = true;
+            }
+        } else {
             s[0] = '\0';
-            break;
-        }
-        s[strcspn(s, "\n")] = '\0';
-        if (strlen(s) > 0) {
-            break;
+            isStringRead = true;
         }
 #ifdef TEST
         if (strlen(s) == 0)
