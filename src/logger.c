@@ -70,8 +70,7 @@ char *logLevelToText(const logLevel l) {
 static void logMessage(const logger *logger, const char *text, const logLevel level, const char *file, const char *function, const int line) {
     if (!logger->initialized)
         return;
-    const char *levelString = (level == Info) ? "Info" : (level == Warning) ? "Warning"
-                                                                            : "Error";
+    const char *levelString = logLevelToText(level);
     const char *fileNameUnix = strrchr(file, '/');
     const char *fileNameWindows = strrchr(file, '\\');
     const char *fileName = NULL;
