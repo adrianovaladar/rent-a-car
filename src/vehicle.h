@@ -40,7 +40,7 @@ typedef struct vehicle {
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void insertVehicle(FILE *inputFile, FILE *outputFile, logger *logger, vehicle *vehicles, size_t *quantity);
+void insertVehicle(FILE *inputFile, FILE *outputFile, const logger *logger, vehicle *vehicles, size_t *quantity);
 /**
  * @brief Displays all vehicles.
  *
@@ -58,7 +58,7 @@ void showAllVehicles(FILE *outputFile, const vehicle *vehicles, size_t quantity)
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void manageVehicleByCode(FILE *inputFile, FILE *outputFile, logger *logger, vehicle *vehicles, size_t *quantity);
+void manageVehicleByCode(FILE *inputFile, FILE *outputFile, const logger *logger, vehicle *vehicles, size_t *quantity);
 /**
  * @brief Searches for a vehicle by their code.
  *
@@ -68,7 +68,7 @@ void manageVehicleByCode(FILE *inputFile, FILE *outputFile, logger *logger, vehi
  * @param code Code of the vehicle to search for.
  * @return Index of the vehicle if found, -1 otherwise.
  */
-int searchCodeVehicle(logger *logger, const vehicle *vehicles, size_t quantity, int code);
+int searchCodeVehicle(const logger *logger, const vehicle *vehicles, size_t quantity, int code);
 /**
  * @brief Shows the vehicle location.
  *
@@ -92,7 +92,7 @@ char *officeEnumToText(enum office o);
  * @param vehicles Array to store the vehicles.
  * @param quantity Number of vehicles.
  */
-void readVehicles(FILE *outputFile, logger *logger, const char *fileName, vehicle *vehicles, size_t *quantity);
+void readVehicles(FILE *outputFile, const logger *logger, const char *fileName, vehicle *vehicles, size_t *quantity);
 /**
  * @brief Writes vehicles to a file.
  *
@@ -102,6 +102,6 @@ void readVehicles(FILE *outputFile, logger *logger, const char *fileName, vehicl
  * @param vehicles Array of vehicles.
  * @param quantity Number of vehicles.
  */
-void writeVehicles(FILE *outputFile, logger *logger, const char *fileName, const vehicle *vehicles, size_t quantity);
+void writeVehicles(FILE *outputFile, const logger *logger, const char *fileName, const vehicle *vehicles, size_t quantity);
 
 #endif//RENT_A_CAR_VEHICLE_H

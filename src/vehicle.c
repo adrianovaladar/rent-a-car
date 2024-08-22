@@ -37,11 +37,13 @@ static void readVehicleData(FILE *inputFile, FILE *outputFile, vehicle *v) {
     v->location = readInt(inputFile, outputFile, 0, 5);
 }
 
-int searchCodeVehicle(logger *logger, const vehicle *vehicles, const size_t quantity, const int code) {
+int searchCodeVehicle(const logger *logger, const vehicle *vehicles, const size_t quantity, const int code) {
     int position = -1;
-    for (int i = 0; i <= quantity && position == -1; i++) {
+    int i = 0;
+    while (i <= quantity && position == -1) {
         if (vehicles[i].code == code)
             position = i;
+        i++;
     }
     if (position == -1) {
         logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Vehicle with code %d not found", code);
@@ -60,7 +62,7 @@ static void setCodeNewVehicle(vehicle *vehicles, const size_t *quantity) {
     }
 }
 
-void insertVehicle(FILE *inputFile, FILE *outputFile, logger *logger, vehicle *vehicles, size_t *quantity) {
+void insertVehicle(FILE *inputFile, FILE *outputFile, const logger *logger, vehicle *vehicles, size_t *quantity) {
     if (*quantity == MAX_VEHICLES) {
         fprintf(outputFile, "The stand is full, please come back later\n");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to insert vehicle: maximum capacity reached", Warning, __FILE__, __FUNCTION__, __LINE__);
@@ -74,7 +76,7 @@ void insertVehicle(FILE *inputFile, FILE *outputFile, logger *logger, vehicle *v
     (*quantity)++;
 }
 
-static void editVehicle(FILE *inputFile, FILE *outputFile, logger *logger, vehicle *v) {
+static void editVehicle(FILE *inputFile, FILE *outputFile, const logger *logger, vehicle *v) {
     if (v->isUnderContract) {
         fprintf(outputFile, "The vehicle is under a contract at the moment, please come back later\n");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to edit vehicle with code %d: vehicle is under contract", v->code);
@@ -85,7 +87,7 @@ static void editVehicle(FILE *inputFile, FILE *outputFile, logger *logger, vehic
     logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Vehicle with code %d edited successfully", v->code);
 }
 
-static void deleteVehicle(FILE *outputFile, logger *logger, vehicle *vehicles, const int position, size_t *quantity) {
+static void deleteVehicle(FILE *outputFile, const logger *logger, vehicle *vehicles, const int position, size_t *quantity) {
     if (vehicles[position].isUnderContract) {
         fprintf(outputFile, "The vehicle is under a contract at the moment, please come back later\n");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to delete vehicle with code %d: vehicle is under contract", vehicles[position].code);
@@ -108,7 +110,7 @@ static void showVehicle(FILE *outputFile, const vehicle v) {
     fprintf(outputFile, "Status: %s\n", v.isUnderContract ? "Unavailable" : "Available");
 }
 
-void manageVehicleByCode(FILE *inputFile, FILE *outputFile, logger *logger, vehicle *vehicles, size_t *quantity) {
+void manageVehicleByCode(FILE *inputFile, FILE *outputFile, const logger *logger, vehicle *vehicles, size_t *quantity) {
     if (*quantity == 0) {
         fprintf(outputFile, "There are no registered vehicles\n");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "No registered vehicles found for management", Info, __FILE__, __FUNCTION__, __LINE__);
@@ -119,9 +121,13 @@ void manageVehicleByCode(FILE *inputFile, FILE *outputFile, logger *logger, vehi
     if (codeFound >= 0) {
         showVehicle(outputFile, vehicles[codeFound]);
         fprintf(outputFile, "Edit(e) Delete(d) (Press any other key plus enter to leave this menu)\n");
-        unsigned char op;
+        unsigned char op = 0;
         do {
-            op = fgetc(inputFile);
+            const int result = fgetc(inputFile);
+            if (result == EOF) {
+                continue;
+            }
+            op = (unsigned char) result;
         } while (op == '\n');
         if (op == 'E' || op == 'e') {
             editVehicle(inputFile, outputFile, logger, &vehicles[codeFound]);
@@ -168,7 +174,7 @@ void showVehiclesLocation(FILE *outputFile, const vehicle *vehicles, const size_
     }
 }
 
-void readVehicles(FILE *outputFile, logger *logger, const char *fileName, vehicle *vehicles, size_t *quantity) {
+void readVehicles(FILE *outputFile, const logger *logger, const char *fileName, vehicle *vehicles, size_t *quantity) {
     FILE *file = fopen(fileName, "rb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);
@@ -198,7 +204,7 @@ void readVehicles(FILE *outputFile, logger *logger, const char *fileName, vehicl
 }
 
 // function to write vehicles to a binary file
-void writeVehicles(FILE *outputFile, logger *logger, const char *fileName, const vehicle *vehicles, const size_t quantity) {
+void writeVehicles(FILE *outputFile, const logger *logger, const char *fileName, const vehicle *vehicles, const size_t quantity) {
     FILE *file = fopen(fileName, "wb");
     if (file == NULL) {
         fprintf(outputFile, "Error opening file '%s'!\n", fileName);
