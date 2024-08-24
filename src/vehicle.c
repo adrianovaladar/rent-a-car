@@ -49,7 +49,6 @@ int searchCodeVehicle(const logger *logger, const vehicle *vehicles, const size_
         logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Vehicle with code %d not found", code);
     } else {
         logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Vehicle with code %d found", code);
-
     }
     return position;
 }

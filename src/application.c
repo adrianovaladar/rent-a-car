@@ -36,13 +36,13 @@ static void showMenu() {
         printf("0 - Exit\n");
 }
 
-static void readData(logger *logger, const char *customersFile, const char *vehiclesFile, const char *contractsFile, customer *customers, vehicle *vehicles, contract *contracts, size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
+static void readData(const logger *logger, const char *customersFile, const char *vehiclesFile, const char *contractsFile, customer *customers, vehicle *vehicles, contract *contracts, size_t *quantityCustomers, size_t *quantityVehicles, size_t *quantityContracts) {
     readCustomers(stdout, logger, customersFile, customers, quantityCustomers);
     readVehicles(stdout, logger, vehiclesFile, vehicles, quantityVehicles);
     readContracts(stdout, logger, contractsFile, contracts, quantityContracts);
 }
 
-static void writeData(logger *logger, const char *customersFile, const char *vehiclesFile, const char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
+static void writeData(const logger *logger, const char *customersFile, const char *vehiclesFile, const char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
     writeCustomers(stdout, logger, customersFile, customers, quantityCustomers);
     writeVehicles(stdout, logger, vehiclesFile, vehicles, quantityVehicles);
     writeContracts(stdout, logger, contractsFile, contracts, quantityContracts);
