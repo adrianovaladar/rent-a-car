@@ -132,7 +132,7 @@ static int searchContract(FILE *inputFile, FILE *outputFile, const logger *logge
     return searchByStartingDate(inputFile, outputFile, logger, contracts, quantityContracts, vehicleCode);
 }
 
-void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, const size_t quantityCustomers, const size_t quantityVehicles) {
+void startContract(FILE *inputFile, FILE *outputFile, const logger *logger, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, const size_t quantityCustomers, const size_t quantityVehicles) {
     if (*quantityContracts == MAX_CONTRACTS) {
         fprintf(outputFile, "We reached our full capacity of contracts. Please come back later");
         logFormattedMessage(logger, Warning, __FILE__, __FUNCTION__, __LINE__, "Failed to insert contract: maximum capacity reached", Warning, __FILE__, __FUNCTION__, __LINE__);

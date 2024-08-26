@@ -42,7 +42,7 @@ void showContracts(FILE *outputFile, const contract *contracts, size_t quantity)
  * @param quantityCustomers Number of customers in the array.
  * @param quantityVehicles Number of vehicles in the array.
  */
-void startContract(FILE *inputFile, FILE *outputFile, logger *logger, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, size_t quantityCustomers, size_t quantityVehicles);
+void startContract(FILE *inputFile, FILE *outputFile, const logger *logger, contract *contracts, customer *customers, vehicle *vehicles, size_t *quantityContracts, size_t quantityCustomers, size_t quantityVehicles);
 
 /**
  * @brief Manages an existing contract by vehicle code and start date.
