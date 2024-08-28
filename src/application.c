@@ -71,7 +71,7 @@ void run() {
     char customersFile[14];
     char vehiclesFile[13];
     char contractsFile[14];
-    logger *logger = getLoggerInstance();
+    const logger *logger = getLoggerInstance();
 #ifdef _WIN32
     strcat(customersFile, "customers.bin\0");
     strcat(vehiclesFile, "vehicles.bin\0");
