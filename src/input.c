@@ -10,18 +10,23 @@ const int invalidType = -1;
 const int limits = -2;
 #endif
 
+static void flushInput(FILE *inputFile, int check) {
+    while ((check = fgetc(inputFile)) != '\n' && check != EOF) {
+        // flush file
+    }
+}
+
 int readInt(FILE *inputFile, FILE *outputFile, const int lowerLimit, const int upperLimit) {
     int value;
+    int check;
     do {
         fprintf(outputFile, "Insert a number between %d and %d: ", lowerLimit, upperLimit);
-        int check = fscanf(inputFile, "%d", &value);
+        check = fscanf(inputFile, "%d", &value);
         if (check != 1) {
 #ifdef TEST
             return invalidType;
 #endif
-            while ((check = fgetc(inputFile)) != '\n' && check != EOF) {
-                // flush file
-            }
+            flushInput(inputFile, check);
             continue;
         }
         if (value >= lowerLimit && value <= upperLimit)
@@ -31,21 +36,21 @@ int readInt(FILE *inputFile, FILE *outputFile, const int lowerLimit, const int u
         return limits;
 #endif
     } while (1);
+    flushInput(inputFile, check);
     return value;
 }
 
 float readFloat(FILE *inputFile, FILE *outputFile, const float lowerLimit, const float upperLimit) {
     float value;
+    int check;
     do {
         fprintf(outputFile, "Insert a number between %.2f and %.2f: ", lowerLimit, upperLimit);
-        int check = fscanf(inputFile, "%f", &value);
+        check = fscanf(inputFile, "%f", &value);
         if (check != 1) {
 #ifdef TEST
             return (float)invalidType;
 #endif
-            while ((check = fgetc(inputFile)) != '\n' && check != EOF) {
-                // flush file
-            }
+            flushInput(inputFile, check);
             continue;
         }
         if (value >= lowerLimit - EPSILON && value <= upperLimit + EPSILON)
@@ -55,6 +60,7 @@ float readFloat(FILE *inputFile, FILE *outputFile, const float lowerLimit, const
         return (float)limits;
 #endif
     } while (1);
+    flushInput(inputFile, check);
     return value;
 }
 
@@ -93,9 +99,10 @@ void readDate(FILE *inputFile, FILE *outputFile, date *date) {
 int readOption(FILE *inputFile, FILE *outputFile) {
     int option;
     bool optionExists;
+    int check;
     do {
         fprintf(outputFile, "Insert an option: ");
-        int check = fscanf(inputFile, "%d", &option);
+        check = fscanf(inputFile, "%d", &option);
         optionExists = option == 0 || option == 1 || option == 2 || option == 3 ||
                        option == 11 || option == 12 || option == 13 || option == 14 ||
                        option == 21 || option == 22 || option == 23;
@@ -109,5 +116,6 @@ int readOption(FILE *inputFile, FILE *outputFile) {
             }
         }
     } while (!optionExists);
+    flushInput(inputFile, check);
     return option;
 }
