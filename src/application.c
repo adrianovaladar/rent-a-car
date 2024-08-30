@@ -49,9 +49,6 @@ static void writeData(const logger *logger, const char *customersFile, const cha
 }
 
 static void end() {
-    if (getchar() == '\n') {
-        // ignore if a new line is detected
-    }
     printf("-----------------------\n");
     printf("Press enter to continue\n");
     while (getchar() != '\n') {
