@@ -242,7 +242,7 @@ static void endContract(FILE *inputFile, FILE *outputFile, const logger *logger,
     } while (!isLegalDate);
     contracts[pos].price = (float) (diffInDays(contracts[pos].startDate, contracts[pos].endDate) + 1) * contracts[pos].priceDay;
     fprintf(outputFile, "Office where the vehicle is:\n");
-    fprintf(outputFile, "%s %d %s %d %s %d %s %d %s %d %s %d", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
+    fprintf(outputFile, "%s %d %s %d %s %d %s %d %s %d %s %d\n", officeEnumToText(Braga), Braga, officeEnumToText(Coimbra), Coimbra, officeEnumToText(Guarda), Guarda, officeEnumToText(Faro), Faro, officeEnumToText(Lisbon), Lisbon, officeEnumToText(Porto), Porto);
     contracts[pos].endOffice = readInt(inputFile, outputFile, 0, 5);
     vehicles[positionVehicle].location = contracts[pos].endOffice;
     logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract ended: customer code %d vehicle code '%d' start date '%s' end date '%s' price per day '%f' final price %f", contracts[quantityContracts].codeCustomer, contracts[quantityContracts].codeVehicle, getFormattedDate(contracts[quantityContracts].startDate), getFormattedDate(contracts[quantityContracts].endDate), contracts[quantityContracts].priceDay, contracts[quantityContracts].price);
