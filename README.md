@@ -44,7 +44,7 @@ $ make
 ### Run the executable:
 
 ```
-$ ./rentacar
+$ ./rent_a_car
 ```
 
 ## Usage
@@ -53,6 +53,7 @@ Once you start the application, you'll be greeted with a simple menu. Just enter
 Here’s what the menu looks like:
 
 ```
+Rent-a-car
 ----------------------- MENU ----------------------
 
 ------------------ Customer Area ------------------
