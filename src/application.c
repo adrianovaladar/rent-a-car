@@ -70,13 +70,13 @@ void run() {
     char contractsFile[14];
     const logger *logger = getLoggerInstance();
 #ifdef _WIN32
-    strcat(customersFile, "customers.bin\0");
-    strcat(vehiclesFile, "vehicles.bin\0");
-    strcat(contractsFile, "contracts.bin\0");
+    strcpy(customersFile, "customers.bin");
+    strcpy(vehiclesFile, "vehicles.bin");
+    strcpy(contractsFile, "contracts.bin");
 #else
-    strcat(customersFile, "customers\0");
-    strcat(vehiclesFile, "vehicles\0");
-    strcat(contractsFile, "contracts\0");
+    strcpy(customersFile, "customers");
+    strcpy(vehiclesFile, "vehicles");
+    strcpy(contractsFile, "contracts");
 #endif
     readData(logger, customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, &quantityCustomers, &quantityVehicles, &quantityContracts);
     do {
