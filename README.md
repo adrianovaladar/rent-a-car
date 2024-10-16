@@ -89,4 +89,4 @@ This project is dedicated to my dog Marley, who was with me throughout all the d
 
 ## Creator
 
-This project was created by [**Adriano Valadar**](https://adrianovaladar.github.io).
+This project was created by [**Adriano Valadar**](https://github.com/adrianovaladar).
