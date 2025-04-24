@@ -46,6 +46,31 @@ $ make
 ```
 $ ./rent_a_car
 ```
+### Another Approach: Dockerfile (for Linux)
+
+#### Build the docker image
+
+First, build the Docker image using the provided Dockerfile:
+
+    $ docker build -t rent-a-car .
+
+This command will create a Docker image tagged as rent-a-car.
+
+#### Run the application
+
+Once the image is built, run the app inside a Docker container:
+
+    $ docker run -it -v ~/rent_a_car_files:/usr/src/app/files -v ~/rent_a_car_files/logs:/usr/src/app/logs rent-a-car
+
+This command does the following:
+
+- -it: Runs the container interactively with a terminal;
+- -v ~/rent_a_car_files:/usr/src/app/files: Mounts the rent_a_car_files directory from your local machine (in your home directory)
+  to /usr/src/app/files inside the container.
+  This provides persistent storage of the data;
+- -v ~/rent_a_car_files/logs:/usr/src/app/logs: This allows the application to save logs that can be useful for debugging and
+  issue tracking;
+- rent-a-car: Specifies the Docker image to use.
 
 ## Usage
 Once you start the application, you'll be greeted with a simple menu. Just enter the number corresponding to what you'd like to do.
