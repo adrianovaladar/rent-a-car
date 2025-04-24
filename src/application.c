@@ -8,8 +8,10 @@
 #include <string.h>
 #ifdef _WIN32
     #define CLEAR_CONSOLE() system("cls")
+    #include <direct.h>
 #else
     #define CLEAR_CONSOLE() system("clear")
+    #include <sys/stat.h>
 #endif
 
 static void showMenu() {
@@ -43,6 +45,11 @@ static void readData(const logger *logger, const char *customersFile, const char
 }
 
 static void writeData(const logger *logger, const char *customersFile, const char *vehiclesFile, const char *contractsFile, const customer *customers, const vehicle *vehicles, const contract *contracts, const size_t quantityCustomers, const size_t quantityVehicles, const size_t quantityContracts) {
+#ifdef _WIN32
+    _mkdir("files");
+#else
+    mkdir("files", 0777);
+#endif
     writeCustomers(stdout, logger, customersFile, customers, quantityCustomers);
     writeVehicles(stdout, logger, vehiclesFile, vehicles, quantityVehicles);
     writeContracts(stdout, logger, contractsFile, contracts, quantityContracts);
@@ -65,18 +72,18 @@ void run() {
     vehicle vehicles[MAX_VEHICLES];
     contract contracts[MAX_CONTRACTS];
     // variables to read/write data
-    char customersFile[14];
-    char vehiclesFile[13];
-    char contractsFile[14];
+    char customersFile[20];
+    char vehiclesFile[19];
+    char contractsFile[20];
     const logger *logger = getLoggerInstance();
 #ifdef _WIN32
-    strcpy(customersFile, "customers.bin");
-    strcpy(vehiclesFile, "vehicles.bin");
-    strcpy(contractsFile, "contracts.bin");
+    strcpy(customersFile, "files\\customers.bin");
+    strcpy(vehiclesFile, "files\\vehicles.bin");
+    strcpy(contractsFile, "files\\contracts.bin");
 #else
-    strcpy(customersFile, "customers");
-    strcpy(vehiclesFile, "vehicles");
-    strcpy(contractsFile, "contracts");
+    strcpy(customersFile, "files/customers");
+    strcpy(vehiclesFile, "files/vehicles");
+    strcpy(contractsFile, "files/contracts");
 #endif
     readData(logger, customersFile, vehiclesFile, contractsFile, customers, vehicles, contracts, &quantityCustomers, &quantityVehicles, &quantityContracts);
     do {
