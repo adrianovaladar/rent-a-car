@@ -35,5 +35,6 @@ add_executable(rent_a_car
 # Add tests - Only if BUILD_TESTS is enabled
 option(BUILD_TESTS "Build tests" OFF)
 if (BUILD_TESTS)
+    enable_testing()
     add_subdirectory(tests)
 endif ()

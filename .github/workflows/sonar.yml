@@ -31,7 +31,7 @@ jobs:
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ --config Release
       - name: Run tests to generate coverage statistics
         run: |
-          ${{github.workspace}}/build/tests/AllTests
+          ctest --test-dir ${{github.workspace}}/build --output-on-failure
       - name: Collect coverage into one XML report
         run: |
           gcovr --sonarqube --gcov-ignore-parse-errors > coverage.xml

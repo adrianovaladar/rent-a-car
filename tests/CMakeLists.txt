@@ -37,3 +37,5 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 target_link_libraries(AllTests gtest gtest_main gmock_main)
+
+add_test(NAME AllTests COMMAND AllTests)
