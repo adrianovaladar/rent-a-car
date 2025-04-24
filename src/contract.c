@@ -84,7 +84,7 @@ static void editContract(FILE *inputFile, FILE *outputFile, const logger *logger
             }
         }
     } while (!isLegalDate);
-    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract edited: price per day '%d' start date '%s'", contracts[pos].priceDay, getFormattedDate(contracts[pos].startDate));
+    logFormattedMessage(logger, Info, __FILE__, __FUNCTION__, __LINE__, "Contract edited: price per day '%.2f' start date '%s'", contracts[pos].priceDay, getFormattedDate(contracts[pos].startDate));
 }
 
 static void deleteContract(FILE *outputFile, const logger *logger, contract *c, const int pos, size_t *quantity, vehicle *vehicles, const size_t quantityVehicles, customer *customers, const size_t quantityCustomers) {
